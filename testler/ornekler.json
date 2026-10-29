@@ -1,0 +1,1289 @@
+{
+ "olcum_tarihi": "2026-10-28",
+ "kaynak": "~/Zotero/zotero.sqlite salt okunur kopyası",
+ "toplam_kayit": 3870,
+ "turkce_aday": 2453,
+ "turler": {
+  "title_case_tr": {
+   "sayi": 1419,
+   "aciklama": "Türkçe başlık Title Case (her kelime büyük); cümle düzenine çevrilmeli",
+   "ornekler": [
+    {
+     "key": "UN6QQU8A",
+     "type": "bookSection",
+     "field": "title",
+     "value": "Dünyada Maden Hukukuyla İlgili Yeni Yaklaşımlar ve Bu Bağlamda Türk Maden Hukukunun Gelişimi"
+    },
+    {
+     "key": "RAEEUNFL",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Madencilik Alanında Bir İhtisas Mahkemesinin Oluşturulmasına  Gerek Olup Olmadığı Üzerine Bazı Düşünceler"
+    },
+    {
+     "key": "Q2WIWSH5",
+     "type": "conferencePaper",
+     "field": "title",
+     "value": "Türkiye Madencilik Sektörü İçin Bir Politika Çerçevesi"
+    },
+    {
+     "key": "PUFYHACT",
+     "type": "thesis",
+     "field": "title",
+     "value": "Çevre Hakkı Kavramı ve Avrupa İnsan Hakları Mahkemesi'nin Çevre Hakkına Yaklaşımı"
+    },
+    {
+     "key": "FUGBIQX4",
+     "type": "book",
+     "field": "title",
+     "value": "İnsan Hakkı Olarak Çevre Hakkı"
+    },
+    {
+     "key": "RI92JM54",
+     "type": "book",
+     "field": "title",
+     "value": "Sağlıklı ve Dengeli Bir Çevrede Yaşama Hakkı – Çevreye Bir Kamu Hukuku Yaklaşımı"
+    },
+    {
+     "key": "6578KNBE",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Türkiye’de Çevre Hakkının Mülkiyet Hakkı ve Özel Teşebbüs Hürriyeti Üzerindeki Etkileri"
+    },
+    {
+     "key": "KB3ACKE7",
+     "type": "thesis",
+     "field": "title",
+     "value": "Kırsal Alanda Çevre Sorunlarına Etik Yaklaşım: Kırsal Çevre Etiği"
+    },
+    {
+     "key": "K9G2ZZZR",
+     "type": "book",
+     "field": "title",
+     "value": "Kültür Politikaları ve İnsan Hakları Bağlamında Doğal ve Tarihi Çevreyi Korumak"
+    },
+    {
+     "key": "8C8JC7VB",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Hukuki Güvenlik İlkesinin Kavramsal Gelişimi"
+    }
+   ]
+  },
+  "dil_bos_tr": {
+   "sayi": 1054,
+   "aciklama": "Türkçe kayıtta language alanı boş",
+   "ornekler": [
+    {
+     "key": "UN6QQU8A",
+     "type": "bookSection",
+     "field": "language",
+     "value": "",
+     "note": "Dünyada Maden Hukukuyla İlgili Yeni Yaklaşımlar ve Bu Bağlamda Türk Maden Hukukunun Gelişimi"
+    },
+    {
+     "key": "RAEEUNFL",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "",
+     "note": "Madencilik Alanında Bir İhtisas Mahkemesinin Oluşturulmasına  Gerek Olup Olmadığı Üzerine Bazı Düşünceler"
+    },
+    {
+     "key": "Q2WIWSH5",
+     "type": "conferencePaper",
+     "field": "language",
+     "value": "",
+     "note": "Türkiye Madencilik Sektörü İçin Bir Politika Çerçevesi"
+    },
+    {
+     "key": "QSE6ACXP",
+     "type": "book",
+     "field": "language",
+     "value": "",
+     "note": "BOŞ ATIF"
+    },
+    {
+     "key": "PUFYHACT",
+     "type": "thesis",
+     "field": "language",
+     "value": "",
+     "note": "Çevre Hakkı Kavramı ve Avrupa İnsan Hakları Mahkemesi'nin Çevre Hakkına Yaklaşımı"
+    },
+    {
+     "key": "FUGBIQX4",
+     "type": "book",
+     "field": "language",
+     "value": "",
+     "note": "İnsan Hakkı Olarak Çevre Hakkı"
+    },
+    {
+     "key": "R3HZFVJQ",
+     "type": "book",
+     "field": "language",
+     "value": "",
+     "note": "Çevre Hukukuna Giriş"
+    },
+    {
+     "key": "TSLLY85L",
+     "type": "book",
+     "field": "language",
+     "value": "",
+     "note": "Maden ve Taşocakları Hukuku"
+    },
+    {
+     "key": "RI92JM54",
+     "type": "book",
+     "field": "language",
+     "value": "",
+     "note": "Sağlıklı ve Dengeli Bir Çevrede Yaşama Hakkı – Çevreye Bir Kamu Hukuku Yaklaşımı"
+    },
+    {
+     "key": "6578KNBE",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "",
+     "note": "Türkiye’de Çevre Hakkının Mülkiyet Hakkı ve Özel Teşebbüs Hürriyeti Üzerindeki Etkileri"
+    }
+   ]
+  },
+  "tamami_buyuk_baslik_tr": {
+   "sayi": 721,
+   "aciklama": "Türkçe başlık tamamen büyük harf",
+   "ornekler": [
+    {
+     "key": "Q6EY8K6B",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "TOPLUMSAL DEĞİŞİMİN HUKUK ÜZERİNE ETKİSİNİ KARL RENNER’İN GÖRÜŞLERİ ÇERÇEVESİNDE AÇIKLAMAK"
+    },
+    {
+     "key": "6X2GT9VF",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "TRAFİK İDARİ PARA CEZALARININ YARGISAL DENETİMİ ÜZERİNE BİR DEĞERLENDİRME"
+    },
+    {
+     "key": "DDBLNGZR",
+     "type": "interview",
+     "field": "title",
+     "value": "KARIŞIK NOTLARIM, DÜŞÜNCELERİM VS."
+    },
+    {
+     "key": "M4VYWUD2",
+     "type": "instantMessage",
+     "field": "title",
+     "value": "TEZLE ALAKALI OLASI MAKALE/ÇALIŞMA BAŞLIKLARI"
+    },
+    {
+     "key": "4QJP5KIH",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "TÜRKİYE’DE SAHİPSİZ SOKAK KÖPEK SALDIRILARINDA İDARENİN HUKUKİ SORUMLULUĞU"
+    },
+    {
+     "key": "6UCWI8J3",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "HSAHİPSİZ KÖPEKLERİN POPÜLASYONUNUN KONTROL ALTINA ALINMASI VE BUNA İLİŞKİN HUKUKİ ALTYAPININ OLUŞTURULMASI"
+    },
+    {
+     "key": "HUXQBG2T",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "ORTA ÇAĞ AVRUPA'SINDA İNSAN HAKLARI"
+    },
+    {
+     "key": "YFEQUKA8",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "ÇEKİRDEĞE DOĞRU: HAKKIN ÖZÜ BAĞLAMINDA MÜLKİYET HAKKINA İLİŞKİN GÜNCEL BİR DEĞERLENDİRME"
+    },
+    {
+     "key": "YFEQUKA8",
+     "type": "journalArticle",
+     "field": "shortTitle",
+     "value": "ÇEKİRDEĞE DOĞRU"
+    },
+    {
+     "key": "K8SR6X98",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "İNSAN HAKLARI VE YÖNETİM HUKUKU"
+    }
+   ]
+  },
+  "dil_en_dergipark": {
+   "sayi": 99,
+   "aciklama": "DergiPark/TR dergide İngilizce makale, dil 'en' doğru (Türkçe adayı sayılmamalı)",
+   "ornekler": [
+    {
+     "key": "S5LDEP2B",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Extension of the Most Favoured Nation Clause to Dispute Settlement Provisions in Bilateral Investment Treaties Which Turkey is a Party of"
+    },
+    {
+     "key": "9XF5JJML",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Can Rawls’ Theory of Distributive Justice Become a Cure for Poverty?"
+    },
+    {
+     "key": "MNKN9MRV",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Pushback of Refugees Under International Law: A Conceptual Analysis"
+    },
+    {
+     "key": "3I7NNJQW",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Recent Developments on the Question of Religion Courses: An Analysis of a Turkish Constitutional Courts’s Decision in 2022"
+    },
+    {
+     "key": "GFDXFFJP",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Violation of the Right to A Fair Trial in Arbitration: Analysing the Turkish Court of Cassation’s Decision of 10 February 2021"
+    },
+    {
+     "key": "DELS5UXZ",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Transforming the Judiciary into the Proxies of The Rulers: The Hagia Sophia Case"
+    },
+    {
+     "key": "HFQ8LBJM",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "scheme=\"ISO639-1\"",
+     "note": "A Review of the Case Law of the European Court of Human Rights in the Context of Environmental Justice"
+    },
+    {
+     "key": "DFB5G5Y4",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Transformation From Soft Law to Hard Law of International Environmental Protection: Process, Basic Concepts and Principles – Part 1: “Common Heritage of Mankind”, “Present and Future Generations”, “Inter/Intra-generational Equity” and “Sustainable Development"
+    },
+    {
+     "key": "SPXRNPEG",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "A Review of Asylum and Migration Policies of Political Groups in the European Parliament"
+    },
+    {
+     "key": "7TRUJQHX",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Theories of Interpretation: Islamic Law v. International"
+    }
+   ]
+  },
+  "dil_tr_bicim": {
+   "sayi": 71,
+   "aciklama": "Dil alanı tr-TR / TR / tur / Turkish gibi; 'tr' olarak normalize edilmeli",
+   "ornekler": [
+    {
+     "key": "3N3YQMKF",
+     "type": "videoRecording",
+     "field": "language",
+     "value": "tr-TR"
+    },
+    {
+     "key": "C83B86RB",
+     "type": "bookSection",
+     "field": "language",
+     "value": "tr-TR"
+    },
+    {
+     "key": "M7Q2NEQ6",
+     "type": "webpage",
+     "field": "language",
+     "value": "tr-TR"
+    },
+    {
+     "key": "5D6PAG3L",
+     "type": "webpage",
+     "field": "language",
+     "value": "tr-TR"
+    },
+    {
+     "key": "38IK9NJQ",
+     "type": "webpage",
+     "field": "language",
+     "value": "TR"
+    },
+    {
+     "key": "MD2P7LZJ",
+     "type": "interview",
+     "field": "language",
+     "value": "tr-TR"
+    },
+    {
+     "key": "LDL52BLR",
+     "type": "interview",
+     "field": "language",
+     "value": "tr-TR"
+    },
+    {
+     "key": "NSJUHJHU",
+     "type": "interview",
+     "field": "language",
+     "value": "tr-TR"
+    },
+    {
+     "key": "A827M9YU",
+     "type": "interview",
+     "field": "language",
+     "value": "tr-TR"
+    },
+    {
+     "key": "YG7B9EDV",
+     "type": "interview",
+     "field": "language",
+     "value": "tr-TR"
+    }
+   ]
+  },
+  "yazar_soyad_cok_kelime_tr": {
+   "sayi": 53,
+   "aciklama": "İki kelimeli soyadı (çift soyadı); dokunulmamalı, yalnızca bilgi",
+   "ornekler": [
+    {
+     "key": "Y95KUYRN",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Meltem Sarıbeyoğlu Skalar"
+    },
+    {
+     "key": "V2S4YRNN",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Bahar Konuk Sommer"
+    },
+    {
+     "key": "6WB7FMG9",
+     "type": "thesis",
+     "field": "creator",
+     "value": "Seda Örsten Esirgen"
+    },
+    {
+     "key": "E7D8VNXI",
+     "type": "book",
+     "field": "creator",
+     "value": "Özge Okay Tekinsoy"
+    },
+    {
+     "key": "2WSGRAGC",
+     "type": "book",
+     "field": "creator",
+     "value": "Gül Fiş Üstün"
+    },
+    {
+     "key": "9GDLXWH4",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Ilgın Özkaya Özlüer"
+    },
+    {
+     "key": "4GGRMSPD",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Bahar Konuk Sommer"
+    },
+    {
+     "key": "AZHL58HP",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Merve Alçık Engürülü"
+    },
+    {
+     "key": "29H6LHDW",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Kamile Türkoğlu Üstün"
+    },
+    {
+     "key": "NGRM3NQJ",
+     "type": "conferencePaper",
+     "field": "creator",
+     "value": "Nükhet Yılmaz Turgut"
+    }
+   ]
+  },
+  "i_nokta_artigi": {
+   "sayi": 52,
+   "aciklama": "Yanlış yerelle küçültülmüş İ artığı (i + U+0307); ayrıca I→i hataları (Aliminda, Sinav)",
+   "ornekler": [
+    {
+     "key": "WMJVKYKD",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Kamu Görevli̇si̇ Aliminda Sözlü Sinav Ve Mülakat Yöntemleri̇ İle Yargisal Deneti̇m Sorunu"
+    },
+    {
+     "key": "Y79GBCEQ",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Ekoloji̇k Kri̇ze Karşi Yeşi̇l Anayasa"
+    },
+    {
+     "key": "WYTN76J4",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Avrupa İnsan Hakları Mahkemesi̇’ni̇n Çevreni̇n Korunmasına Katkısı"
+    },
+    {
+     "key": "6RL29HSI",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Devletçe İşleti̇lecek Madenler Hakkında Kanun Üzeri̇nde Açıklamalar"
+    },
+    {
+     "key": "XKU5P9B8",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "7343 Sayılı Kanun ile İhaleni̇n Feshi̇ Şi̇kâyeti̇nde (İİK M.134) Yapılan Deği̇şi̇kli̇kleri̇n Değerlendi̇ri̇lmesi̇"
+    },
+    {
+     "key": "XF5TETE9",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Mahalli̇ İdareleri̇n Sokak Köpekleri̇ni̇n Verebi̇leceği̇ Zararlar İle İlgi̇li̇ Yükümlülüleri̇ ve Bu Yükümlülükleri̇n Mahalli̇ İdareler Arasindaki̇ İli̇şki̇ler Bakimindan Değerlendi̇ri̇lmesi̇"
+    },
+    {
+     "key": "2MFPHB5W",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Uluslararasi İdare Hukuku Üzeri̇ne Genel Bi̇r Değerlendi̇rme"
+    },
+    {
+     "key": "6ZT4S35U",
+     "type": "interview",
+     "field": "title",
+     "value": "Ankara Bölge İdare Mahkemesi̇ 4. İdari̇ Dava Dai̇resi̇, E. 2022/1704 K. 2022/2974, T. 8.12.2022"
+    },
+    {
+     "key": "ZS3YAR5N",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "İnsan Hakları, Mülteci̇ler ve Devlet; Eleşti̇rel Bi̇r Yaklaşim"
+    },
+    {
+     "key": "C6D4R6EP",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "İdari̇ Yargida Sinirli Ehli̇yetsi̇zleri̇n Genel (objekti̇f) Dava Ehli̇yeti̇"
+    }
+   ]
+  },
+  "bosluk": {
+   "sayi": 31,
+   "aciklama": "Çift boşluk, baş/son boşluk, satır sonu artıkları",
+   "ornekler": [
+    {
+     "key": "8DRCGJRW",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Introduction of legal rights for nature could protect natural systems from destruction\n          , \n            \n              Scientific evidence indicates that the global environmental crisis is accelerating and that environmental laws have not been able to reverse the trend (\n              1\n              ). A movement to recognize nature as a rights holder argues that existing laws regulate, rather than stop, the destruction of the natural world (\n              2\n              ). Instead of incrementally reforming such laws, a growing number of jurisdictions around the world have recognized rights of nature (see the box). This may better protect natural systems, though questions remain and contributions from various disciplines will be necessary to implement this rights revolution and ensure its effectiveness."
+    },
+    {
+     "key": "RAEEUNFL",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Madencilik Alanında Bir İhtisas Mahkemesinin Oluşturulmasına  Gerek Olup Olmadığı Üzerine Bazı Düşünceler"
+    },
+    {
+     "key": "HDJ3ZWBY",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Abstract\n              Whilst many claim there is a human right to a clean environment, the jurisprudence of the European Court of Human Rights is examined to show how that court has balanced rights and interests in deciding relevant cases on this issue. Recent jurisprudential and academic debates on balancing are examined in this context before an analysis of some English decisions in this area to show that the existence of a human right to a clean environment may indeed be a phantom."
+    },
+    {
+     "key": "H5I7RTHS",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Investor-State arbitration is not only a mechanism to settle disputes between an investor and a State arising out of an investment, it is also a form of global governance that involves the exercise of power by arbitral tribunals in the global administrative space. In setting standards for State conduct vis-à-vis foreign investors, for example in defining what is improper administration or a violation of due process under fair and equitable treatment, tribunals set standards which may influence future conduct by the respondent State and other States, and will very likely influence the decision-making of tribunals in other cases.  In settling disputes between investors and States, the tribunals also act as pre-agreed review agencies of a State’s specific actions, in some cases applying proportionality analysis or other tools of public law review when confronted with difficult balances between investor protection and the State’s environmental or economic policy choices in the wider public interest.  In these respects, investor-State arbitration forms part of a governance structure, and helps constitute and shape the emerging body of global administrative law.  At the same time, this regulatory activity of arbitral tribunals attracts significant criticism, not only of specific decisions but with regard to the legitimacy of the decision-making powers of these tribunals as such.  This paper argues that these concerns can be addressed, at least in part, by application of principles of the emerging global administrative law to, and by, these tribunals."
+    },
+    {
+     "key": "9EHBBEJV",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "This article seeks to present an integrated conception of sustainable development, with particular emphasis on the contribution of international human rights law and theory. Part II considers a structural conception of sustainable development. Part III considers parallels between sustainable development and self-determination. Part IV provides some general reflections on international environmental law and international human rights law in terms of analogous concepts, principles and systems. What similarities are there and what differences? Part V considers the progress made towards recognition of a “human right to the environment”. Part VI considers how international environmental claims could be brought within the existing international human rights complaint systems. Part VII analyses the judgment of the European Court of Human Rights in the\n              Lopez Ostra\n              case (1994), the leading case on environmental claims to have reached that Court."
+    },
+    {
+     "key": "HC3SLYZD",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Abstract\n            This article begins by questioning the capacity of the concept of sustainable development to stabilize social reproduction and foster global justice. Based on interdisciplinary perspectives on global governance, it discusses the way in which global law fails to cope with the resonance of advanced capitalism in the world society and ecological systems. Our analysis focuses on the regulatory and institutional features of three interwoven functional regulatory regimes (global finance, energy, and environmental protection), which demonstrate structural governance dysfunction at the expense of ecological integrity and justice in the global realm. The article further examines the capacity of global law to foster a ‘compositive’ and ‘compensatory’ contribution to global justice and the stability of the Earth system through global constitutionalism. In this context, it concludes that Neil Walker's global law approach provides a fertile analytical framework for describing the patterns of interaction between different species of global law but proves to be particularly ‘slippery’ in its normative propositions regarding the gap between global law and justice. Drawing from the Earth system approach, we argue in favour of a global material constitutionalism, recognizant of ecosystemic boundaries and socio-environmental impacts of the global socio-economic metabolism. We consider that the gap between global law and global justice is best addressed by devising more deliberative patterns of transnational governance, as well as ecosystem and human rights approaches, in order to accommodate the fair and equitable internalization of material limits across global regulatory regimes that act as functionally differentiated economic constitutions of advanced capitalism."
+    },
+    {
+     "key": "7FPZS62Q",
+     "type": "preprint",
+     "field": "abstractNote",
+     "value": "In response to demands for greater accountability and responsiveness in global regulatory governance, global administrative law (GAL) decision-making mechanisms of transparency, participation, reason giving, and review have emerged in many global regimes, the WTO system. This paper shows how three aspects of the WTO regime can fruitfully be understood and evaluated in terms of administration and administrative law.  With respect to the WTO’s internal governance, the paper argues that simultaneously strengthening the WTO administrative bodies and subjecting them to GAL procedural disciplines would establish better internal institutional balance and enhance the organization’s effectiveness and legitimacy. With respect to the vertical relation between the WTO and its members, it shows how the WTO has secured far reaching adoption of GAL disciplines by domestic regulatory administrations, to the benefit of foreign but also of domestic interests. With respect to the horizontal dimension of the WTO’s relation with other global standard-setting bodies, it argues that the WTO should make compliance with GAL procedures a condition for according WTO recognition to such bodies’ regulatory standards. The paper concludes that, overall, the application of GAL mechanisms to these different facets of trade regulatory decision making will promote accountability and responsiveness to a broader range of interests and a more cosmopolitan normative perspective. It further concludes, from the perspective of legal theory, that GAL is a more suitable and productive conceptual framework for addressing the legal dimensions of global regulatory governance than constitutionalism and other alternatives."
+    },
+    {
+     "key": "NYCGSKUI",
+     "type": "preprint",
+     "field": "abstractNote",
+     "value": "An early framing of ‘global administrative law’ (GAL) provisionally ‘bracket[ed] the question of democracy’ as too ambitious an ideal for global administration.  To many, the bracketing of democracy has appeared analytically unpersuasive and normatively dubious. This essay is an initial attempt to open the brackets and bring GAL and democracy into conversation. It addresses two separate observations: first, that democracy currently lacks tools to respond to the globalization and diffusion of political authority; and secondly, that GAL is not presently democratic  — it has no room for democratic concerns in its emerging norms. The juxtaposition of democracy and GAL yields insights for the way in which each might contribute to the reimagination of global governance."
+    },
+    {
+     "key": "LLRDXL92",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Abstract\n            The article attempts to illuminate how the concept of accountability is diversely shaped and signified in the theoretical legal discourse. It engages in a threefold mapping review: (i) it portrays, according to the basic divide between the angles ‘within the state’ and ‘beyond the state’, the geographical and functional contexts in which real-world political accountability mechanisms exist and interact; (ii) it interprets an influential legitimating discourse that is being used as a benchmark to appraise institutions and political processes beyond the state – the Global Administrative Law project (GAL); (iii) it highlights how this sort of accountability discourse is tied with demands for legitimacy in global governance that cannot be detached from the old political ideals. Largely oriented towards due process, I argue that the GAL project, in order to maintain a normative appeal, should not ignore larger political ideals, however controversial they might be. Otherwise, it remains a manipulable and hence unreliable cause to be endorsed."
+    },
+    {
+     "key": "AVMUI36H",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Abstract\n              Looking back over the last sixty years, there is no doubt that the role and the capacity of international organizations to conduct operations have greatly evolved. Their mandates have expanded and the objectives to be reached have been diversified. Field operations have increased in a dramatic way. It has become increasingly necessary for international organizations to resort to innovative legal mechanisms to be able to fulfil the new tasks they have been assigned. In the meantime, the appearance on the world stage of a large number of non-State actors carrying out tasks which were traditionally incumbent upon State authorities and intergovernmental organisations, has led to the establishment of specific mechanisms allowing them to collaborate closely with the latter. In face of the challenges raised by these complex interlocking legal relationships, numerous administrative law type principles have emerged as instruments for adapting the classic international system of States and intergovernmental organizations to contemporary requirements."
+    }
+   ]
+  },
+  "yazar_diakritiksiz_tr": {
+   "sayi": 17,
+   "aciklama": "Türkçe soyadı diakritiksiz (Yilmaz, Yildiz)",
+   "ornekler": [
+    {
+     "key": "7XNEEUNR",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Hasan Yilmaz"
+    },
+    {
+     "key": "WLZWEEIZ",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Furkan Yildiz"
+    },
+    {
+     "key": "8BCEFT94",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Serdar Yilmaz"
+    },
+    {
+     "key": "5C5CJ693",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Duygu HATIPOĞLU Aydin"
+    },
+    {
+     "key": "AKRE79LC",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Ahmet Yilmaz"
+    },
+    {
+     "key": "I7393MGE",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Hatice Kübra Ecemi̇Ş Yilmaz"
+    },
+    {
+     "key": "URH4GS2U",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Harun Yilmaz"
+    },
+    {
+     "key": "WUJ3VPAL",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Ramazan Yildirim"
+    },
+    {
+     "key": "QU8D2IAH",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Yucel Ogurlu"
+    },
+    {
+     "key": "F8GLKJKF",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Ihsan Yilmaz"
+    }
+   ]
+  },
+  "yazar_kucuk_bas": {
+   "sayi": 14,
+   "aciklama": "Küçük harfle başlayan ad; çoğu meşru parçacık (von, de, van den), biri çöp (madenci)",
+   "ornekler": [
+    {
+     "key": "5RSQ386C",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Pau de Vilchez"
+    },
+    {
+     "key": "CTUJRVCC",
+     "type": "bookSection",
+     "field": "creator",
+     "value": "Armin von Bogdandy"
+    },
+    {
+     "key": "CTUJRVCC",
+     "type": "bookSection",
+     "field": "creator",
+     "value": "Jochen von Bernstorff"
+    },
+    {
+     "key": "AVMUI36H",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Laurence Boisson de Chazournes"
+    },
+    {
+     "key": "5N594TS5",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Jeroen C. J. M van den Bergh"
+    },
+    {
+     "key": "6GFGLDJP",
+     "type": "report",
+     "field": "creator",
+     "value": "Henneleen de Boo"
+    },
+    {
+     "key": "FPVXU6JK",
+     "type": "blogPost",
+     "field": "creator",
+     "value": "madenci"
+    },
+    {
+     "key": "NID4TNT4",
+     "type": "book",
+     "field": "creator",
+     "value": "Andrew von Hirsch"
+    },
+    {
+     "key": "VBICHXJX",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Rosemarie van den Breemer"
+    },
+    {
+     "key": "239V3AHE",
+     "type": "book",
+     "field": "creator",
+     "value": "Rosemarie van den Breemer"
+    }
+   ]
+  },
+  "nbsp": {
+   "sayi": 13,
+   "aciklama": "Kırılmaz boşluk (U+00A0)",
+   "ornekler": [
+    {
+     "key": "G2PIZXTU",
+     "type": "webpage",
+     "field": "abstractNote",
+     "value": "The American West has been in the midst of a megadrought for the last two decades — the worst it has experienced in at least 1200 years.[footnote-short-crop]Nathan Rott, Study Finds Western Megadrought Is the Worst in 1,200 Years, NPR (Feb. 14,&hellip;"
+    },
+    {
+     "key": "WJ764D6H",
+     "type": "webpage",
+     "field": "abstractNote",
+     "value": "“Çamlıca Köylülerinin Hukuk Zaferi✌🏾\n\nÇamlıca köylüleri ile birlikte İkizköylülerin de davacı olduğu Bodrum Barajı'nın ÇED olumlu kararı iptal edildi.”"
+    },
+    {
+     "key": "TMVF86F4",
+     "type": "book",
+     "field": "abstractNote",
+     "value": "Environmental Laws and Their Enforcement is a component of Encyclopedia of Social Sciences and Humanities in the global Encyclopedia of Life Support Systems (EOLSS), which is an integrated compendium of twenty one Encyclopedias.  The volume on Environmental Laws and Their Enforcement deals, in two volumes , with a myriad of issues of great relevance to our world such as: Sustainable Development and National Governance; History of Environmental Law; International Environmental Law; Constitutional Law; International Binding Mechanisms; Laws Governing Freshwater and Ground Water Pollution; Forestry; Biodiversity Conservation and Endangered Species Protection; International Guidelines and Principles; Compliance Models for Enforcement of Environmental Laws And Regulations; International Environmental Law; Life Support Systems: Law and Policy; The Principle of Sustainable Development in International Development Law; Environmental Pollution Regulations; Social Concerns for Environmental Exposures to Toxic Substances; Regulation of Air and  Pollutants.  These volumes are aimed at the following five major target audiences: University and College Students, Educators, Professional Practitioners, Research Personnel and Policy Analysts, Managers, and Decision Makers and NGOs."
+    },
+    {
+     "key": "C4M784MK",
+     "type": "webpage",
+     "field": "abstractNote",
+     "value": "In teaching my class on Climate Law, I’ve been struck by how many new legal questions courts are confronting as a result of the climate crisis.  Dealing with these new legal questions is going to put stress on existing legal doctrines and require courts to rethink some basic principles.  Unfortunately, the Supreme Court is pushing … Continue reading \"Unprecedented Legal Questions\""
+    },
+    {
+     "key": "VGR3HQZX",
+     "type": "webpage",
+     "field": "abstractNote",
+     "value": "“\"Bilkent İnsan Hakları Merkezi bünyesinde, Bilkent Üniversitesi Hukuk Fakültesi, Hollanda Krallığı ve Birleşmiş Milletler Kalkınma Programı (UNDP) ile ortaklaşa olarak bir makale yarışması düzenlenecektir. \nYarışma konusu \"Çevre Hukuku, İklim Adaleti veya Afet Hukuku\"dur.”"
+    },
+    {
+     "key": "4GGRMSPD",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Çevrenin korunması ve geliştirilmesini amaç edinen çevre hakkına ilk kez, 1972 tarihli Birleşmiş Milletler Stockholm Konferansı sonrası ortaya konan Bildiride, insanın kendisine onurlu ve iyi bir hayat sürmeye olanak veren nitelikli bir çevrede yaşama hakkına sahip olduğunun öngörülmesi suretiyle yer verilmiştir. Dayanışma hakları olarak da adlandırılan üçüncü kuşak haklar arasında yer alan çevre hakkı, Türk Anayasasının 56. maddesinde ekonomik ve sosyal haklar başlığı altında düzenlenmiştir. Anayasada 2010 yılında yapılan değişiklikle Anayasada ve Avrupa İnsan Hakları Sözleşmesi’nde düzenlenen hakların ihlal edildiği iddiasıyla Anayasa Mahkemesine bireysel başvuru yoluyla başvurulması mümkündür. Her ne kadar çevre hakkı Avrupa İnsan Hakları Sözleşmesi’nde açıkça düzenlenmemişse de, Avrupa İnsan Hakları Mahkemesi, içtihat yoluyla çevre hakkını Sözleşme içerisinde düzenlenen diğer haklarla ilişkilendirerek çevrenin korunmasını güvence altına almaktadır. Anayasa Mahkemesi de çevre hakkının korunmasına yönelik önüne gelen başvuruları, sağlıklı bir çevrede yaşamayı Anayasanın 17. maddesinde düzenlenen maddi ve manevi varlığın geliştirilmesi hakkının bir parçası olarak değerlendirmek suretiyle incelemektedir. \n          , \n            ﻿The right to environment, which aims to protect and improve the environment, was first mentioned in the Declaration issued after the United Nations Conference in Stockholm in 1972 by stipulating that a person has the right to live in a decent environment which allows him to live a dignified and good life. The right to environment, which is also referred to as the third generation rights, also called solidarity rights, is regulated under the heading of economic and social rights in the Article 56 of the Turkish Constitution. The amendment to the Turkish Constitution in 2010 made it possible for everyone to apply to the Constitutional Court by individual application on the grounds that one of the fundamental rights and freedoms within the scope of the European Convention on Human Rights which are guaranteed by the Constitution has been violated by public authorities. Although the right to the environment is not explicitly regulated in the European Convention on Human Rights, the European Court of Human Rights guarantees the protection of the environment by assessing the right to the environment with other rights regulated by the Convention. The Constitutional Court examines the applications for the protection of the right to environment by evaluating it as a part of the right to life and the right to protect and improve someone’s corporeal and spiritual existence regulated in Article 17 of the Constitution."
+    },
+    {
+     "key": "TIA7QX47",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "The article investigates the underlying challenges of administrative and legal support of environmental safety under globalization. The current globalization conditions and factors affecting the transition of environmental safety from local to a global level, which is due to globalization processes in the world and a number of global anthropogenic challenges, are analyzed. The emphasis is focused on the impact of globalization on the adoption of international treaties in the field of environmental safety. The importance of administrative and legal environmental safety at the state level for the implementation of the executed international treaties is substantiated. The obsolescence and underperformance of the current state of administrative and legal support of environmental safety in Ukraine is grounded, the necessity for its optimization is proved, the weaknesses are highlighted and the need for introducing a number of improvement directions, including propaganda of a careful attitude to the environment, is substantiated; regulatory support for the effective distribution of functions and viable mechanism for management of central and local executive authorities, local government institutions on the formation and implementation of state policy components in the field of climate change in accordance with their competence; regulatory actions of joint events and cooperation of domestic government bodies in the area of environmental safety with similar bodies of neighboring countries; implementation ensuring of the provisions of the Association Agreement between Ukraine and the European Union, the European Atomic Energy Community and their member states related to climate change; ensuring the fulfillment of Ukraine’s obligations regarding reporting on international agreements in the field of climate change, etc.  Keywords: globalization, environmental safety, state environmental policy, legal support of environmental safety, administrative and legal support for environmental safety of Ukraine, international legal support for environmental safety"
+    },
+    {
+     "key": "MZG89SDJ",
+     "type": "webpage",
+     "field": "abstractNote",
+     "value": "Cumhuriyet Halk Partisi(CHP) Antalya Milletvekili Av. Aliye Coşar yaptığı açıklamada  Antalya'da Gazipaşa'dan Kaş'a kadar rant ve talan amaçlı doğal kaynakların tehdit altında olduğunu söyledi."
+    },
+    {
+     "key": "BKMN4HPJ",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Comprehensive knowledge on the issues contributing to mining conflicts is crucial in balancing between the exploitation of mineral deposits and local claims. We explore recent mining conflicts in the European Union using information derived from the Global Atlas of Environmental Justice to improve the understanding of the  potential impacts of the intensification of mining activities by the new minerals policies. The variety of causes of conflict is wide and ranges from environmental impacts to socio-economic and health concerns of the populations residing in the vicinity of the mines. While mining conflicts have arisen during all the phases of the life cycle of a mine, new mining projects have been well presented amongst the conflicts. Policy makers should increasingly pay attention to the multiple impacts that mining has had on the environment and socially, in order to be able to put the plans for increasing minerals extraction in Europe into practice."
+    },
+    {
+     "key": "IIH7XT9E",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Mining activities have emerged as major contributors to environmental damage. This paper offers an analyse of the actual situation of environmental damages caused by mining activities in Europe. Alarmingly, pollution from mining activities in the European Union is increasing. Surface and underground mining have detrimental effects on air and water quality, land degradation, waste disposal, noise pollution, deforestation and loss of biodiversity, endangered species, microbiota, economy, and health. Moreover, the risk of dam destruction because of climate change is increased. Globally this fact ranked Europe in second place in terms of dangerousness. The situation of protected species is critical and their status remains poor. The rehabilitation cost is exorbitant, and enforcement of regulations is lacking. It is evident that, due to economic demand for metals, mining will play a central role in EU's future despite the growing emphasis on green initiatives and transition. Unfortunately, public awareness regarding environmental impact of mining activities is insufficient, and their voices are often disregarded.  In order to reduce the negative impact of mining on the environment, economy and public health, it is necessary to take urgent political and technical measures. This paper aims to present a comprehensive overview and offer suggestions for future actions."
+    }
+   ]
+  },
+  "html_artik": {
+   "sayi": 12,
+   "aciklama": "HTML varlıkları (&amp;lt; &ndash;) ve etiket kalıntıları",
+   "ornekler": [
+    {
+     "key": "G2PIZXTU",
+     "type": "webpage",
+     "field": "abstractNote",
+     "value": "The American West has been in the midst of a megadrought for the last two decades — the worst it has experienced in at least 1200 years.[footnote-short-crop]Nathan Rott, Study Finds Western Megadrought Is the Worst in 1,200 Years, NPR (Feb. 14,&hellip;"
+    },
+    {
+     "key": "KJIR2Y73",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Abstract Introduction New Zealand’s equity-focused endgame goal (Smokefree 2025) aims to reduce smoking prevalence to minimal levels (ie, &amp;lt;5%) in all population groups by 2025. Inadequate progress has stimulated discussion of innovative measures to reduce prevalence; because few studies have explored how marginalized groups perceive these measures, we addressed this knowledge gap. Aims and Methods In November and December 2020, we conducted 20 in-depth interviews with people who smoked daily, were aged between 21 and 53, earned less than the median income (NZD33 900), and had marginal or inadequate income sufficiency. We explored participants’ smoking history and used an elicitation exercise to probe their views on smokefree policies, including potential endgame measures. We used qualitative descriptive analysis and reflexive thematic analysis to interpret the data. Results Participants favored increasing personal support to quit and reducing nicotine levels in cigarettes, but generally opposed tobacco excise tax increases and paying people to quit. While many privileged their right to “choose,” some recognized that stronger policies could restore the loss of agency addiction caused. Participants felt smoking’s powerful addictiveness remained poorly understood, and called for smoking to be recognized and treated as an addiction. Conclusions Several participants supported intensifying existing measures or introducing new measures. However, their use of tobacco industry rhetoric to frame smoking as a choice they had made could inadvertently reinforce the stigma they experienced. Reframing cigarettes as an addictive product engineered by a deceptive industry, may make it easier for participants to access the expanded support and compassion they sought. Implications Policy measures, such as reducing the nicotine level in cigarettes, could support endgame goals; however, greater public understanding of addiction is needed to reduce stigma, support self-efficacy, and foster smoking cessation. Industry denormalization campaigns could challenge views of smoking as a personal choice, decrease self-blame among people who smoke, and present endgame goals as likely to enhance agency."
+    },
+    {
+     "key": "D6YSX6IU",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Background Modelling studies find the smokefree generation (SFG) policy could help achieve the tobacco endgame. The UK is on course to introduce an SFG in 2027 that prohibits tobacco sales to individuals born in or after 2009. Methods We adapted an individual-level microsimulation model with a synthetic representative English population, and used previously validated smoking initiation, quit and relapse probabilities by age and deprivation quintile. We simulated four scenarios from 2023 to 2075: no intervention, pessimistic SFG, central SFG and optimistic SFG. Proportionate universalism sensitivity analyses assumed effective targeting led to greater effects in more deprived areas and smaller effects in less deprived areas. Equity was assessed using slope and relative indices of inequality. Results The central SFG scenario forecast smoking prevalence to be reduced to &lt;5% in 12–30 year-olds by 2049, but not until 2055 for males and not until 2059 for those living in the most deprived quintile. Absolute socioeconomic inequalities were reduced but not relative inequalities. Under proportionate universalism, &lt;5% prevalence is achieved a year earlier (2048) and both absolute and relative inequalities by index of multiple deprivation quintile are substantially reduced by 2050. By 2075, 87 899 (85 293–90 791) discounted quality-adjusted life years were gained in the central scenario compared with baseline. Conclusions The SFG policy has potential to reduce absolute inequalities among its target population and achieve significant gains in quality and length of life. Achieving reductions in relative inequalities will likely require targeted interventions that lead to greater effectiveness in lower socioeconomic areas and for males."
+    },
+    {
+     "key": "TL9HRUQN",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Transboundary issues &ndash; from (chemical) pollution, land-use change to unsustainable levels of exploitation &ndash; have been eroding natural sites across Europe, reducing biodiversity in the process. In light of this, this paper analyses the comprehensiveness of EU environmental law, appraising its underlying ethos in the process. Additionally, it explores whether a Natureship Framework Directive at the European Union (EU) level, which establishes legal personality for natural sites, can deliver a &lsquo;change of course&rsquo; with respect to the anthropocentric view underpinning environmental law as a pressing thought experiment. It constructs a (fictive) law which grants natural sites substantive and procedural rights, conceptualising how such an instrument may take shape. One finding is that an EU Natureship may be a robust tool to address flaws within EU environmental law. For example, the attribution of legal personality to natural sites alongside the appointment of formal representatives can significantly relieve the burden for NGOs and the European Commission, which may suffer from limited resources when it comes to judicial enforcement of environmental norms (or, alternatively, ecological rights). Other benefits pertain to nature management, which may be less complex and more politically stable under the approach put forward in this paper. An EU Natureship, therefore, may provide a vehicle to shift EU environmental law from the anthropocentric to the ecocentric."
+    },
+    {
+     "key": "C96PWXMS",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "The paper delves into the early impacts of generative AI (GenAI) on the legal sector, its implications for the activity systems of judges, lawyers and litigants, and the values underpinning the administration of justice. Literature analysis is complemented by a survey of the functions GenAI systems offer to law firms, judges and citizens, as well as by assessing the guidelines for the proper use of such technologies in the legal domain. The paper underscores how GenAI is becoming pervasive through specialized applications and its integration into everyday office tools. Such a rapid proliferation of applications has revealed that several of the principles suggested by the guidelines are inadequate in managing GenAI usage and assigning responsibilities to the providers. Users are ultimately responsible and must fully understand and accept the consequences of their use. Therefore, when interacting with GenAI in the legal business, comprehending the systems&rsquo; technological features and functioning, including their limitations and potential pitfalls, is the primary safeguard now available. The finding underscores the need for human empowerment to prevent an uncontrolled proliferation of GenAI in the legal business, thereby stressing the importance of human oversight in using AI."
+    },
+    {
+     "key": "KZCUYVRD",
+     "type": "preprint",
+     "field": "abstractNote",
+     "value": "This article discusses the benefits and challenges of using artificial intelligence (AI) systems to assist lawyers in legal practice. It argues that at present AI systems are not a threat to take over lawyers’ jobs, but rather a powerful tool that can enhance the efficiency and quality of lawyers’ work. However, it also warns that AI systems are not infallible and require professional and responsible supervision by lawyers. The article provides some best practices and recommendations for lawyers to ensure the accuracy and reliability of AI-generated legal work:&lt;br&gt;&lt;br&gt;• AI systems are tools that learn to do legal tasks and do them well at amazing speeds, but they are not (yet) self-aware or capable of reasoning like humans. Lawyers must exercise due diligence and ethical standards when using AI systems to support their legal practice. They should supervise everything the AI does and verify the sources, information, and forms that the AI provides. Lawyers must make judgments as to proving the AI with useful information but still respecting client confidentiality.&lt;br&gt;&lt;br&gt;• AI systems can generate coherent and persuasive legal texts, but they can also make errors such as fabricating sources, misinterpreting facts, or applying the wrong laws and legal sources.&lt;br&gt;&lt;br&gt;• AI systems learn from large datasets of legal and non-legal material on the internet, but they do not understand the meaning or context of what they read or write. The AI systems aim to please, but they lack judgment, wisdom, honesty, and legal experience.&lt;br&gt;&lt;br&gt;• Lawyers should use AI systems to assist them with tasks where they already know what the research, sources, and form of the response should look like. This will help the lawyers to evaluate the results and spot any errors or inconsistencies.&lt;br&gt;&lt;br&gt;• AI systems are very good (and very fast) at performing tasks such as document review, translation, summarization, analysis, explanation, or making connections using facts, datasets, and publicly available legal sources. Lawyers should not ask AI systems to make choices or exercise discretionary judgment. Lawyers should ask the AI to perform tasks that the AI is good at and leave the talents and skills that are uniquely human to human lawyers.&lt;br&gt;&lt;br&gt;The conclusion is that lawyers should embrace AI systems as a powerful tool that can enhance their efficiency and quality of work, but they should also remember the importance of human oversight and judgment in the use of AI for law."
+    },
+    {
+     "key": "EMK9P8T5",
+     "type": "preprint",
+     "field": "abstractNote",
+     "value": "In this paper, ChatGPT, is asked to provide c.150+ paragraphs of detailed prediction and insight into the following overlapping questions, concerning the potential impact of ChatGPT and successor generative AI systems on the evolving practice of law and the legal professions as we know them:&lt;br&gt;&lt;br&gt;• Which are the individual legal business areas where ChatGPT could make a significant/ transformative impact and reduce costs and increase efficiencies?&lt;br&gt;• Where can ChatGPT use its special NLP abilities to assist in legal analysis and advice?&lt;br&gt;• Which are the specific areas where generative AI systems like ChatGPT can revolutionize and improve the legal profession?&lt;br&gt;• How can systems like ChatGPT help ordinary people with legal questions and legal problems?&lt;br&gt;• What is the likely timeframe for ChatGPT and other generative AI systems to transform legal services and the legal profession?&lt;br&gt;• What are the potential implications for new and intending law students?&lt;br&gt;• How will ChatGPT and similar systems impact professional lawyers in future?&lt;br&gt;&lt;br&gt;Some of ChatGPT’s key insights and predictions (see full paper attached for detailed responses and analysis) are as follows:&lt;br&gt;&lt;br&gt;ChatGPT identifies the following key individual legal business areas where it could make a significant/ transformative impact and reduce costs and increase efficiencies: Alternative dispute resolution, Automated billing, Case analysis, Case management, Compliance monitoring, Contract management, Contract review, Document automation, Document review, Discovery and E-discovery, Drafting legal documents, Due diligence, Expertise matching, Intellectual Property and IP management, Legal advice, Legal analytics, Legal chatbots, Legal drafting, Legal document review, Legal education, Legal marketing, Legal research, Litigation support, Natural language processing (NLP), Patent analysis, Predictive analytics, Regulatory compliance, Research, Risk assessment, Training and education, Translation and Virtual assistants.&lt;br&gt;&lt;br&gt;ChatGPT flags up its special NLP abilities to assist in legal analysis and advice, particularly in the following key areas: Contract analysis, Document classification, Document summarization, Due diligence, Legal chatbots, Legal document review, Legal document summarization, Legal drafting, Legal language translation, Legal research, Named entity recognition, Predictive analytics, Regulatory compliance, Sentiment analysis and Topic modelling.&lt;br&gt;&lt;br&gt;On the question of which are the specific areas where generative AI systems like ChatGPT can revolutionize and improve the legal profession, ChatGPT identifies: Accessibility, Accuracy, Collaboration, Cost reduction, Customization, Decision-making, Efficiency, Error-reduction, New business and innovation, Job displacement potential, Legal research, Risk management and Scalability.&lt;br&gt;&lt;br&gt;On the question of how can systems like ChatGPT help ordinary people with legal questions and legal problems, ChatGPT identifies the following areas: 24/7 availability, Automated legal services, Consistency of advice, Contract review, Cost-effectiveness, Court filings, Customization, Document preparation, Education, Empowerment, Faster response times, Language translation, Legal advice, Legal chatbots, Legal education, Legal research, Mediation and dispute resolution, Privacy, Scalability and Simplified language.&lt;br&gt;&lt;br&gt;On the question of the likely timeframe for ChatGPT and other generative AI systems to transform legal services and the legal profession, Chat GPT comments that “It is difficult to predict with certainty, as it will depend on a variety of factors such as technological advancements, regulatory changes, and market demand. [However] There are several reasons to believe that the transformation of legal services through generative AI systems like ChatGPT will happen relatively quickly...the transformation of legal services through generative AI systems is likely to happen relatively quickly, potentially within the next 5-10 years.”&lt;br&gt;&lt;br&gt;On the potential implications for new and intending law students, ChatGPT comments that: “It is essential for students contemplating studying law to be aware of the ability of ChatGPT and generative AI systems to perform legal jobs instead of humans in the future. These technologies are already transforming the legal industry, and their impact is likely to continue to grow in the years to come. Understanding how these systems work and how they can be used in legal practice will be crucial for anyone seeking a career in law, and may also provide a competitive advantage in the job market. By understanding the potential impact of these technologies on the legal industry, students can better prepare themselves for the changing nature of legal work and take advantage of the new opportunities that are emerging as a result of these developments.”&lt;br&gt;&lt;br&gt;On the all-important question for lawyers of how ChatGPT and similar systems will impact professional lawyers in future, ChatGPT comments that: “Generative AI systems like ChatGPT have the potential to significantly impact the demand and payment for professional lawyers in the future. As these systems become more advanced and capable of performing a wider range of legal tasks, it is likely that they will begin to replace some of the work that is currently performed by human lawyers.\"&lt;br&gt;&lt;br&gt;\"One area where this is already happening is in document review. AI systems can review and analyze large volumes of documents much more quickly and accurately than human lawyers, which can save significant time and cost for law firms and their clients. As these systems become more sophisticated, they may also be able to perform other tasks such as legal research and analysis, drafting legal documents, and even providing legal advice.\"&lt;br&gt;&lt;br&gt;\"The impact of generative AI systems on the demand for lawyers will depend on the specific tasks and areas of law that they are able to perform. It is likely that some areas of law will be more heavily impacted than others. For example, areas such as contract law and intellectual property may be more susceptible to automation, while litigation and dispute resolution may be less so.\"&lt;br&gt;&lt;br&gt;\"In terms of payment for professional lawyers, the impact of generative AI systems is also likely to vary depending on the specific tasks and areas of law. In some cases, these systems may allow lawyers to perform their work more quickly and efficiently, which could potentially lead to higher billable hours and increased income. However, if these systems are able to replace some of the work that is currently performed by human lawyers, it could also lead to a reduction in demand for these services and a decrease in fees.\"&lt;br&gt;&lt;br&gt;\"One potential impact of systems like ChatGPT on the legal industry is a reduction in the demand for certain types of legal work that can be automated or performed more efficiently by AI systems. For example, tasks like document review, contract drafting, and legal research may be performed more accurately and quickly by AI systems than by humans, leading to a decrease in the number of lawyers needed to perform these tasks.\"&lt;br&gt;&lt;br&gt;\"It is also possible that the development of AI systems like ChatGPT will lead to changes in the way that legal services are priced and delivered. As these technologies become more common, it is likely that clients will begin to expect lower costs and faster turnaround times for certain types of legal work. This could lead to increased competition among legal service providers, which in turn could put pressure on lawyers to lower their rates or find ways to deliver legal services more efficiently….it is clear that these technologies have the potential to significantly change the legal industry, and that lawyers will need to adapt in order to remain competitive and relevant in a rapidly changing market. This may involve developing new skills and knowledge related to working alongside AI systems, or focusing on areas of law that are less susceptible to automation.”&lt;br&gt;&lt;br&gt;Interestingly, although ChatGPT does discuss practical contract management, IP and evidence, it does not seem to predict inroads being made into academic legal analysis, statutory construction, complex case analysis or the development of new legal thinking and principles, so not into the theoretical domain of law professors and senior lawyers and judges, (although there are additional reasons why there are likely to be knock-on reductions in demand for these specialist lawyers too). &lt;br&gt;&lt;br&gt;But for the vast majority of procedural (routinely turning-the-handle type) practitioner law and practice, ChatGPT seems to be predicting a seismic sectoral shock, a reduction in human-centric legal work, an increase in legal self-help for clients and the public, and a technological transformation in and fundamental repricing and manpower shock for the legal sector within a timeframe of 5-10 years. &lt;br&gt;&lt;br&gt;N.B. This is only one set of predictions, which could prove right or wrong, indeed from an unconscious chatbot machine ChatGPT. However it has the credibility of being made based on both a huge body of knowledge data, and on the consistent rules programmed into ChatGPT itself, and by apparently coherently reasoned responses. Time will soon tell of course..."
+    },
+    {
+     "key": "HAUTMMT6",
+     "type": "preprint",
+     "field": "abstractNote",
+     "value": "This document reports research conducted from December 2022 to August 2024, and in particular, Part I experiments conducted from May 20 to July 12, 2024, and Part II from August 15-27, 2024, on the use of generative AI in legal education and academic support. This study was a cross-sectional, latitudinal, qualitative evaluation of generative AI systems at a certain point in time and at the level of development of each system at that point in time. Although the topic of this study is learning the law, the results and overall approach to using an AI as a personalized learning tutor can be applied to many graduate and undergraduate programs in universities and other levels of education. This paper reports the Part I experiments and their qualitative and comparative findings comparing the performance of public-facing general purpose LLMs—Claude 3.5 Sonnet, Copilot, Gemini 1.5 Pro, and GPT-4o Omni—and a law-specific LLM with a curated legal dataset, Lexis+ AI, and it will reveal which systems performed the best as personalized, self-guided, one-on-one law tutors. It also reports the Part II experiments on using a generative AI system, Claude 3.5 Sonnet, as a personalized one-on-one tutor to improve a novice learner’s performance on objective examinations in subjects the learner has never studied.&lt;br&gt;&lt;br&gt;Although the topic of this study is learning the law, the results and overall approach to using an AI as a personalized learning tutor can be applied to many graduate and undergraduate programs in universities and other levels of education. The advancements in tutoring represented by generative AI systems have increased the pace of adoption of AI technologies to the point that GAI tools can play a significant role in academic support in law schools and universities. Generative AI tools can help a student learn and understand material better, more deeply, and notably faster than traditional means of reading, rereading, notetaking, and outlining. GAI tools, particularly Intelligent Tutoring Systems (ITS), adaptive learning platforms, and AI-augmented tutoring solutions, have shown promise in enhancing student engagement, improving learning outcomes, and providing tailored academic support. AI can explain, elaborate on, and summarize course material. It can write and administer formative assessments, and, if desired, it can write self-guided summative evaluations and grade them. AI can translate material into and from foreign languages with a fidelity to context, usage, and nuances of meaning not previously seen in machine learning or neural network translation services. AI also can visualize material using the tools of visual generative AI that literally paint pictures of the subjects and situations in the material that can overcome students’ literacy issues both in the native language of the communication and in the students’ own native languages."
+    },
+    {
+     "key": "267FWQVD",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "AbstractInformation technology is so ubiquitous and AI’s progress so inspiring that also legal professionals experience its benefits and have high expectations. At the same time, the powers of AI have been rising so strongly that it is no longer obvious that AI applications (whether in the law or elsewhere) help promoting a good society; in fact they are sometimes harmful. Hence many argue that safeguards are needed for AI to be trustworthy, social, responsible, humane, ethical. In short: AI should be good for us. But how to establish proper safeguards for AI? One strong answer readily available is: consider the problems and solutions studied in AI &amp; Law. AI &amp; Law has worked on the design of social, explainable, responsible AI aligned with human values for decades already, AI &amp; Law addresses the hardest problems across the breadth of AI (in reasoning, knowledge, learning and language), and AI &amp; Law inspires new solutions (argumentation, schemes and norms, rules and cases, interpretation). It is argued that the study of AI as Law supports the development of an AI that is good for us, making AI &amp; Law more relevant than ever."
+    },
+    {
+     "key": "FIZTW4KB",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "AbstractDuring the past decade, a small but rapidly growing number of Law&amp;Tech scholars have been applying algorithmic methods in their legal research. This Article does it too, for the sake of saving disclosure regulation failure: a normative strategy that has long been considered dead by legal scholars, but conspicuously abused by rule-makers. Existing proposals to revive disclosure duties, however, either focus on the industry policies (e.g. seeking to reduce consumers’ costs of reading) or on rulemaking (e.g. by simplifying linguistic intricacies). But failure may well depend on both. Therefore, this Article develops a `comprehensive approach', suggesting to use computational tools to cope with linguistic and behavioral failures at both the enactment and implementation phases of disclosure duties, thus filling a void in the Law &amp; Tech scholarship. Specifically, it outlines how algorithmic tools can be used in a holistic manner to address the many failures of disclosures from the rulemaking in parliament to consumer screens. It suggests a multi-layered design where lawmakers deploy three tools in order to produce optimal disclosure rules: machine learning, natural language processing, and behavioral experimentation through regulatory sandboxes. To clarify how and why these tasks should be performed, disclosures in the contexts of online contract terms and privacy online are taken as examples. Because algorithmic rulemaking is frequently met with well-justified skepticism, problems of its compatibility with legitimacy, efficacy and proportionality are also discussed."
+    }
+   ]
+  },
+  "dil_yanlis_tr": {
+   "sayi": 12,
+   "aciklama": "Türkçe başlık ama dil alanı en / en-US",
+   "ornekler": [
+    {
+     "key": "5BYUZYNM",
+     "type": "book",
+     "field": "language",
+     "value": "en-US",
+     "note": "Maden İdare Hukukumuzun Ana İlkeleri ve Temel Müesseseleri"
+    },
+    {
+     "key": "7NKN6JW3",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Koloniden Devlete: Yerleşim Koloniciliği Ekseninde Kuzey Amerika’daki İngiliz Kolonilerinin Devlet Haline Gelme Süreci"
+    },
+    {
+     "key": "N2ENABVC",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Yapay Zekâ ve Uluslararası Hukukun Geleceği"
+    },
+    {
+     "key": "8PJFX33E",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Toplumun ve Bireyin Bilgi Edinme Hakkı"
+    },
+    {
+     "key": "Z6L7XUDX",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Çevre Sorunları ve İnsan Hakları İlişkisi"
+    },
+    {
+     "key": "UPPCQMZK",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "İklim Değişikliğiyle Mücadelede Bir Araç Olarak Uluslararası İnsan Hakları Hukuku"
+    },
+    {
+     "key": "L68PLEZ8",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "en",
+     "note": "Ormancılıkta Kamu Yararı"
+    },
+    {
+     "key": "43C6M38G",
+     "type": "bookSection",
+     "field": "language",
+     "value": "en",
+     "note": "\"DÖNGÜSEL EKONOMİ VE SÜRDÜRÜLEBİLİR KALKINMA: MEVCUT DURUM VE YAPILMASI GEREKENLER\" | Request PDF"
+    },
+    {
+     "key": "TNGGJEQS",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "scheme=\"ISO639-1\"",
+     "note": "Politika Yapım Sürecinde Kullanılan Yeni Bir Yöntem: Düzenleyici Etki Analizi"
+    },
+    {
+     "key": "CGIJKXCF",
+     "type": "journalArticle",
+     "field": "language",
+     "value": "English",
+     "note": "An Evaluation in terms of Public Interest on Privatization and Regeneration of Public Lands: İstanbul"
+    }
+   ]
+  },
+  "kopuk_kelime": {
+   "sayi": 12,
+   "aciklama": "Tire + boşluk: hepsi meşru Almanca/Fince bileşik (Dosier- und); Türkçede kopuk kelime bulunmadı",
+   "ornekler": [
+    {
+     "key": "98ASGSTP",
+     "type": "interview",
+     "field": "title",
+     "value": "Gasus Dosier- und Fördertechnik GmbH v. Hollanda"
+    },
+    {
+     "key": "LLACBLV7",
+     "type": "journalArticle",
+     "field": "publicationTitle",
+     "value": "Zeitschrift für Friedens- und Konfliktforschung"
+    },
+    {
+     "key": "B3NR8ZAC",
+     "type": "book",
+     "field": "publisher",
+     "value": "työ- ja elinkeinoministeriö"
+    },
+    {
+     "key": "7LR4CCNL",
+     "type": "report",
+     "field": "title",
+     "value": "Strategien zur Reduktion oder Verhinderung von Tabak- und Nikotinkonsum in ausgewählten Ländern"
+    },
+    {
+     "key": "BHIGNVVN",
+     "type": "report",
+     "field": "title",
+     "value": "Menschenwürde auch bei Sozial- und Ordnungsamtsbestattungen"
+    },
+    {
+     "key": "K3IST6UX",
+     "type": "bookSection",
+     "field": "title",
+     "value": "Religions- und staatskirchenrechtliche Aspekte des Friedhofs- und Bestattungswesens"
+    },
+    {
+     "key": "K3IST6UX",
+     "type": "bookSection",
+     "field": "bookTitle",
+     "value": "Friedhofs- und Bestattungsrecht"
+    },
+    {
+     "key": "WG2QJGGA",
+     "type": "book",
+     "field": "title",
+     "value": "Friedhofs- und Bestattungsrecht"
+    },
+    {
+     "key": "6B2DU98E",
+     "type": "journalArticle",
+     "field": "publicationTitle",
+     "value": "Städte- und Gemeinderat"
+    },
+    {
+     "key": "KC2JAV9D",
+     "type": "book",
+     "field": "title",
+     "value": "Niedersächsisches Gesetz über das Friedhofs- und Bestattungswesen – Kommentar"
+    }
+   ]
+  },
+  "bagli_harf": {
+   "sayi": 11,
+   "aciklama": "Bağlı harfler (ﬁ ﬂ) özetlerde",
+   "ornekler": [
+    {
+     "key": "YPX5LGCJ",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "In 2015, a Pakistani court in the case of Leghari v. Federation of Pakistan made history by accepting arguments that governmental failures to address climate change adequately violated petitioners’ rights. This case forms part of an emerging body of pending or decided climate change-related lawsuits that incorporate rights-based arguments in several countries, including the Netherlands, the Philippines, Austria, South Africa, and the United States (US). These decisions align with efforts to recognize the human rights dimensions of climate change, which received important endorsement in the Paris Agreement. The decisions also represent a signiﬁcant milestone in climate change litigation. Although there have been hundreds of climatebased cases around the world over the past two decades – especially in the US – past and much of the ongoing litigation focuses primarily on statutory interpretation avenues. Previous efforts to bring human rights cases have also failed to achieve formal success. The new cases demonstrate an increasing trend for petitioners to employ rights claims in climate change lawsuits, as well as a growing receptivity of courts to this framing. This ‘rights turn’ could serve as a model or inspiration for rights-based litigation in other jurisdictions, especially those with similarly structured law and court access."
+    },
+    {
+     "key": "65LZLLLT",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "It is rare to ﬁnd an environmental law development or ‘innovation’ announced or celebrated without some discussion of its transferability. Discourses of diffusion are becoming increasingly central to the way that we develop, communicate and frame environmental law ideas. And yet, this signiﬁcant dimension of environmental law practice seems to have outgrown existing conceptual scaffolding and scholarly vocabularies. The concept, and intentionally unfamiliar terminology, of ‘contagious lawmaking’ creates a space for both ﬂeshing out, and problematizing, the phenomenon of the dynamic and multi-directional transfer of environmental law ideas. This article sets the stage for further study of the global diffusion of environmental law. It does so by identifying the phenomenon of contagious lawmaking and by making explicit some of the terminological and methodological challenges implicated in its study. The article draws on narratives of the ‘global’ diffusion of environmental impact assessment, cited as ‘the most widely adopted environmental management tool in the world’."
+    },
+    {
+     "key": "KVUMN6YY",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "This article examines the role human rights instruments play when states seek to adopt regulatory initiatives in the name of addressing climate change. The article argues that a series of important restrictions exist. Governments responding to climate change need to take into account existing human rights. This observation is particularly relevant for countries implementing Reduction of Emissions from Deforestation and Degradation (REDD) projects and for countries taking part in Clean Development Mechanism (CDM) projects under the Kyoto Protocol. The article likewise argues that special human rights obligations arise in relation to the risks associated with climate change. These place on states a responsibility to secure risk assessment and risk communication while taking steps to mitigate climate change-associated risks. While the article considers these requirements to constitute an absolute minimum, it is argued that they can oﬀer a way of securing that national governments are accountable when it comes to climate change responses. On the other hand, it will be shown that these human rights restrictions will sometimes have the potential to run counter to the adoption of eﬀective climate change responses."
+    },
+    {
+     "key": "7F86SWAH",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Agriculture and mining are two basic sectors of the economy that are producing raw materials. It is necessary to have a mining license in order to work out ores which are fully owned by the state. The community of rights and obligations arising from the law and / or the mining license in miner’s favour are called mineral rights. The person who has the mineral rights may work out ores personally or can also leave the use of the mineral rights to a third party with a royalty contract. On the other hand, it is possible that the mineral rights can be transferred to a third party by mineral rights transfer contract. However, these two diﬀerent contracts are intermingled in theory and practice. For this reason, it is aimed to determine the boundary between these two contracts in this study."
+    },
+    {
+     "key": "NCLT4BH7",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "This article evaluates the potential role of the European Court of Human Rights in adjudicating cases related to climate change. The Court is currently facing its ﬁrst four climate applications, and addressing them is more than a routine process of applying existing case law. These cases speak to fundamental questions regarding the Court’s engagement with systemic problems, politically and technically challenging issues, and its own subsidiarity to state decision-making. Looking at recent environmental case law, this article identiﬁes and discusses various possible futures for the Court’s approach to climate cases, including from admissibility, substantive, and remedial perspectives. It also considers the tendencies and factors inﬂuencing the Court’s potential response to climate claims. This includes its docket crisis, its evolution towards a ‘procedural turn’, and its approach to the balancing of competing interests and its selection of the appropriate level of scrutiny. We conclude that the Court must contribute to the search for a modus vivendi that permits competing interests to coexist and ensures a liveable future. This is not only a question of ensuring future enjoyment of human rights, but also of safeguarding the Court’s own ability to carry out its role and to thrive into the future."
+    },
+    {
+     "key": "MRYJ5GCN",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Socio-environmental conﬂicts are situations that exemplify human rights transgressions caused by extractive activities. These are present in developing countries where extractivism, imperialism, and colonialism paradigms prevail. In the context of Mexico, criminalization, violence, and the absence of rule of law promote these conﬂicts, frequently aggravated by involvement with private interests. In the last 20 years, the relationship between human rights in the mining sector and its impact on the environment has been a critical research subject. This paper aims to carry out a systematic review to analyze human rights transgressions related to the mining industry’s impact in Mexico, and identify factors causing socio-environmental conﬂicts. The current study shows a systematic analysis based on the PRISMA (Preferred Reporting Items for Systematic Reviews and Meta-Analyses) methodology. This method contributed to the collection of references that describe conﬂicts due to human rights transgressions and environmental damage in mining areas in Mexico. Human rights transgressions caused by mining in a Mexican context demonstrate the inability of the state to stop the increase in socio-environmental conﬂicts and its lack of concern towards preventing damage to the environment."
+    },
+    {
+     "key": "3G4HDHGL",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "The minerals industry interacts with water in many different ways that can affect the environment and communities. In the context of emerging debates about the status of access to water as a distinct human right and the mining industry’s engagement with human rights discourses, this article highlights points of disconnection between technical, scientiﬁc and engineering-based approaches to water management on the one hand and human rights perspectives on the other. We argue that greater understanding and emphasis on the intersecting nature of water and human rights is important from a sustainable development perspective. Better connections will increase the likelihood that mining companies will respect human rights, avoid or mitigate adverse social and environmental risks that occur through their interaction with water and collaboratively identify water-related development opportunities. Discursive, organisational, political and conceptual barriers of these various disconnects are considered and strategies for strengthening points of connection provided."
+    },
+    {
+     "key": "B9SG7WW6",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "The production of lithium-ion batteries (LIBs) has increased in capacity by almost eight fold in the past ten years due to growing demand for consumer electronics and electric-drive vehicles. The social and environmental implications of increased lithium demand is signiﬁcant not only in the context of policy initiatives that are incentivizing electric vehicle adoption, but also because electric vehicle adoption is part of the vision of sustainability transitions that are being put forth in a variety of contexts. Any evidence that suggests that the externalities of the technology uptake are not being addressed would directly counter the intent of such initiatives. For LIBs to be fully sustainable, it is imperative that impacts along life cycle stages be adequately addressed, including lithium mineral extraction. This study investigates how the scope and focus of research in this area are changing and what drives their evolution. Based on a bibliometric analysis, we evaluate the state of research on the issues of lithium mineral extraction, use, and their impacts. The article identiﬁes research hotspots and emerging research agendas by mapping the evolution of research focus and themes. Our analysis ﬁnds that research on the socio-environmental impacts of lithium extraction at local level has been very limited. We discuss some research directions to address the knowledge gaps in terms of speciﬁc research topics, methodologies, and broader system perspectives."
+    },
+    {
+     "key": "R6TA62Q9",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "This article discusses the impact of the rule of law on the resilience of societies for governing complex socio-ecological changes. It concludes that the notions of the rule of law and legal certainty have changed, and that they can be compatible with the use of framework laws of a rather open-textured character, provided certain legal safeguards, such as the right to a legal review, are at hand. While legal certainty is an important virtue of law, it does not as such necessarily prevent adequate ﬂexibility in administrative decision-making concerning health, the environment or the use of natural resources. The article also considers to what extent certain established administrative means of control in the ﬁeld of environment protection and the use of natural resources match the ﬁndings and proposals, e.g. on ﬂexibility and adaptability, provided by resilience research. Finally the article discusses the impact of state sovereignty on governance of large-scale socio-ecological changes, with reach across state borders. It concludes that, despite some attempts of softening the impact of state borders in transboundary environmental decision-making and management, state sovereignty still hampers multilevel governance and management of resources in such contexts."
+    },
+    {
+     "key": "SRDDR99K",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Achieving a “win–win” situation regarding economic growth and environmental protection has become a common goal for sustainable development in all countries around the world. As the world’s largest developing country and the second largest economy, China has been striving to maintain economic growth while improving environmental quality to achieve its sustainable development goals. Applying the decoupling approach, a model widely used to quantify the relationship between the environment and the economy, this study analyzed the relationship between the economy and the environment, examining the decoupling performance of economic growth and environmental impacts in 30 Chinese provinces, autonomous regions, and municipalities to investigate whether economic growth and environmental protection have achieved a “win–win” situation. Nighttime light (NTL) data were used to measure the performance of economic growth. In addition, an environmental pressure index (EPI) assessment framework covering 6 primary and 11 secondary indicators was constructed to measure the environmental quality of China over time. First, NTL data proved to be a valid data source for assessing decoupling performance; second, environmental pressure at both the national and provincial levels signiﬁcantly decreased during the study period; third, the relationship between the economy and the environment has been further improved, and economic growth and environmental protection have achieved a “win–win” situation. These ﬁndings offer an in-depth analysis of the decoupling of the economy and the environment in China and serve as a guide for future implementation strategies for sustainable development in various regions."
+    }
+   ]
+  },
+  "tamami_buyuk_dergi": {
+   "sayi": 9,
+   "aciklama": "Dergi/yayıncı adı tamamen büyük; kısaltmalar (İSOD, YÜHFD, MDPI, OECD) korunmalı",
+   "ornekler": [
+    {
+     "key": "ZCGHZ7AX",
+     "type": "journalArticle",
+     "field": "publicationTitle",
+     "value": "CLIMATE CHANGE LITIGATION"
+    },
+    {
+     "key": "LRC8SP7D",
+     "type": "journalArticle",
+     "field": "publisher",
+     "value": "T.C. ANAYASA MAHKEMESİ"
+    },
+    {
+     "key": "2SVSWESQ",
+     "type": "journalArticle",
+     "field": "series",
+     "value": "EVIDENCE-BASED POLICY"
+    },
+    {
+     "key": "UILADSQX",
+     "type": "journalArticle",
+     "field": "publisher",
+     "value": "T.C. ANAYASA MAHKEMESİ"
+    },
+    {
+     "key": "TM5KYTJZ",
+     "type": "journalArticle",
+     "field": "publisher",
+     "value": "BİLGİTOY BİLGİ, BİLİM, EĞİTİM,ARAŞTIRMA, GELİŞTİRME VE STRATEJİ DERNEĞİ"
+    },
+    {
+     "key": "C94K6JII",
+     "type": "journalArticle",
+     "field": "publisher",
+     "value": "BİLGİTOY BİLGİ, BİLİM, EĞİTİM,ARAŞTIRMA, GELİŞTİRME VE STRATEJİ DERNEĞİ"
+    },
+    {
+     "key": "CGS472I5",
+     "type": "journalArticle",
+     "field": "publicationTitle",
+     "value": "TÜRK COĞRAFYA DERGİSİ"
+    },
+    {
+     "key": "AGLYGF5E",
+     "type": "journalArticle",
+     "field": "publisher",
+     "value": "BİLGİTOY BİLGİ, BİLİM, EĞİTİM,ARAŞTIRMA, GELİŞTİRME VE STRATEJİ DERNEĞİ"
+    },
+    {
+     "key": "MJWS4ZH5",
+     "type": "journalArticle",
+     "field": "publisher",
+     "value": "T.C. ANAYASA MAHKEMESİ"
+    }
+   ]
+  },
+  "yazar_unvan": {
+   "sayi": 8,
+   "aciklama": "Yazar adında unvan (Dr, Arş Gör, Av)",
+   "ornekler": [
+    {
+     "key": "6UCWI8J3",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Dr Murat Aydo"
+    },
+    {
+     "key": "KKWVSRW8",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Dr Özge Didem Boulanger"
+    },
+    {
+     "key": "DGEZ6U3P",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Arş Gör Ayla Çalişkan"
+    },
+    {
+     "key": "8CJAYS5J",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Dr A Füsun Arsava"
+    },
+    {
+     "key": "84MCQL8A",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Dr Abdulkadir Pekel"
+    },
+    {
+     "key": "EJUWQGAD",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Dr Aydın Turhan"
+    },
+    {
+     "key": "EWXUN8A4",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Av Müslüm Fincan"
+    },
+    {
+     "key": "FPZSW67Q",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "Av Müslüm Fincan"
+    }
+   ]
+  },
+  "gorunmez_karakter": {
+   "sayi": 4,
+   "aciklama": "Sıfır genişlikli boşluk vb.",
+   "ornekler": [
+    {
+     "key": "M7Q2NEQ6",
+     "type": "webpage",
+     "field": "title",
+     "value": "​​​​​​​Kirazlı'da tarıma ve zeytinciliğe darbe vuracak taş ocağına mahkeme freni"
+    },
+    {
+     "key": "4GGRMSPD",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "Çevrenin korunması ve geliştirilmesini amaç edinen çevre hakkına ilk kez, 1972 tarihli Birleşmiş Milletler Stockholm Konferansı sonrası ortaya konan Bildiride, insanın kendisine onurlu ve iyi bir hayat sürmeye olanak veren nitelikli bir çevrede yaşama hakkına sahip olduğunun öngörülmesi suretiyle yer verilmiştir. Dayanışma hakları olarak da adlandırılan üçüncü kuşak haklar arasında yer alan çevre hakkı, Türk Anayasasının 56. maddesinde ekonomik ve sosyal haklar başlığı altında düzenlenmiştir. Anayasada 2010 yılında yapılan değişiklikle Anayasada ve Avrupa İnsan Hakları Sözleşmesi’nde düzenlenen hakların ihlal edildiği iddiasıyla Anayasa Mahkemesine bireysel başvuru yoluyla başvurulması mümkündür. Her ne kadar çevre hakkı Avrupa İnsan Hakları Sözleşmesi’nde açıkça düzenlenmemişse de, Avrupa İnsan Hakları Mahkemesi, içtihat yoluyla çevre hakkını Sözleşme içerisinde düzenlenen diğer haklarla ilişkilendirerek çevrenin korunmasını güvence altına almaktadır. Anayasa Mahkemesi de çevre hakkının korunmasına yönelik önüne gelen başvuruları, sağlıklı bir çevrede yaşamayı Anayasanın 17. maddesinde düzenlenen maddi ve manevi varlığın geliştirilmesi hakkının bir parçası olarak değerlendirmek suretiyle incelemektedir. \n          , \n            ﻿The right to environment, which aims to protect and improve the environment, was first mentioned in the Declaration issued after the United Nations Conference in Stockholm in 1972 by stipulating that a person has the right to live in a decent environment which allows him to live a dignified and good life. The right to environment, which is also referred to as the third generation rights, also called solidarity rights, is regulated under the heading of economic and social rights in the Article 56 of the Turkish Constitution. The amendment to the Turkish Constitution in 2010 made it possible for everyone to apply to the Constitutional Court by individual application on the grounds that one of the fundamental rights and freedoms within the scope of the European Convention on Human Rights which are guaranteed by the Constitution has been violated by public authorities. Although the right to the environment is not explicitly regulated in the European Convention on Human Rights, the European Court of Human Rights guarantees the protection of the environment by assessing the right to the environment with other rights regulated by the Convention. The Constitutional Court examines the applications for the protection of the right to environment by evaluating it as a part of the right to life and the right to protect and improve someone’s corporeal and spiritual existence regulated in Article 17 of the Constitution."
+    },
+    {
+     "key": "UMP7EQN5",
+     "type": "journalArticle",
+     "field": "abstractNote",
+     "value": "With the judicialization of politics and the creation of new environmental institutions, environmental litigation is now an increasingly common dimension of socioenvironmental conflicts. This study examines this pattern in the context of recently created environmental courts in Chile, focusing on lithium and copper mining litigation in the Atacama salt flats of the Antofagasta Region. I argue that while the courts are formally open to a wide variety of legal complaints, community groups face an uphill battle when using legal mobilization strategies due to the underlying political and economic power of the mining industry in northern Chile. Nevertheless, environmental litigation matters for environmental policy implementation because it reveals conflicts over environmental compliance, highlighting gaps between environmental laws on the books and actual practices. In this sense, environmental litigation activates environmental regulations and can provide communities with greater leverage to demand stronger enforcement, even as the long-term implications of judicial rulings for addressing current and past harms remain to be seen. The paper is based on documents from the Chilean environmental courts database, media sources, and twenty-two semi-structured interviews with activists and community leaders, lawyers, sci­ entists, and government officials to better interpret and contextualize the court archival data."
+    },
+    {
+     "key": "SNED3ZZH",
+     "type": "newspaperArticle",
+     "field": "abstractNote",
+     "value": "Argentine President Javier Milei generated both excitement and fear last month when he announced a congressional bill to create “non-human corporations” run by AI, but the companies would actually require ​human involvement."
+    }
+   ]
+  },
+  "sondaki_nokta": {
+   "sayi": 3,
+   "aciklama": "Başlık sonunda nokta",
+   "ornekler": [
+    {
+     "key": "DDBLNGZR",
+     "type": "interview",
+     "field": "title",
+     "value": "KARIŞIK NOTLARIM, DÜŞÜNCELERİM VS."
+    },
+    {
+     "key": "U98VUDRX",
+     "type": "interview",
+     "field": "title",
+     "value": "Ledyayeva, Dobrokhotova, Zolotareva ve Romashina v. Rusya, B.N. 53157/99, 53247/99, 53695/00 ve 56850/00."
+    },
+    {
+     "key": "QIFKDBXQ",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "İDARİ YARGI KARAR GEREKLERİNİN YERİNE GETİRİLMEMESİ VEYA GEREĞİ GİBİ YERİNE GETİRİLMEMESİ, BİREY İÇİN, ONUR KIRICI İDARİ MUAMELE OLMAKTADIR."
+    }
+   ]
+  },
+  "tamami_buyuk_baslik_diger": {
+   "sayi": 2,
+   "aciklama": "İngilizce başlık tamamen büyük",
+   "ornekler": [
+    {
+     "key": "UU5FHC5A",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "THE SCIENCE OF GETTING RICH"
+    },
+    {
+     "key": "MIVESFGY",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "HUMAN RIGHTS APPROACH TO ENVIRONMENTAL PROTECTION"
+    }
+   ]
+  },
+  "yazar_virgul": {
+   "sayi": 2,
+   "aciklama": "Tek alana 'Soyad, Ad' yazılmış yazar",
+   "ornekler": [
+    {
+     "key": "KBGY6EX4",
+     "type": "conferencePaper",
+     "field": "creator",
+     "value": "Yılmaz Turgut, Nükhet"
+    },
+    {
+     "key": "W3JVQP6W",
+     "type": "journalArticle",
+     "field": "creator",
+     "value": "John C., IV Coates"
+    }
+   ]
+  },
+  "yazar_tek_alan": {
+   "sayi": 1,
+   "aciklama": "Tek alan modunda kurum adı (meşru)",
+   "ornekler": [
+    {
+     "key": "SX9BKJ7K",
+     "type": "book",
+     "field": "creator",
+     "value": "Muğla Büyükşehir Belediyesi"
+    }
+   ]
+  },
+  "dergipark_baslik_oneki": {
+   "sayi": 1,
+   "aciklama": "DergiPark sayfa başlığından gelen 'Dergi » Makale » ' öneki",
+   "ornekler": [
+    {
+     "key": "LIH5268E",
+     "type": "journalArticle",
+     "field": "title",
+     "value": "Türkiye Adalet Akademisi Dergisi » Makale » GENEL VERİ KORUMA İLKELERİNİN YAPAY ZEKÂ KARŞISINDA UYGULANABİLİRLİĞİ SORUNU"
+    }
+   ]
+  }
+ },
+ "dil_alani_dagilimi_turkce_adaylar": {
+  "(boş)": 1054,
+  "tr": 1217,
+  "tr-TR": 64,
+  "en": 104,
+  "scheme=\"ISO639-1\"": 5,
+  "en-US": 1,
+  "TR": 1,
+  "tur": 3,
+  "Turkish": 3,
+  "English": 1
+ },
+ "dil_alani_dagilimi_tum": {
+  "(boş)": 1846,
+  "tr": 1217,
+  "en": 635,
+  "tr-TR": 64,
+  "de": 53,
+  "eng": 16,
+  "en-US": 13,
+  "en-GB": 5,
+  "scheme=\"ISO639-1\"": 5,
+  "tur": 3,
+  "Turkish": 3,
+  "en_US": 2,
+  "English": 2,
+  "TR": 1,
+  "en-EUROPE": 1,
+  "EN": 1,
+  "en-AU": 1,
+  "nl": 1,
+  "fr": 1
+ }
+}

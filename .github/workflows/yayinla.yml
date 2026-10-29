@@ -1,0 +1,44 @@
+name: Test et ve yayınla
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # v* etiketinde GitHub sürümü oluşturmak için
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Kural testleri (Node, bağımlılıksız)
+        run: node testler/calistir.js
+      - name: Zotero eklentisi (xpi)
+        run: python paketleme/xpi_yap.py metadata-duzelt.xpi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: metadata-duzelt
+          path: metadata-duzelt.xpi
+      - name: GitHub sürümü (v* etiketi)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Zotero, eklenti güncellemelerini en son sürümdeki updates.json'dan bulur
+          ver=$(python -c "import json; print(json.load(open('zotero-eklenti/manifest.json'))['version'])")
+          [ "v$ver" = "$GITHUB_REF_NAME" ] || { echo "etiket $GITHUB_REF_NAME, eklenti sürümü $ver: aynı olmalı"; exit 1; }
+          python - <<PY
+          import json
+          link = "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/metadata-duzelt.xpi"
+          json.dump({"addons": {"metadataduzelt@aykut.local": {"updates": [{"version": "$ver", "update_link": link,
+                     "applications": {"zotero": {"strict_min_version": "7.0"}}}]}}}, open("updates.json", "w"), indent=2)
+          PY
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "Metadata Düzelt $GITHUB_REF_NAME" \
+            --notes "Zotero 7 eklentisi: metadata-duzelt.xpi (Zotero › Tools › Plugins › ⚙ › Install Plugin From File…). Bir kez kurulduktan sonra kendiliğinden güncellenir." \
+            metadata-duzelt.xpi updates.json

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="tr">
+<head>
+	<meta charset="utf-8"/>
+	<title>Metadata Düzelt — önizleme</title>
+	<style>
+		:root { color-scheme: light dark; --bg: #fff; --fg: #1b1b1b; --muted: #6b6b6b; --line: #ddd; --head: #f3f3f3; --old: #b3261e; --new: #1a7f37; --orta: #b26a00; --sel: #e8f0fe; }
+		@media (prefers-color-scheme: dark) { :root { --bg: #1e1e1e; --fg: #e6e6e6; --muted: #9a9a9a; --line: #3a3a3a; --head: #2a2a2a; --old: #ff8a80; --new: #7ee787; --orta: #ffb74d; --sel: #26324a; } }
+		html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px -apple-system, "Segoe UI", system-ui, sans-serif; }
+		body { display: flex; flex-direction: column; }
+		header { padding: 10px 14px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+		header h1 { font-size: 14px; margin: 0; flex: 1; }
+		header button, footer button { font: inherit; padding: 4px 10px; }
+		main { flex: 1; overflow: auto; }
+		table { border-collapse: collapse; width: 100%; }
+		th { position: sticky; top: 0; background: var(--head); text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); font-weight: 600; z-index: 1; }
+		td { padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+		tr.kayit td { background: var(--head); font-weight: 600; padding-top: 8px; }
+		tr.kayit td span.link { color: #3b6fd6; cursor: pointer; font-weight: normal; margin-left: 8px; font-size: 12px; }
+		tr.satir.secili { background: var(--sel); }
+		td.eski { color: var(--old); }
+		td.yeni { color: var(--new); }
+		td.alan { white-space: nowrap; color: var(--muted); }
+		td.aciklama { color: var(--muted); font-size: 12px; max-width: 260px; }
+		.guven { display: inline-block; font-size: 11px; padding: 0 5px; border-radius: 8px; border: 1px solid var(--line); margin-left: 4px; }
+		.guven.orta { color: var(--orta); border-color: var(--orta); }
+		.guven.yuksek { color: var(--new); border-color: var(--new); }
+		.uyari { padding: 8px 14px; background: rgba(255, 183, 77, 0.15); border-bottom: 1px solid var(--line); font-size: 12px; max-height: 110px; overflow: auto; }
+		footer { padding: 10px 14px; border-top: 1px solid var(--line); display: flex; gap: 10px; align-items: center; }
+		footer .bosluk { flex: 1; color: var(--muted); font-size: 12px; }
+		input[type=checkbox] { margin: 0; }
+	</style>
+</head>
+<body>
+	<header>
+		<h1 id="baslik">Önizleme</h1>
+		<button id="tumu">Tümünü seç</button>
+		<button id="yuksek">Yalnızca yüksek güvenlileri seç</button>
+		<button id="hicbiri">Hiçbirini seçme</button>
+	</header>
+	<div id="uyarilar" class="uyari" hidden="hidden"></div>
+	<main>
+		<table>
+			<thead>
+				<tr><th style="width:26px"></th><th>Alan</th><th>Eski</th><th>Yeni</th><th>Kural</th></tr>
+			</thead>
+			<tbody id="govde"></tbody>
+		</table>
+	</main>
+	<footer>
+		<span class="bosluk" id="ozet"></span>
+		<button id="vazgec">Vazgeç</button>
+		<button id="uygula" style="font-weight:600">Seçilenleri uygula</button>
+	</footer>
+	<script src="chrome://metadataduzelt/content/onizleme.js"></script>
+</body>
+</html>

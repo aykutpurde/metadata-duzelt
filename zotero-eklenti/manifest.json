@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "Metadata Düzelt",
+  "version": "0.1.0",
+  "description": "Zotero kayıtlarındaki metadata hatalarını (bozuk karakter, büyük/küçük harf, yazar adı, dil alanı) özellikle Türkçe eserler için önizlemeli ve geri alınabilir biçimde düzeltir.",
+  "author": "Aykut",
+  "icons": {
+    "48": "icon48.png",
+    "96": "icon96.png"
+  },
+  "applications": {
+    "zotero": {
+      "id": "metadataduzelt@aykut.local",
+      "update_url": "https://github.com/aykutpurde/metadata-duzelt/releases/latest/download/updates.json",
+      "strict_min_version": "7.0",
+      "strict_max_version": "10.0.*"
+    }
+  }
+}
