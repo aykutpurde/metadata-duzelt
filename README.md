@@ -4,6 +4,13 @@ Zotero eklentisi. PDF'ten ya da DOI ile eklenen kayıtlarda, özellikle **Türk�
 metadata hatalarını bulur ve **önizlemeli, geri alınabilir** biçimde düzeltir. Tamamen Zotero içinde
 JavaScript; ek program gerektirmez, hiçbir veri dışarı gönderilmez.
 
+> **English:** A Zotero plugin that finds and fixes common metadata errors, especially in Turkish
+> records: mojibake and broken characters, ALL-CAPS or lowercase titles (Turkish title case per TDK
+> rules, with proper `I/ı` and `İ/i` handling), author names with academic titles, and missing or wrong
+> language fields. Every change is shown in a preview first and can be undone. Runs entirely inside
+> Zotero; nothing is sent anywhere. Install `metadata-duzelt.xpi` from the
+> [latest release](https://github.com/aykutpurde/metadata-duzelt/releases/latest).
+
 ## Ne düzeltir
 
 | Grup | Örnek | Güven |
