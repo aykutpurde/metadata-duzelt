@@ -37,8 +37,8 @@ jobs:
           import json
           link = "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/metadata-duzelt.xpi"
           json.dump({"addons": {"metadataduzelt@aykut.local": {"updates": [{"version": "$ver", "update_link": link,
-                     "applications": {"zotero": {"strict_min_version": "7.0"}}}]}}}, open("updates.json", "w"), indent=2)
+                     "applications": {"zotero": {"strict_min_version": "8.0"}}}]}}}, open("updates.json", "w"), indent=2)
           PY
           gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --title "Metadata Düzelt $GITHUB_REF_NAME" \
-            --notes "Zotero 7 eklentisi: metadata-duzelt.xpi (Zotero › Tools › Plugins › ⚙ › Install Plugin From File…). Bir kez kurulduktan sonra kendiliğinden güncellenir." \
+            --notes "Zotero eklentisi: metadata-duzelt.xpi (Zotero › Tools › Plugins › ⚙ › Install Plugin From File…). Bir kez kurulduktan sonra kendiliğinden güncellenir." \
             metadata-duzelt.xpi updates.json

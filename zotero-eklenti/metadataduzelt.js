@@ -1,4 +1,4 @@
-/* Metadata Düzelt — Zotero 7 eklentisi.
+/* Metadata Düzelt — Zotero eklentisi.
  *
  * Kayıtlardaki metadata hatalarını (bozuk karakter, büyük/küçük harf, yazar adı, dil alanı) kurallar/
  * altındaki saf fonksiyonlarla bulur, önizleme penceresinde satır satır onaylatır, onaylananları

@@ -1,6 +1,6 @@
 # Metadata Düzelt
 
-Zotero 7 eklentisi. PDF'ten ya da DOI ile eklenen kayıtlarda, özellikle **Türkçe eserlerde** sık görülen
+Zotero eklentisi. PDF'ten ya da DOI ile eklenen kayıtlarda, özellikle **Türkçe eserlerde** sık görülen
 metadata hatalarını bulur ve **önizlemeli, geri alınabilir** biçimde düzeltir. Tamamen Zotero içinde
 JavaScript; ek program gerektirmez, hiçbir veri dışarı gönderilmez.
 
@@ -57,7 +57,7 @@ kendiliğinden güncellenir.
 
 ```
 zotero-eklenti/
-  bootstrap.js        Zotero 7 yaşam döngüsü, chrome:// kaydı
+  bootstrap.js        Zotero yaşam döngüsü, chrome:// kaydı
   metadataduzelt.js   menüler, sütun, önizleme, yazma, geri alma, otomatik mod
   kurallar/           saf kurallar (Zotero'suz, Node'da çalışır): dil, karakter, tire, harf, yazar, motor
   content/            önizleme penceresi (XHTML + JS)
