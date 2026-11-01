@@ -32,6 +32,8 @@ function shutdown() {
 	MetadataDuzelt = undefined;
 	chromeHandle?.destruct();
 	chromeHandle = undefined;
+	// güncelleme/yeniden kurulumda eski paketin önbelleğe alınmış pencere dosyaları kullanılmasın (boş önizleme penceresi)
+	Services.obs.notifyObservers(null, "chrome-flush-caches");
 }
 
 function install() {}

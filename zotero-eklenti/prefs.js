@@ -4,3 +4,5 @@ pref("extensions.metadataduzelt.otomatik", false);
 pref("extensions.metadataduzelt.baslikStili", "baslik");
 // Yalnızca "cumle" düzeninde: Her Kelimesi Büyük Türkçe başlıkları da cümle düzenine çevir
 pref("extensions.metadataduzelt.titleCaseDonustur", true);
+// "Kaynakla doğrula": PDF'e ek olarak CrossRef (DOI) ve DergiPark makale sayfasına da bakılsın
+pref("extensions.metadataduzelt.cevrimiciDogrula", true);

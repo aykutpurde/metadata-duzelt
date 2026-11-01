@@ -5,7 +5,11 @@
  *
  * Kurallar: boşluk/NFC temizliği, unvan silme (Prof. Dr., Arş. Gör., Av.), "Soyad, Ad" ayırma,
  * tek alana yazılmış kişi adını ikiye bölme, TAMAMI BÜYÜK adı baş harfe çevirme (Türkçe yerel),
- * diakritiksiz Türkçe ad/soyadı sözlükle düzeltme (Yilmaz → Yılmaz).
+ * diakritiksiz Türkçe ad/soyadı sözlükle düzeltme (Yilmaz → Yılmaz), ad alanına düşmüş ikinci soyadını
+ * soyadına taşıma ("Cansu Koç" + "Başar" → "Cansu" + "Koç Başar").
+ *
+ * baglam.adSozluk (isteğe bağlı): sozlukKur(kutuphanedekiYazarlar) — hangi kelimenin kütüphanede ilk ad,
+ * hangisinin soyadı olarak geçtiği. Yoksa yalnızca büyük harf işaretine ("Şeyma SAĞDIÇ") bakılır.
  */
 (function (root, factory) {
 	if (typeof module === "object" && module.exports) {
@@ -44,6 +48,64 @@
 		ismet: "İsmet", ilyas: "İlyas", gokay: "Gökay", gokalp: "Gökalp", cagatay: "Çağatay", cagla: "Çağla", sebnem: "Şebnem", sule: "Şule", cigdem: "Çiğdem",
 		yagmur: "Yağmur", dogukan: "Doğukan", gunes: "Güneş", ulas: "Ulaş", bariş: "Barış", baris: "Barış", gurcan: "Gürcan", gursel: "Gürsel", nilufer: "Nilüfer",
 	}));
+
+	// Türkçede ikinci ad olarak sık geçen, soyadı da olabilen kısa kelimeler: taşınmaz ("Ayşe Nur", "Ali Can")
+	const IKINCI_AD = new Set("nur gul can han kaan ece naz su ay tan er cem efe eda hande nil sena sila deniz ozge bilge gunes umut".split(" "));
+
+	/** Karşılaştırma anahtarı: küçük, Türkçe harfler sadeleşmiş (Koç → koc, Başar → basar). */
+	function katla(s) {
+		return String(s || "").normalize("NFC").replace(/i̇/g, "i").toLocaleLowerCase("tr")
+			.replace(/[çğıöşüâîû]/g, (c) => ({ ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", â: "a", î: "i", û: "u" })[c]);
+	}
+
+	/** Kütüphanedeki kişi yazarlardan ad/soyad sıklığı: { adIlk: Map, soyad: Map } (anahtar: katla). */
+	function sozlukKur(kisiler) {
+		let adIlk = new Map(), soyad = new Map();
+		let say = (m, k) => m.set(k, (m.get(k) || 0) + 1);
+		let gorulen = new Set();
+		for (let k of kisiler || []) {
+			let f = String(k.firstName || ""), l = String(k.lastName || "");
+			if (gorulen.has(f + "|" + l)) {
+				continue;
+			}
+			gorulen.add(f + "|" + l);
+			let ilk = f.split(/\s+/).find((w) => /^\p{L}{2,}$/u.test(w));
+			if (ilk) {
+				say(adIlk, katla(ilk));
+			}
+			for (let w of l.split(/\s+/)) {
+				if (/^\p{L}{2,}$/u.test(w)) {
+					say(soyad, katla(w));
+				}
+			}
+		}
+		return { adIlk, soyad };
+	}
+
+	/** Ad alanının sonundaki soyadı kelimeleri: büyük harfli ("Şeyma SAĞDIÇ") ya da sözlükte yalnızca soyadı olan ("Cansu Koç"). */
+	function adaDusenSoyad(ad, sozluk, turkce) {
+		let ws = ad.trim().split(/\s+/);
+		if (ws.length < 2 || ws.some((w) => /\d|[,&\/@()]/.test(w))) {
+			return null;
+		}
+		let k = 0;
+		while (k < ws.length - 1 && /^\p{Lu}[\p{Lu}'’-]+$/u.test(ws[ws.length - 1 - k]) && !/^\p{Lu}\p{Lu}?$/u.test(ws[ws.length - 1 - k])) {
+			k++;
+		}
+		// tamamı büyük ad ("H. ŞEBNEM") işaret sayılmaz: kalan kısımda küçük harf olmalı
+		if (k && ws.slice(0, -k).some((w) => /\p{Ll}/u.test(w))) {
+			return { ad: ws.slice(0, -k).join(" "), soyad: ws.slice(-k).join(" "), isaret: "buyuk" };
+		}
+		let son = ws[ws.length - 1];
+		let anahtar = katla(son);
+		if (!sozluk || !turkce || !/^\p{Lu}\p{Ll}+$/u.test(son) || IKINCI_AD.has(anahtar) || PARCACIK.has(anahtar)) {
+			return null;
+		}
+		if ((sozluk.soyad.get(anahtar) || 0) >= 1 && !(sozluk.adIlk.get(anahtar) || 0)) {
+			return { ad: ws.slice(0, -1).join(" "), soyad: son, isaret: "sozluk" };
+		}
+		return null;
+	}
 
 	function temizle(s) {
 		return karakter.bosluk(karakter.gorunmez(karakter.nfc(s || "")), { alan: "creator" });
@@ -153,6 +215,26 @@
 			}
 
 			let d = TURK_HARF.test(c.firstName + c.lastName) || baglam.dil == "tr" ? "tr" : "en-US";
+			// soyadı gerçek bir ad olmalı: "Olay Ve" + "Olgular", "Zehreddin ASLAN" + "2" gibi bozuk kayıtlar atlanır
+			let soyadGecerli = /^\p{Lu}[\p{L}'’.-]*(?:\s+\p{Lu}[\p{L}'’.-]*)*$/u.test(c.lastName.trim())
+				&& !/^(?:ve|and|ile)$/i.test(c.lastName.trim());
+			if (c.fieldMode == 0 && soyadGecerli && !KURUM.test(c.firstName)) {
+				let t = adaDusenSoyad(c.firstName, baglam.adSozluk, d == "tr");
+				if (t && katla(t.soyad) == katla(c.lastName)) {
+					ekle("ikiSoyad", `Soyadı ad alanında tekrarlanmış (“${t.soyad}”); silindi`, "orta");
+					c.firstName = t.ad;
+				}
+				else if (t && /^(?:ve|and|ile)$/i.test(t.soyad)) {
+					// "Olay Ve": bağlaç soyadı değildir
+				}
+				else if (t) {
+					ekle("ikiSoyad", t.isaret == "buyuk"
+						? `Ad alanındaki büyük harfli “${t.soyad}” soyadına taşındı`
+						: `“${t.soyad}” kütüphanede yalnızca soyadı olarak geçiyor; soyadına taşındı (iki soyadlı yazar)`, "orta");
+					c.firstName = t.ad;
+					c.lastName = (t.isaret == "buyuk" ? basHarf(t.soyad, d) : t.soyad) + " " + c.lastName;
+				}
+			}
 			if (c.fieldMode == 0) {
 				let fb = tamamiBuyuk(c.firstName), lb = tamamiBuyuk(c.lastName);
 				if (!c.firstName && /^\p{Lu}{2,6}$/u.test(c.lastName)) {
@@ -183,6 +265,12 @@
 				}
 			}
 
+			// "N-erdal": tek harf + tire + küçük harf gerçek bir ad biçimi değil (bozuk içe aktarım)
+			let supheli = [c.firstName, c.lastName].find((x) => /(?:^|[\s.])\p{L}-\p{Ll}/u.test(x));
+			if (supheli) {
+				ekle("supheli", `Ad bozuk görünüyor: “${supheli}” (özgün kaynaktan kontrol edin)`, "orta");
+				uyarilar.push({ indeks: i, mesaj: `Yazar adı bozuk görünüyor: “${supheli}” (özgün kaynaktan kontrol edin)` });
+			}
 			if (c.fieldMode == 0 && c.lastName && /^\p{Ll}/u.test(c.lastName) && !PARCACIK.has(c.lastName.split(/\s+/)[0].toLocaleLowerCase("tr"))) {
 				uyarilar.push({ indeks: i, mesaj: `Soyadı küçük harfle başlıyor: “${c.lastName}” (gerçek bir ad olmayabilir)` });
 			}
@@ -204,5 +292,5 @@
 		return { yazarlar: sonuc, degisiklikler, uyarilar };
 	}
 
-	return { uygula, unvanSil, basHarf, diakritik, kisiGibi, tamamiBuyuk, DIAKRITIK, PARCACIK };
+	return { uygula, sozlukKur, katla, adaDusenSoyad, unvanSil, basHarf, diakritik, kisiGibi, tamamiBuyuk, DIAKRITIK, PARCACIK };
 });

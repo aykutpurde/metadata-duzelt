@@ -28,15 +28,22 @@ Türkçe başlıklarda **TDK kuralı** uygulanır: her kelime büyük harfle ba�
 da, de` bağlaçları ile `mı/mi/mu/mü` soru eki küçük kalır (ilk kelime ve iki noktadan sonraki ilk kelime
 hep büyük). **Kısaltmalar** (AİHM, TBMM, İYUK…), iç büyük harfli adlar (ChatGPT, e-Devlet), **kesme işaretli
 ekler** (`Türkiye'de`, `AİHM'nin`), Roma rakamları, parantez içi kısaltmalar (`(IOI)`), `m.`/`f.`/`v.` gibi atıf
-kısaltmaları ve `Islah-ı` gibi izafet ekleri korunur. `Türkçe başlık / English title` biçimindeki çok dilli
-başlıklarda yalnızca Türkçe parçaya dokunulur. Araçlar › Metadata Düzelt menüsünden **cümle düzeni**
+kısaltmaları ve `Islah-ı`, `Şûrâ-yı` gibi izafet ekleri korunur. Başlığın yalnızca bir kısmı TAMAMI BÜYÜK yazılmışsa
+(`KAMU MALİ KRİZİ VE YEREL YÖNETİMLER -Yerel…`) o kısım da çevrilir. **İki dilli başlıklarda** (`Türkçe başlık /
+English title`, ` - `, `=`, ayraçsız `TÜRKÇE BAŞLIK English title`) yalnızca eserin dilindeki (dil alanı) parça
+bırakılır. Sona yapışmış dil etiketleri (`[tr]`) ve başlığın tamamını saran tırnaklar silinir; Türkçe yerelle bozulmuş yabancı başlıklarda
+`ı → i` düzeltilir (`Internatıonal → International`); `N-erdal` gibi bozuk görünen yazar adları işaretlenir.
+**İki soyadlı yazarlar:** ad alanına düşmüş soyadı (`Cansu Koç` + `Başar`, `Şeyma SAĞDIÇ` + `Güven`) soyadına
+taşınır. İşaret ya ad alanındaki BÜYÜK harfli kelimedir ya da kelimenin kütüphanenizde yalnızca soyadı olarak
+geçmesidir (sözlük her taramada `creators` tablosundan kurulur; `Nur`, `Can`, `Gül` gibi ikinci adlar taşınmaz).
+İngilizce başlıklarda büyük yazılmış `of, the, in, on, a…` küçültülür (ilk kelime ve iki nokta sonrası hariç).
+Şapkalı harflere (`zekâ / zeka`) kurallar dokunmaz; kaynakla doğrulamada kaynaktaki yazıma uydurulur. Araçlar › Metadata Düzelt menüsünden **cümle düzeni**
 (yalnızca ilk harf büyük) ya da **dokunma** seçilebilir. Küçültme Türkçe yerelle yapılır (`I → ı`, `İ → i`).
 Sözlükte olmayan özel adlar ve küçük kalması istenen kelimeler için **istisna listesi** vardır (listedeki
 yazım aynen korunur).
 
 Yapmadıkları: diakritiksiz Türkçeyi geri getirme (`Sinav → Sınav`; yalnızca uyarı verir), İngilizce
-Title Case başlıkları çevirme (Zotero'nun kendi sağ tık menüsü var), DergiPark/TR Dizin'den doğrulama
-(ikinci sürümde).
+Title Case başlıkları çevirme (Zotero'nun kendi sağ tık menüsü var).
 
 ## Kurulum
 
@@ -48,6 +55,15 @@ kendiliğinden güncellenir.
 
 - **Seçili kayıtlar:** sağ tık › **Metadata'yı düzelt…** Önizleme penceresi her alan için *eski → yeni*
   gösterir; satırları tek tek seçip **Seçilenleri uygula** deyin. Onaysız hiçbir şey yazılmaz.
+- **Kaynakla doğrula:** önizlemedeki düğme, başlık önerilerini ve şüpheli yazar adlarını özgün kaynakla
+  karşılaştırır: bağlı PDF'in ilk sayfaları (Zotero'nun tam metin dizini), DOI varsa CrossRef, DergiPark
+  bağlantısı varsa makale sayfası. Karşılaştırma harf düzeninden bağımsızdır (PDF'te başlık genelde büyük
+  harflidir); metin aynıysa `✓`, kaynak başka bir başlık/ad gösteriyorsa `≠` ve o satırın seçimi kaldırılır.
+  Şapka (â î û) kaynaktaki başlık kaydına (yoksa PDF'e) göre ayarlanır: kaynakta `Zekâ` ise öneri `Zekâ` olur.
+  Yazar önerilerinde ad kaynaktan alınır (`Basar → Başar`; PDF'te `Cansu KOÇ BAŞAR` ise soyadı `Koç Başar`);
+  kaynaklardan Türkçe harfi en eksiksiz olan seçilir, var olan bir Türkçe harf asla silinmez.
+  İnternete çıkılmasın isterseniz `extensions.metadataduzelt.cevrimiciDogrula` ayarını `false` yapın
+  (yalnızca PDF'e bakılır).
 - **Bütün kütüphane:** Tools › Metadata Düzelt › **Kütüphanede metadata sorunlarını tara…** Özet ve
   toplu önizleme verir; *Zotero'da göster* sorunlu kayıtları seçer.
 - **Geri alma:** Tools › Metadata Düzelt › **Son düzeltmeyi geri al**. Her uygulama bir "parti" olarak
@@ -66,7 +82,7 @@ kendiliğinden güncellenir.
 zotero-eklenti/
   bootstrap.js        Zotero yaşam döngüsü, chrome:// kaydı
   metadataduzelt.js   menüler, sütun, önizleme, yazma, geri alma, otomatik mod
-  kurallar/           saf kurallar (Zotero'suz, Node'da çalışır): dil, karakter, tire, harf, yazar, motor
+  kurallar/           saf kurallar (Zotero'suz, Node'da çalışır): dil, karakter, tire, harf, yazar, motor, dogrula
   content/            önizleme penceresi (XHTML + JS)
   locale/             tr ve en-US (.ftl)
 testler/
