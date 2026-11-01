@@ -12,14 +12,16 @@ MetadataDuzelt = {
 	menuIDs: [],
 	columnKey: null,
 	observerID: null,
-	K: null,                 // kural modülleri: { dil, karakter, tire, harf, yazar, motor }
+	K: null,                 // kural modülleri: { dil, karakter, tire, harf, yazar, motor, dogrula }
 	cache: new Map(),        // itemID -> { mod: dateModified, n: öneri sayısı } (sütun için)
 	istisnalar: [],
+	adSozluk: null,          // yazar.sozlukKur: kütüphanedeki ad/soyad sıklığı
 	busy: false,
 
 	PREF_AUTO: "extensions.metadataduzelt.otomatik",
 	PREF_STIL: "extensions.metadataduzelt.baslikStili",
 	PREF_TC: "extensions.metadataduzelt.titleCaseDonustur",
+	PREF_ONLINE: "extensions.metadataduzelt.cevrimiciDogrula",
 
 	// ------------------------------------------------------------ kurulum
 
@@ -27,7 +29,7 @@ MetadataDuzelt = {
 		this.id = id;
 		this.rootURI = rootURI;
 		let scope = {};
-		for (let f of ["dil", "karakter", "tire", "harf", "yazar", "motor"]) {
+		for (let f of ["dil", "karakter", "tire", "harf", "yazar", "motor", "dogrula"]) {
 			Services.scriptloader.loadSubScript(rootURI + "kurallar/" + f + ".js", scope);
 		}
 		this.K = scope.MetadataDuzeltKurallar;
@@ -40,6 +42,7 @@ MetadataDuzelt = {
 		this.registerMenus();
 		this.registerColumn();
 		this.loadExceptions();
+		this.loadNameStats();
 		this.observerID = Zotero.Notifier.registerObserver(
 			{ notify: (...args) => this.onNotify(...args) }, ["item"], "metadataduzelt");
 	},
@@ -149,6 +152,10 @@ MetadataDuzelt = {
 		return Zotero.Prefs.get(this.PREF_AUTO, true) === true;
 	},
 
+	onlineOn() {
+		return Zotero.Prefs.get(this.PREF_ONLINE, true) !== false;
+	},
+
 	titleCaseOn() {
 		return Zotero.Prefs.get(this.PREF_TC, true) !== false;
 	},
@@ -166,7 +173,23 @@ MetadataDuzelt = {
 			stil: this.style(),
 			titleCaseDonustur: this.titleCaseOn(),
 			istisnalar: this.istisnalar,
+			adSozluk: this.adSozluk,
 		};
+	},
+
+	/** Kütüphanedeki kişi yazarlardan ad/soyad sıklığı: iki soyadlı yazar kuralı için ("Cansu Koç" + "Başar"). */
+	async loadNameStats() {
+		try {
+			let kisiler = [];
+			await Zotero.DB.queryAsync("SELECT firstName, lastName FROM creators WHERE fieldMode = 0", [], {
+				onRow: (row) => kisiler.push({ firstName: row.getResultByIndex(0) || "", lastName: row.getResultByIndex(1) || "" }),
+			});
+			this.adSozluk = this.K.yazar.sozlukKur(kisiler);
+			this.cache.clear();
+		}
+		catch (e) {
+			Zotero.logError(e);
+		}
 	},
 
 	/** Zotero öğesini kural motorunun anladığı düz nesneye çevirir. */
@@ -232,6 +255,7 @@ MetadataDuzelt = {
 			return;
 		}
 		await this.loadExceptions();
+		await this.loadNameStats();
 		let { rows, uyarilar } = this.rows(targets);
 		if (!rows.length) {
 			this.notify(targets.length == 1
@@ -239,7 +263,7 @@ MetadataDuzelt = {
 				: `${targets.length} kayıtta düzeltilecek bir şey bulunamadı ✓`
 				+ (uyarilar.length ? `\n(${uyarilar.length} uyarı: elle bakılmalı)` : ""));
 			if (uyarilar.length) {
-				this.showWarnings(uyarilar);
+				this.openPreview(rows, uyarilar, targets.length == 1 ? (targets[0].getDisplayTitle() || targets[0].key) : `${targets.length} kayıt`);
 			}
 			return;
 		}
@@ -261,6 +285,7 @@ MetadataDuzelt = {
 		let line = new pw.ItemProgress("document", "Kayıtlar listeleniyor…");
 		try {
 			await this.loadExceptions();
+			await this.loadNameStats();
 			let all = await Zotero.Items.getAll(libraryID, false, false);
 			let items = all.filter((it) => it.isRegularItem() && !it.deleted);
 			let rows = [], uyarilar = [], itemCount = 0;
@@ -330,7 +355,9 @@ MetadataDuzelt = {
 			"karakter.htmlVarliklar": "HTML varlığı", "karakter.bagliHarf": "bağlı harf (ﬁ ﬂ)", "karakter.gorunmez": "görünmez karakter / NBSP",
 			"karakter.bosluk": "fazla boşluk", "karakter.dergiparkOneki": "DergiPark sayfa öneki", "karakter.sondakiNokta": "başlık sonu noktası",
 			"tire.kopukKelime": "kopuk kelime", "harf.tamamiBuyuk": "tamamı büyük başlık", "harf.kucukBaslik": "küçük harfli başlık (TDK: Her Kelime Büyük)",
-			"harf.titleCase": "Her Kelimesi Büyük başlık",
+			"harf.titleCase": "Her Kelimesi Büyük başlık", "harf.buyukKosu": "başlıkta TAMAMI BÜYÜK kelimeler",
+			"karakter.dilEtiketi": "başlıkta dil etiketi ([tr])", "karakter.saranTirnak": "başlığı saran tırnak", "karakter.sahteI": "yabancı kelimede yanlış ı (Internatıonal)",
+			"dil.ikiDilliBaslik": "iki dilli başlık (yalnızca eser dili bırakıldı)", "yazar.ikiSoyad": "ad alanına düşmüş ikinci soyadı", "yazar.supheli": "bozuk görünen yazar adı",
 			"harf.adBuyuk": "tamamı büyük dergi/kurum adı", "dil.bos": "dil alanı boş", "dil.normalize": "dil kodu biçimi", "dil.yanlis": "dil alanı yanlış",
 			"dil.bozuk": "dil alanı bozuk", "yazar.temizle": "yazar adında boşluk/karakter", "yazar.unvan": "yazar unvanı", "yazar.virgul": "yazar “Soyad, Ad”",
 			"yazar.soyadBos": "yazar soyadı boş", "yazar.tekAlan": "tek alana yazılmış yazar", "yazar.buyukHarf": "TAMAMI BÜYÜK yazar",
@@ -342,23 +369,112 @@ MetadataDuzelt = {
 
 	openPreview(rows, uyarilar, baslik) {
 		let win = Zotero.getMainWindow();
+		let hedefler = [
+			...rows.map((satir, i) => ({ tur: "satir", i, satir })),
+			...uyarilar.map((u, i) => ({ tur: "uyari", i, satir: this.warningTarget(u) })),
+		].filter((h) => h.satir && this.K.dogrula.dogrulanabilir(h.satir));
 		let args = {
 			baslik,
 			satirlar: rows,
 			uyarilar,
 			etiket: (k) => this.ruleLabel(k),
 			onUygula: (secilen) => this.apply(secilen.map((i) => rows[i]), baslik),
+			dogrulanacak: hedefler.length,
+			onDogrula: (geri) => this.verifyTargets(hedefler, geri),
 			onGoster: (itemID) => win.ZoteroPane.selectItem(itemID),
 		};
 		win.openDialog("chrome://metadataduzelt/content/onizleme.xhtml", "metadataduzelt-onizleme",
 			"chrome,dialog=no,centerscreen,resizable,width=1100,height=700", args);
 	},
 
-	showWarnings(uyarilar) {
-		let win = Zotero.getMainWindow();
-		let text = uyarilar.slice(0, 30).map((u) => `• ${u.baslik}\n   ${u.mesaj}`).join("\n");
-		Services.prompt.alert(win, "Metadata Düzelt — uyarılar (elle bakılmalı)", text
-			+ (uyarilar.length > 30 ? `\n… ve ${uyarilar.length - 30} uyarı daha` : ""));
+	// ------------------------------------------------------------ kaynakla doğrulama
+
+	/** Kaydın özgün kaynakları: bağlı PDF'in tam metni (Zotero dizini), CrossRef (DOI), DergiPark makale sayfası. */
+	async sources(item) {
+		let k = { basliklar: [], yazarlar: [], pdf: null };
+		for (let id of item.getAttachments()) {
+			let a = Zotero.Items.get(id);
+			if (!a || !a.isPDFAttachment()) {
+				continue;
+			}
+			try {
+				let t = await a.attachmentText;
+				if (t && t.trim()) {
+					k.pdf = t.slice(0, 12000);
+					break;
+				}
+			}
+			catch (e) {
+				Zotero.debug("Metadata Düzelt: PDF metni okunamadı: " + e);
+			}
+		}
+		if (!this.onlineOn()) {
+			return k;
+		}
+		let fields = this.record(item).fields;
+		let doi = this.K.dogrula.doiBul(fields);
+		if (doi) {
+			try {
+				let x = await Zotero.HTTP.request("GET", "https://api.crossref.org/works/" + encodeURIComponent(doi),
+					{ responseType: "json", timeout: 15000 });
+				let r = this.K.dogrula.crossrefOku((x.response || {}).message || {});
+				r.basliklar.forEach((metin) => k.basliklar.push({ kaynak: "CrossRef", metin }));
+				r.yazarlar.forEach((tam) => k.yazarlar.push({ kaynak: "CrossRef", tam }));
+				k.adSoyad = r.adSoyad;
+			}
+			catch (e) {
+				Zotero.debug("Metadata Düzelt: CrossRef sorgusu başarısız (" + doi + "): " + e);
+			}
+		}
+		if (/^https?:\/\/(?:www\.)?dergipark\.org\.tr\/.+\/article\//.test(fields.url || "")) {
+			try {
+				let x = await Zotero.HTTP.request("GET", fields.url, { responseType: "text", timeout: 15000 });
+				let r = this.K.dogrula.metaOku(x.response || "");
+				r.basliklar.forEach((metin) => k.basliklar.push({ kaynak: "DergiPark", metin }));
+				r.yazarlar.forEach((tam) => k.yazarlar.push({ kaynak: "DergiPark", tam }));
+			}
+			catch (e) {
+				Zotero.debug("Metadata Düzelt: DergiPark sayfası okunamadı: " + e);
+			}
+		}
+		return k;
+	},
+
+	/** Yazar uyarısını doğrulanacak satır biçimine çevirir (kayıttaki güncel ad). */
+	warningTarget(u) {
+		if (u.alan != "creators" || u.indeks == null) {
+			return null;
+		}
+		let c = Zotero.Items.get(u.itemID)?.getCreators()[u.indeks];
+		return c ? { itemID: u.itemID, alan: "creators", guven: "orta", yeniYazar: { firstName: c.firstName || "", lastName: c.lastName || "" } } : null;
+	},
+
+	/** Hedefleri ({tur, i, satir}) kaynakla karşılaştırır; her sonuç geldikçe geri(tur, i, sonuc) çağrılır. */
+	async verifyTargets(hedefler, geri) {
+		let kaynaklar = new Map();
+		for (let h of hedefler) {
+			let sonuc;
+			try {
+				if (!kaynaklar.has(h.satir.itemID)) {
+					let item = Zotero.Items.get(h.satir.itemID);
+					kaynaklar.set(h.satir.itemID, item ? await this.sources(item) : {});
+				}
+				sonuc = this.K.dogrula.degerlendir(h.satir, kaynaklar.get(h.satir.itemID));
+				if (sonuc?.yeniOneri && h.tur == "satir") {
+					h.satir.yeni = sonuc.yeniOneri;   // önizlemede "uygula" bu nesneyi yazar
+					if (sonuc.yeniYazarOneri) {
+						h.satir.yeniYazar = { ...h.satir.yeniYazar, ...sonuc.yeniYazarOneri };
+					}
+				}
+			}
+			catch (e) {
+				Zotero.logError(e);
+				sonuc = { durum: "bulunamadi", mesaj: "Doğrulama hatası: " + (e.message || e) };
+			}
+			if (sonuc) {
+				geri(h.tur, h.i, sonuc);
+			}
+		}
 	},
 
 	/** Seçilen önerileri yazar; eski değerleri kayıt dosyasına ekler. */

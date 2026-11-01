@@ -30,6 +30,12 @@
 		footer { padding: 10px 14px; border-top: 1px solid var(--line); display: flex; gap: 10px; align-items: center; }
 		footer .bosluk { flex: 1; color: var(--muted); font-size: 12px; }
 		input[type=checkbox] { margin: 0; }
+		.dogrulama { margin-top: 4px; font-size: 11px; }
+		.dogrulama.dogrulandi { color: var(--new); }
+		.dogrulama.farkli { color: var(--old); }
+		.dogrulama.bilgi, .dogrulama.bulunamadi { color: var(--orta); }
+		.dogrulama.kaynakYok { color: var(--muted); }
+		#dogrulaDurum { color: var(--muted); font-size: 12px; }
 	</style>
 </head>
 <body>
@@ -38,6 +44,8 @@
 		<button id="tumu">Tümünü seç</button>
 		<button id="yuksek">Yalnızca yüksek güvenlileri seç</button>
 		<button id="hicbiri">Hiçbirini seçme</button>
+		<button id="dogrula" title="Başlık ve şüpheli yazar önerilerini bağlı PDF'in ilk sayfalarıyla, DOI varsa CrossRef'le, DergiPark bağlantısı varsa makale sayfasıyla karşılaştırır. Kaynakla çelişen satırların seçimi kaldırılır.">Kaynakla doğrula</button>
+		<span id="dogrulaDurum"></span>
 	</header>
 	<div id="uyarilar" class="uyari" hidden="hidden"></div>
 	<main>

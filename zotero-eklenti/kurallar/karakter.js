@@ -148,6 +148,30 @@
 		return m ? m[1].trim() : metin;
 	}
 
+	const SARAN_TIRNAK = [["'", "'"], ['"', '"'], ["“", "”"], ["‘", "’"], ["«", "»"], ["„", "“"], ["”", "”"], ["’", "’"]];
+
+	/** Başlığın tamamını saran tırnak: "'TÜRKİYE’DE … MEVCUDİYETİ'" → "TÜRKİYE’DE … MEVCUDİYETİ".
+	 *  İçeride aynı tırnak geçiyorsa ("“A” ve “B”") dokunulmaz. */
+	function saranTirnak(metin) {
+		let s = metin.trim();
+		for (let [ac, kapa] of SARAN_TIRNAK) {
+			if (s.length > 2 && s.startsWith(ac) && s.endsWith(kapa)) {
+				let ic = s.slice(ac.length, -kapa.length);
+				if (!ic.includes(ac) && !ic.includes(kapa) && /\p{L}/u.test(ic)) {
+					return ic.trim();
+				}
+			}
+		}
+		return metin;
+	}
+
+	const DIL_ETIKETI = /\s*[\[(](?:tr|tur|en|eng|de|deu|ger|fr|fra|fre|türkçe|turkish|english|ingilizce)[\])]\s*$/i;
+
+	/** Başlık sonuna yapışmış dil etiketi: "… BİR ANALİZ [tr]", "… (en)". */
+	function dilEtiketi(metin) {
+		return metin.replace(DIL_ETIKETI, "") || metin;
+	}
+
 	const KISALTMA_SONU = /(?<!\p{L})(?:vs|vb|vd|bkz|krş|etc|al|Inc|Ltd|Jr|Sr|Co|No|Nr|St|Bd|Vol|Cilt|Sayı|pp)\.$/iu;
 	const TEK_HARF_SONU = /(?<!\p{L})(?:\p{Lu}|\p{N}+)\.$/u;   // "A.", "B.N.", "2018."
 
@@ -183,6 +207,10 @@
 		adim("gorunmez", "Görünmez karakterler / kırılmaz boşluklar temizlendi", gorunmez);
 		if (BASLIK_ALANLARI.has(baglam.alan)) {
 			adim("dergiparkOneki", "Sayfa başlığı öneki (“Dergi » Makale »”) atıldı", dergiparkOneki);
+			if (baglam.alan != "shortTitle") {   // kısa başlık çoğunlukla "“Alıntı”: alt başlık"ın alıntı kısmıdır
+				adim("saranTirnak", "Başlığın tamamını saran tırnak işaretleri kaldırıldı", saranTirnak, "orta");
+			}
+			adim("dilEtiketi", "Başlık sonundaki dil etiketi ([tr], (en) …) atıldı; özgün başlıkla karşılaştırın", dilEtiketi, "orta");
 		}
 		adim("bosluk", "Fazla boşluk / satır sonu temizlendi", (x) => bosluk(x, baglam));
 		if (BASLIK_ALANLARI.has(baglam.alan)) {
@@ -191,5 +219,5 @@
 		return { metin: s, degisiklikler };
 	}
 
-	return { uygula, mojibake, eskiKodSayfasi, htmlVarliklar, bagliHarf, gorunmez, nfc, bosluk, dergiparkOneki, sondakiNokta, BASLIK_ALANLARI };
+	return { uygula, saranTirnak, dilEtiketi, mojibake, eskiKodSayfasi, htmlVarliklar, bagliHarf, gorunmez, nfc, bosluk, dergiparkOneki, sondakiNokta, BASLIK_ALANLARI };
 });

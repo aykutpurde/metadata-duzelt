@@ -45,6 +45,40 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 	// Title Case sezgisi: bu kelimelerden biri büyük yazılmışsa başlık Title Case'dir
 	const ISLEV_TR = new Set("ve ile veya ya bir bu şu için olarak üzerine hakkında ilişkin açısından bağlamında arasında sonra önce gibi kadar daha çok mi mı mu mü ki ancak ise göre karşı ilgili ışığında çerçevesinde bakımından yoluyla aracılığıyla hükmünde sayılı tarihli dair yönelik doğru üzerinden olan olup olarak açısından yönünden içinde dışında arasındaki üzerindeki hakkındaki ilişkindeki".split(" "));
 
+	const IZAFET = /^[yY]?[ıiuüIİUÜ]$/u;
+
+	/** İngilizce Title Case başlıkta büyük yazılmış küçük kelimeler: "Challenges Of Invoking … Before The Court" → "of", "the".
+	 *  Yalnızca bu kelimelerin ilk harfi küçülür; ilk kelime ve iki nokta/soru/tire sonrası büyük kalır. */
+	const LATINCE = /^(?:dubio|situ|re|rem|vitro|vivo|personam|abstracto|concreto|loco|camera|toto|absentia|extremis|limine|facto|jure|se)$/i;
+
+	function ingilizceKucukKelimeler(metin) {
+		let capNext = true;
+		let tokens = metin.split(/(\s+)/);
+		return tokens.map((tok, i) => {
+			if (!tok || /^\s+$/.test(tok)) {
+				return tok;
+			}
+			let { on, core, son } = parcala(tok);
+			if (!core) {
+				if (/[:?!.–—]/.test(tok)) {
+					capNext = true;
+				}
+				return tok;
+			}
+			if (on.startsWith("(") && son.endsWith(")")) {
+				return tok;     // "(23) The LLM…": parantez içi numara sonraki kelimeyi etkilemez
+			}
+			let zorunlu = capNext || /[("“‘]$/.test(on);
+			capNext = sonrakiBuyuk(core, son);
+			let sonraki = parcala(tokens[i + 2] || "").core;
+			if (!zorunlu && /^\p{Lu}\p{Ll}*$/u.test(core) && KUCUK_EN.has(core.toLowerCase())
+					&& core != "V" && !LATINCE.test(sonraki)) {   // "Values V": Roma rakamı; "In Dubio", "Per Se": Latince
+				return on + core.toLowerCase() + son;
+			}
+			return tok;
+		}).join("");
+	}
+
 	function harfler(s) {
 		return s.match(/\p{L}/gu) || [];
 	}
@@ -79,6 +113,48 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		}
 		let islevBuyuk = ws.some((w) => ISLEV_TR.has(dil.kucult(w.replace(/[^\p{L}]/gu, ""), "tr")) && buyukMu(ilk(w), "tr"));
 		return islevBuyuk || (ws.length >= 5 && caps.length / ws.length >= 0.9);
+	}
+
+	/** Başlığın içindeki TAMAMI BÜYÜK kelime koşuları ("KAMU MALİ KRİZİ VE YEREL YÖNETİMLER -Yerel Yönetimlerin…").
+	 *  Koşu, kısaltma listesinde olmayan en az iki uzun (4+) kelime içermeli; "AİHM ve AB", "TBMM KHK" koşu sayılmaz.
+	 *  Dönüş: tokens (metin.split(/(\s+)/)) dizisiyle aynı boyda boolean dizi. */
+	function buyukKosular(tokens, d) {
+		let isaret = tokens.map(() => false);
+		let kosu = [];
+		let kapat = () => {
+			let uzun = kosu.filter((i) => {
+				let core = parcala(tokens[i]).core;
+				return harfler(core).length >= 4 && !KISALTMALAR.has(dil.buyult(core, d)) && !KISALTMALAR.has(core);
+			});
+			if (uzun.length >= 2) {
+				kosu.forEach((i) => { isaret[i] = true; });
+			}
+			kosu = [];
+		};
+		tokens.forEach((tok, i) => {
+			if (!tok || /^\s+$/.test(tok)) {
+				return;
+			}
+			let L = harfler(parcala(tok).core);
+			if (!L.length) {
+				return;      // yalnızca noktalama: koşuyu bölmez
+			}
+			if (L.every((c) => buyukMu(c, d))) {
+				kosu.push(i);
+			}
+			else if (kosu.length && (KUCUK_TR.has(parcala(tok).core) || KUCUK_EN.has(parcala(tok).core))) {
+				// "İÇTİHADÎ mi OLMALI?", "KRİZİ ve YEREL": küçük bağlaç/soru eki koşuyu bölmez
+			}
+			else {
+				kapat();
+			}
+		});
+		kapat();
+		return isaret;
+	}
+
+	function buyukKosuVar(metin, d = "tr") {
+		return buyukKosular(metin.split(/(\s+)/), d).some(Boolean);
 	}
 
 	function romen(core, son) {
@@ -138,8 +214,8 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		if (/^[\p{L}\p{N}.]+[-\/][\p{L}\p{N}.\/-]+$/u.test(core) && !/^\d+$/.test(core)) {
 			let parcalar = core.split(/([-\/])/);
 			// cümle düzeninde yalnızca ilk parça (Sosyo-ekonomik); Her Kelime Büyük'te her parça (Sosyo-Ekonomik)
-			// tek harfli ek parçası (Islah-ı, Kanun-ı Esasi) hiç büyümez
-			return parcalar.map((p, i) => (i % 2 ? p : kelime(p, { ...o, cap: o.cap && (i == 0 || (o.herParca && p.length > 1)) }))).join("");
+			// izafet eki (Islah-ı, Kanun-ı Esasi, Şûrâ-yı Devlet) hiç büyümez
+			return parcalar.map((p, i) => (i % 2 ? p : kelime(p, { ...o, cap: o.cap && (i == 0 || (o.herParca && !IZAFET.test(p))) }))).join("");
 		}
 		if (/^(\p{Lu}\.)+\p{Lu}?$/u.test(up) && core.length <= 8) {
 			return up;   // T.C., A.Ş., U.S.
@@ -215,7 +291,9 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		let allCaps = tamamiBuyuk(metin, d);
 		let istisna = istisnaHaritasi(baglam.istisnalar);
 		let capNext = true;
-		let out = metin.split(/(\s+)/).map((tok) => {
+		let tokens = metin.split(/(\s+)/);
+		let kosu = allCaps ? null : buyukKosular(tokens, d);
+		let out = tokens.map((tok, i) => {
 			if (!tok || /^\s+$/.test(tok)) {
 				return tok;
 			}
@@ -231,7 +309,7 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 			if (istisna.has(dil.kucult(core, d))) {
 				return on + istisna.get(dil.kucult(core, d)) + son;
 			}
-			return on + kelime(core, { d, cap, allCaps, son, parantez: on.endsWith("(") && son.startsWith(")") }) + son;
+			return on + kelime(core, { d, cap, allCaps: allCaps || kosu[i], son, parantez: on.endsWith("(") && son.startsWith(")") }) + son;
 		}).join("");
 		return ozelAdlar(out, d, istisna);
 	}
@@ -244,7 +322,9 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		let allCaps = tamamiBuyuk(metin, d);
 		let istisna = istisnaHaritasi(baglam.istisnalar);
 		let capNext = true;
-		let out = metin.split(/(\s+)/).map((tok) => {
+		let tokens = metin.split(/(\s+)/);
+		let kosu = allCaps ? null : buyukKosular(tokens, d);
+		let out = tokens.map((tok, i) => {
 			if (!tok || /^\s+$/.test(tok)) {
 				return tok;
 			}
@@ -266,7 +346,7 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 				r = low;
 			}
 			else {
-				r = kelime(core, { d, cap: true, allCaps, son, herParca: true, parantez: on.endsWith("(") && son.startsWith(")") });
+				r = kelime(core, { d, cap: true, allCaps: allCaps || kosu[i], son, herParca: true, parantez: on.endsWith("(") && son.startsWith(")") });
 			}
 			return on + r + son;
 		}).join("");
@@ -275,17 +355,11 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 
 	/** "Türkçe başlık / English title" biçimindeki çok dilli başlıkta fn yalnızca Türkçe (ya da belirsiz) parçalara uygulanır. */
 	function parcalarla(s, fn) {
-		let parcalar = s.split(/( \/ | \| )/);
-		if (parcalar.length < 3) {
+		let ps = dil.parcalar(s);
+		if (ps.length < 2) {
 			return fn(s);
 		}
-		return parcalar.map((p, i) => {
-			if (i % 2) {
-				return p;
-			}
-			let t = dil.tespit(p);
-			return t.dil && t.dil != "tr" && t.guven == "yuksek" ? p : fn(p);
-		}).join("");
+		return ps.map((p) => p.ayirac + (p.dil && p.dil != "tr" ? p.metin : fn(p.metin))).join("");
 	}
 
 	const BASLIK_ALANLARI = new Set(["title", "shortTitle", "bookTitle", "proceedingsTitle", "encyclopediaTitle", "dictionaryTitle"]);
@@ -306,15 +380,28 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 				if (y != s) {
 					degisiklikler.push(tamamiBuyuk(s, d)
 						? { kural: "harf.tamamiBuyuk", aciklama: "Tamamı büyük başlık Her Kelime Büyük düzenine çevrildi", guven: "orta" }
-						: { kural: "harf.kucukBaslik", aciklama: "Başlık Her Kelime Büyük düzenine çevrildi (TDK; bağlaçlar küçük)", guven: "orta" });
+						: buyukKosuVar(s, d)
+							? { kural: "harf.buyukKosu", aciklama: "Başlıktaki TAMAMI BÜYÜK kelimeler Her Kelime Büyük düzenine çevrildi", guven: "orta" }
+							: { kural: "harf.kucukBaslik", aciklama: "Başlık Her Kelime Büyük düzenine çevrildi (TDK; bağlaçlar küçük)", guven: "orta" });
 					s = y;
 				}
 			}
 			else if (d == "tr" || d == "en") {
+				if (d == "en" && !tamamiBuyuk(s, d) && ingilizceKucukKelimeler(s) != s) {
+					s = ingilizceKucukKelimeler(s);
+					degisiklikler.push({ kural: "harf.ingilizceKucuk", aciklama: "İngilizce başlıkta of/the/in gibi küçük kelimeler küçültüldü", guven: "orta" });
+				}
 				if (tamamiBuyuk(s, d)) {
 					let y = d == "tr" ? parcalarla(s, (p) => cumleDuzeni(p, baglam)) : cumleDuzeni(s, baglam);
 					if (y != s) {
 						degisiklikler.push({ kural: "harf.tamamiBuyuk", aciklama: "Tamamı büyük başlık cümle düzenine çevrildi", guven: "orta" });
+						s = y;
+					}
+				}
+				else if (buyukKosuVar(s, d)) {
+					let y = d == "tr" ? parcalarla(s, (p) => cumleDuzeni(p, baglam)) : cumleDuzeni(s, baglam);
+					if (y != s) {
+						degisiklikler.push({ kural: "harf.buyukKosu", aciklama: "Başlıktaki TAMAMI BÜYÜK kelimeler cümle düzenine çevrildi", guven: "orta" });
 						s = y;
 					}
 				}
@@ -337,5 +424,5 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		return { metin: s, degisiklikler };
 	}
 
-	return { uygula, cumleDuzeni, baslikDuzeni, tamamiBuyuk, titleCaseGibi, ozelAdlar, KISALTMALAR, OZEL_ADLAR_TR, OZEL_ADLAR_EN, BASLIK_ALANLARI, AD_ALANLARI };
+	return { uygula, ingilizceKucukKelimeler, cumleDuzeni, baslikDuzeni, tamamiBuyuk, titleCaseGibi, buyukKosuVar, ozelAdlar, KISALTMALAR, OZEL_ADLAR_TR, OZEL_ADLAR_EN, BASLIK_ALANLARI, AD_ALANLARI };
 });

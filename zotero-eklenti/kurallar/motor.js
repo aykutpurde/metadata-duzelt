@@ -59,6 +59,10 @@
 			}
 		}
 		let etkin = norm ? norm.split("-")[0] : null;
+		// iki dilli başlıkta dil alanı parçalardan birinin diliyse alana güvenilir
+		if (etkin && t.dil != etkin && dil.parcalar(baslik).some((p) => p.dil == etkin)) {
+			t = { dil: etkin, guven: "yuksek" };
+		}
 		if (!ham.trim()) {
 			if (t.dil && t.guven == "yuksek") {
 				oneriler.push(oneriYap("language", ham, t.dil, [{ kural: "dil.bos", aciklama: "Dil alanı boştu; metinden tespit edildi", guven: "yuksek" }]));
@@ -96,7 +100,7 @@
 		let oneriler = [];
 		let uyarilar = [];
 		let d = dilBelirle(fields, oneriler);
-		let baglamTemel = { dil: d, stil: ayarlar.stil || "baslik", titleCaseDonustur: ayarlar.titleCaseDonustur !== false, istisnalar: ayarlar.istisnalar || [] };
+		let baglamTemel = { dil: d, stil: ayarlar.stil || "baslik", titleCaseDonustur: ayarlar.titleCaseDonustur !== false, istisnalar: ayarlar.istisnalar || [], adSozluk: ayarlar.adSozluk || null };
 
 		for (let alan of METIN_ALANLARI) {
 			let eski = fields[alan];
@@ -108,6 +112,26 @@
 			let r = karakter.uygula(eski, baglam);
 			kurallar.push(...r.degisiklikler);
 			let s = r.metin;
+			if (alan == "title" && d) {
+				let ps = dil.parcalar(s);
+				let diller = new Set(ps.map((p) => p.dil).filter(Boolean));
+				if (diller.size >= 2 && diller.has(d)) {
+					let kalan = ps.filter((p) => p.dil == d);
+					let atilan = ps.filter((p) => p.dil != d).map((p) => p.metin).join(" / ");
+					s = kalan.map((p, i) => (i ? p.ayirac : "") + p.metin).join("");
+					kurallar.push({ kural: "dil.ikiDilliBaslik", aciklama: `İki dilli başlık: eser dilindeki (${d}) kısım bırakıldı; atılan: “${atilan}”`, guven: "orta" });
+				}
+				else if (diller.size >= 2) {
+					uyarilar.push({ alan, mesaj: `Başlık birden çok dilde görünüyor (${[...diller].join(", ")}); eserin dili belirlenemedi, elle bakılmalı` });
+				}
+			}
+			if (alan != "abstractNote") {
+				let y = dil.sahteIDuzelt(s);
+				if (y != s) {
+					kurallar.push({ kural: "karakter.sahteI", aciklama: "Yabancı dildeki kelimelerde Türkçe yerelden kalan ı → i düzeltildi (Internatıonal → International)", guven: "orta" });
+					s = y;
+				}
+			}
 			if (d == "tr" && alan != "abstractNote") {
 				r = tire.uygula(s, baglam);
 				kurallar.push(...r.degisiklikler);

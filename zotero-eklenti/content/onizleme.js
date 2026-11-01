@@ -25,8 +25,9 @@
 		let u = $("uyarilar");
 		u.hidden = false;
 		u.textContent = "Uyarılar (değişiklik önerilmiyor, elle bakılmalı):\n";
-		for (let w of args.uyarilar.slice(0, 50)) {
+		for (let [i, w] of args.uyarilar.slice(0, 50).entries()) {
 			let div = document.createElement("div");
+			div.dataset.u = i;
 			div.textContent = `• ${w.baslik}: ${w.mesaj}`;
 			u.appendChild(div);
 		}
@@ -114,6 +115,57 @@
 	$("hicbiri").addEventListener("click", () => hepsi(() => false));
 	$("yuksek").addEventListener("click", () => hepsi((s) => s.guven == "yuksek"));
 	$("vazgec").addEventListener("click", () => window.close());
+
+	const ISARET = { dogrulandi: "✓", farkli: "≠", bilgi: "ⓘ", bulunamadi: "?", kaynakYok: "–" };
+	const toplam = args.dogrulanacak || 0;
+	if (!args.onDogrula || !toplam) {
+		$("dogrula").hidden = true;
+	}
+	$("dogrula").textContent = `Kaynakla doğrula (${toplam})`;
+	function sonucYaz(kap, sonuc) {
+		kap.querySelector(".dogrulama")?.remove();
+		let div = document.createElement("div");
+		div.className = "dogrulama " + sonuc.durum;
+		div.textContent = `${ISARET[sonuc.durum] || ""} ${sonuc.mesaj}`;
+		kap.appendChild(div);
+	}
+	$("dogrula").addEventListener("click", async () => {
+		$("dogrula").disabled = true;
+		let n = 0, celiski = 0;
+		$("dogrulaDurum").textContent = `0 / ${toplam}…`;
+		try {
+			await args.onDogrula((tur, i, sonuc) => {
+				n++;
+				if (sonuc.durum == "farkli") {
+					celiski++;
+				}
+				if (tur == "uyari") {
+					let div = $("uyarilar").querySelector(`div[data-u="${i}"]`);
+					if (div) {
+						sonucYaz(div, sonuc);
+					}
+				}
+				let tr = tur == "satir" && govde.querySelector(`tr.satir[data-i="${i}"]`);
+				if (tr) {
+					sonucYaz(tr.querySelector("td.aciklama"), sonuc);
+					if (sonuc.yeniOneri) {
+						tr.querySelector("td.yeni").textContent = kisalt(sonuc.yeniOneri);
+					}
+					let cb = tr.querySelector("input");
+					if (sonuc.durum == "farkli" && cb.checked) {
+						cb.checked = false;
+						cb.dispatchEvent(new Event("change"));
+					}
+				}
+				$("dogrulaDurum").textContent = `${n} / ${toplam}…`;
+			});
+			$("dogrulaDurum").textContent = `${n} öğe kaynakla karşılaştırıldı` + (celiski ? `; ${celiski} öğe kaynakla çelişiyor (önerinin seçimi kaldırıldı)` : "");
+		}
+		catch (e) {
+			$("dogrulaDurum").textContent = "Doğrulama yarıda kaldı: " + (e.message || e);
+			$("dogrula").disabled = false;
+		}
+	});
 	$("uygula").addEventListener("click", () => {
 		let liste = [...secili].sort((a, b) => a - b);
 		$("uygula").disabled = true;
