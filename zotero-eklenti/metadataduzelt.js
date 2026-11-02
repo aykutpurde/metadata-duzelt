@@ -160,7 +160,7 @@ MetadataDuzelt = {
 		return Zotero.Prefs.get(this.PREF_TC, true) !== false;
 	},
 
-	/** Türkçe başlık düzeni: "baslik" (TDK, varsayılan) | "cumle" | "dokunma" */
+	/** Başlık düzeni (Türkçe ve İngilizce): "baslik" (TDK / Title Case, varsayılan) | "cumle" | "dokunma" */
 	style() {
 		let s = Zotero.Prefs.get(this.PREF_STIL, true);
 		return ["baslik", "cumle", "dokunma"].includes(s) ? s : "baslik";
@@ -195,8 +195,10 @@ MetadataDuzelt = {
 	/** Zotero öğesini kural motorunun anladığı düz nesneye çevirir. */
 	record(item) {
 		let fields = {};
+		let alanlar = [];
 		for (let fieldID of Zotero.ItemFields.getItemTypeFields(item.itemTypeID)) {
 			let name = Zotero.ItemFields.getName(fieldID);
+			alanlar.push(name);
 			let v = item.getField(name, true, true);
 			if (v) {
 				fields[name] = String(v);
@@ -208,7 +210,7 @@ MetadataDuzelt = {
 			fieldMode: c.fieldMode || 0,
 			creatorType: Zotero.CreatorTypes.getName(c.creatorTypeID),
 		}));
-		return { itemType: Zotero.ItemTypes.getName(item.itemTypeID), fields, creators };
+		return { itemType: Zotero.ItemTypes.getName(item.itemTypeID), fields, alanlar, creators };
 	},
 
 	analyze(item) {
@@ -352,16 +354,19 @@ MetadataDuzelt = {
 	ruleLabel(kural) {
 		return {
 			"karakter.nfc": "birleşik karakter / i̇ artığı", "karakter.mojibake": "bozuk kodlama", "karakter.eskiKodSayfasi": "eski kod sayfası (ý þ ð)",
-			"karakter.htmlVarliklar": "HTML varlığı", "karakter.bagliHarf": "bağlı harf (ﬁ ﬂ)", "karakter.gorunmez": "görünmez karakter / NBSP",
+			"karakter.htmlVarliklar": "HTML varlığı", "karakter.pdfKodlama": "PDF yazı tipi kodlaması (Ġ đ Ģ)", "karakter.bagliHarf": "bağlı harf (ﬁ ﬂ)", "karakter.gorunmez": "görünmez karakter / NBSP",
 			"karakter.bosluk": "fazla boşluk", "karakter.dergiparkOneki": "DergiPark sayfa öneki", "karakter.sondakiNokta": "başlık sonu noktası",
 			"tire.kopukKelime": "kopuk kelime", "harf.tamamiBuyuk": "tamamı büyük başlık", "harf.kucukBaslik": "küçük harfli başlık (TDK: Her Kelime Büyük)",
 			"harf.titleCase": "Her Kelimesi Büyük başlık", "harf.buyukKosu": "başlıkta TAMAMI BÜYÜK kelimeler",
-			"karakter.dilEtiketi": "başlıkta dil etiketi ([tr])", "karakter.saranTirnak": "başlığı saran tırnak", "karakter.sahteI": "yabancı kelimede yanlış ı (Internatıonal)",
+			"harf.ingilizceParantez": "parantez içi İngilizce açılım / kısaltma", "harf.ingilizceKucuk": "İngilizce başlıkta büyük of/the/in",
+			"harf.kisaBaslikBos": "kısa başlık boş", "harf.ingilizceBaslik": "İngilizce başlık Title Case değil", "harf.latince": "Latince ifadede yanlış ı (Suı Generıs)", "harf.kisaBaslikKesik": "kısa başlık kelime ortasında kesik",
+			"karakter.dilEtiketi": "başlıkta dil etiketi ([tr])", "karakter.notParantez": "başlıkta not (künye yok …)", "karakter.saranTirnak": "başlığı saran tırnak", "karakter.sahteI": "yabancı kelimede yanlış ı (Internatıonal)",
 			"dil.ikiDilliBaslik": "iki dilli başlık (yalnızca eser dili bırakıldı)", "yazar.ikiSoyad": "ad alanına düşmüş ikinci soyadı", "yazar.supheli": "bozuk görünen yazar adı",
 			"harf.adBuyuk": "tamamı büyük dergi/kurum adı", "dil.bos": "dil alanı boş", "dil.normalize": "dil kodu biçimi", "dil.yanlis": "dil alanı yanlış",
 			"dil.bozuk": "dil alanı bozuk", "yazar.temizle": "yazar adında boşluk/karakter", "yazar.unvan": "yazar unvanı", "yazar.virgul": "yazar “Soyad, Ad”",
 			"yazar.soyadBos": "yazar soyadı boş", "yazar.tekAlan": "tek alana yazılmış yazar", "yazar.buyukHarf": "TAMAMI BÜYÜK yazar",
 			"yazar.kurumBuyuk": "TAMAMI BÜYÜK kurum", "yazar.diakritik": "diakritiksiz Türkçe ad",
+			"yazar.kucukHarf": "küçük harfle başlayan ad",
 		}[kural] || kural;
 	},
 

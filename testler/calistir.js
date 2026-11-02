@@ -109,6 +109,27 @@ esit("doğrula meta", dogrula.metaOku('<meta name="citation_title" content="Mül
 esit("doğrula crossref", dogrula.crossrefOku({ title: ["A <i>study</i>"], author: [{ given: "N. Erdal", family: "Fanid" }] }), { basliklar: ["A study"], yazarlar: ["N. Erdal Fanid"], adSoyad: [{ ad: "N. Erdal", soyad: "Fanid" }] });
 esit("doğrula DOI", [dogrula.doiBul({ DOI: "10.1234/abc.5" }), dogrula.doiBul({ extra: "DOI: 10.5555/x-y." }), dogrula.doiBul({ url: "https://doi.org/10.33629/auhfd.1234" }), dogrula.doiBul({})],
 	["10.1234/abc.5", "10.5555/x-y", "10.33629/auhfd.1234", null]);
+esit("kısa başlık", ["Yeni Bir Dönemin Başlangıcı: Avrupa Yeşil Mutabakatı", "\"Yetki Genişliği\" İlkesi Üzerine Bir İnceleme", "Çevre Hakkı", "Hukuk mu Siyaset mi? Bir İnceleme",
+	"Avrupa Birliği SIGMA (Support for Improvement in Governance) Programı", "Sağlıklı ve Dengeli Bir Çevrede Yaşama Hakkı – Çevreye Bir Yaklaşım"].map((t) => harf.kisaBaslik(t)),
+	["Yeni Bir Dönemin Başlangıcı", "\"Yetki Genişliği\" İlkesi Üzerine", "Çevre Hakkı", "Hukuk mu Siyaset mi?", "Avrupa Birliği SIGMA", "Sağlıklı ve Dengeli"]);
+esit("kısa başlık kesik", ["Yeni Bir Dönemin Başlang", "Yeni Bir Dönemin", "Yeni Bir…", "Başka"].map((k) => harf.kisaBaslikKesik(k, "Yeni Bir Dönemin Başlangıcı")), [true, false, true, false]);
+esit("kısaltma açılımı", [dil.acilimMi("Sıgma", "Support for Improvement in Governance and Management"), dil.acilimMi("TAIEX", "Technical Assistance and Information Exchange"), dil.acilimMi("Programı", "Support for Improvement in Governance and Management")], [true, true, false]);
+esit("başlıkta not", karakter.notParantez("Kamusal Malların Ölçütü (amme, künye yok)"), "Kamusal Malların Ölçütü");
+esit("başlıkta not değil", ["Kamu Yararı (Kontrol Mekanizmaları)", "İdare Hukuku (Genel Esaslar)"].map(karakter.notParantez), ["Kamu Yararı (Kontrol Mekanizmaları)", "İdare Hukuku (Genel Esaslar)"]);
+esit("başlık düzeni v. / Roma rakamı V", ["Mıaılhe V. Fransa Kararı", "Anayasa ve İdare Hukukundan Kesitler V"].map((t) => harf.baslikDuzeni(t, { dil: "tr" })), ["Mıaılhe v. Fransa Kararı", "Anayasa ve İdare Hukukundan Kesitler V"]);
+esit("yazım şüphesi", ["ARTTIRILAMAMASF’ Kuralını", "Orantılılk İlkesi", "Teklifl erinin", "Türk Halk Reform Konsept Atatürk İnanç Modern", "HUMK TBMM ChatGPT 20.7.1999"].map(harf.yazimSupheli),
+	[["ARTTIRILAMAMASF"], ["Orantılılk"], ["Teklifl"], [], []]);
+esit("PDF kodlaması", ["MADENCĠLĠK FAALĠYETLERĠ", "Ġdari Vesayet GörevlendirilmiĢ", "Atđna Đle Đstanbul", "Đorđević i Šešelj"].map((x) => karakter.pdfKodlama(x, { dil: "tr" })),
+	["MADENCİLİK FAALİYETLERİ", "İdari Vesayet Görevlendirilmiş", "Atina İle İstanbul", "Đorđević i Šešelj"]);
+esit("küçük başlayan ad", yazar.kucukBasla("ali Fuat de la Cruz", "tr"), "Ali Fuat de la Cruz");
+esit("PDF son kelime sınırı", [dogrula.pdfEslesme("İHAM PERSPEKTİFİ\nAhmet", "ihamperspektif"), dogrula.pdfEslesme("İHAM PERSPEKTİF\nAhmet", "ihamperspektif"), dogrula.pdfEslesme("BİR ANALİZYrd. Doç.", "biranaliz")],
+	[{ tam: false, devam: "İ" }, { tam: true }, { tam: false, devam: null }]);
+{
+	let satir = { alan: "title", eski: "KAMU GÖREVLİLERİYLE İLGİLİ İDARİ DAVALARDA ADİL YARGILANMA HAKKININ UYGULANABİLİRLİĞİ Pellegrin’den 1999 Baka’ya 2016 İHAM Perspektif",
+		yeni: "Kamu Görevlileriyle İlgili İdari Davalarda Adil Yargılanma Hakkının Uygulanabilirliği Pellegrin’den 1999 Baka’ya 2016 İHAM Perspektif" };
+	let pdf = "KAMU GÖREVLİLERİYLE İLGİLİ İDARİ DAVALARDA ADİL YARGILANMA\nHAKKININ UYGULANABİLİRLİĞİ: PELLEGRIN’DEN 1999 BAKA’YA 2016 İHAM PERSPEKTİFİ\nAhmet Yılmaz*";
+	esit("doğrula başlık PDF'te son kelime eksik (DergiPark da eksik)", dogrula.degerlendir(satir, { pdf, basliklar: [{ kaynak: "DergiPark", metin: satir.eski }] }).yeniOneri, satir.yeni + "i");
+}
 {
 	let pdf = "Hukuk Dergisi Cilt 3\nMÜLTECİLERİN TEMEL HAK VE ÖZGÜRLÜKLERİNİN KORUN-\nMASI: TÜRK VE ETİYOPYA MÜLTECİ HUKUKU BAKIMINDAN KARŞILAŞTIRMALI BİR ANALİZ\nYrd. Doç. Dr. N. Erdal FANİD";
 	let baslik = { alan: "title", eski: "MÜLTECİLERİN … ANALİZ [tr]", yeni: "Mültecilerin Temel Hak ve Özgürlüklerinin Korunması: Türk ve Etiyopya Mülteci Hukuku Bakımından Karşılaştırmalı Bir Analiz" };

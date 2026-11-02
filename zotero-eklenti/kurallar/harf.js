@@ -5,7 +5,8 @@
  *
  * baslikDuzeni(metin, baglam): TDK başlık kuralı — her kelime büyük harfle başlar; "ve, ile, ya, veya, yahut,
  *   ki, da, de" bağlaçları ve "mı/mi/mu/mü" soru eki küçük kalır (ilk kelime ve iki nokta/tire sonrası hep büyük).
- *   Türkçe eser başlıklarının varsayılanı; dergi/kurum adları için de kullanılır.
+ *   Türkçe eser başlıklarının varsayılanı; dergi/kurum adları için de kullanılır. İngilizcede Title Case:
+ *   a, an, the, and, of, in, for… küçük (Latince "In Dubio", Roma rakamı "V" hariç).
  * cumleDuzeni(metin, baglam): yalnızca ilk harf, iki nokta/soru/ünlem sonrası, kısaltmalar, özel adlar
  *   ve kesme işaretli kelimeler (Türkiye'de, AİHM'nin) büyük kalır. Türkçe yerel: I→ı, İ→i.
  */
@@ -28,7 +29,7 @@ SEGBİS UYAP BİMER CİMER TİHEK KİK KİT BOTAŞ TPAO TEDAŞ EÜAŞ ETKB MAPEG
 OECD AGİT AİHK BMMYK UNHCR NATO ILO WIPO WWF IUCN IPCC UNFCCC COP COP26 COP27 COP28 EEA EFTA CEDAW ICCPR ICESCR UNCLOS PACE
 TCMB BİST KOSGEB OSB KOBİ İSO İTO ATO TOBB TÜSİAD MÜSİAD DİSK TÜRK-İŞ HAK-İŞ KESK TTB TBB TÜRMOB AYİM ASYM YSK RG TC T.C. E. K.
 D. HGK CGK İBK GmbH AG SA SpA Ltd LLC Inc PhD LLM LL.M. UYAP e-Devlet e-İmza AB-ABD ABAD AİHMK CEDAW ICSID UNCITRAL WTO GATT
-NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
+NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK FSEK SMK TKHK MÖHUK KMK İSG GVK KVK DSÖ`.split(/\s+/).filter(Boolean));
 
 	// Özel adlar: kanonik biçim. Uzun ifadeler önce eşleştirilir.
 	const OZEL_ADLAR_TR = `Avrupa İnsan Hakları Mahkemesi|Avrupa İnsan Hakları Sözleşmesi|Avrupa İnsan Hakları Komisyonu|Avrupa Birliği Adalet Divanı|Avrupa Birliği Temel Haklar Şartı|Avrupa Birliği|Avrupa Konseyi|Avrupa Parlamentosu|Avrupa Komisyonu|Avrupa Yeşil Mutabakatı|Avrupa Sosyal Şartı|Birleşmiş Milletler|Anayasa Mahkemesi|Türkiye Büyük Millet Meclisi|Danıştay İdari Dava Daireleri Kurulu|Danıştay Vergi Dava Daireleri Kurulu|Bölge İdare Mahkemesi|Bölge Adliye Mahkemesi|Yargıtay Hukuk Genel Kurulu|Yargıtay Ceza Genel Kurulu|Uyuşmazlık Mahkemesi|Kamu Denetçiliği Kurumu|Kişisel Verileri Koruma Kurulu|Kişisel Verileri Koruma Kurumu|Kişisel Verilerin Korunması Kanunu|Türk Ceza Kanunu|Türk Medeni Kanunu|Türk Medenî Kanunu|Türk Borçlar Kanunu|Türk Ticaret Kanunu|İdari Yargılama Usulü Kanunu|Ceza Muhakemesi Kanunu|Hukuk Muhakemeleri Kanunu|İcra ve İflas Kanunu|İş Kanunu|Çevre Kanunu|Maden Kanunu|İmar Kanunu|Kamu İhale Kanunu|Kamulaştırma Kanunu|Bilgi Edinme Hakkı Kanunu|Devlet Memurları Kanunu|Belediye Kanunu|Büyükşehir Belediyesi Kanunu|Kabahatler Kanunu|Vergi Usul Kanunu|Sosyal Sigortalar ve Genel Sağlık Sigortası Kanunu|Kanun Hükmünde Kararname|Cumhurbaşkanlığı Kararnamesi|sayılı Kanun|sayılı Cumhurbaşkanlığı Kararnamesi|sayılı Kanun Hükmünde Kararname|sayılı Yönetmelik|Cumhurbaşkanlığı|Cumhurbaşkanı|Osmanlı Devleti|Osmanlı İmparatorluğu|Osmanlı|Türkiye Cumhuriyeti|Türkiye|Türk|Türkçe|Avrupa|Amerika Birleşik Devletleri|Amerika|Amerikan|Almanya|Alman|Fransa|Fransız|İngiltere|İngiliz|Birleşik Krallık|İtalya|İtalyan|İspanya|Hollanda|İsviçre|Avusturya|Rusya|Rus|Çin|Japonya|Yunanistan|Kıbrıs|Suriye|Irak|İran|Azerbaycan|Ukrayna|Polonya|Belçika|İsveç|Norveç|Danimarka|Finlandiya|Kanada|Avustralya|Hindistan|Brezilya|Pakistan|Afrika|Asya|Ortadoğu|Orta Doğu|Balkanlar|Kafkasya|Akdeniz|Karadeniz|Ege|Marmara|Anadolu|Trakya|Ankara|İstanbul|İzmir|Bursa|Antalya|Diyarbakır|Konya|Adana|Muğla|Çanakkale|Edirne|Trabzon|Samsun|Erzurum|Van|Paris|Londra|Strazburg|Lüksemburg|Brüksel|Berlin|Viyana|Roma|Washington|Lahey|Cenevre|Anayasa|Danıştay|Yargıtay|Sayıştay|Meclis|İslam|İslami|Hristiyan|Hıristiyan|Yahudi|Musevi|Kur'an|Kur’an|Bizans|Selçuklu|Atatürk|Tanzimat|Meşrutiyet|Cumhuriyet|Paris Anlaşması|Paris İklim Anlaşması|Kyoto Protokolü|Stockholm|Rio|Aarhus Sözleşmesi|Lizbon Antlaşması|Maastricht|Roma Statüsü|Cenevre Sözleşmesi|Covid-19|Kovid-19|Dünya Bankası|Dünya Sağlık Örgütü|Dünya Ticaret Örgütü|Uluslararası Adalet Divanı|Uluslararası Ceza Mahkemesi|Uluslararası Çalışma Örgütü|Uluslararası Para Fonu|Venedik Komisyonu|Federal Anayasa Mahkemesi|Alman Federal Anayasa Mahkemesi|Fransız Danıştayı|Conseil d'État|Conseil d’État|Conseil d'Etat|Conseil d’Etat|Conseil Constitutionnel|Bundesverfassungsgericht|Yüksek Seçim Kurulu|Hâkimler ve Savcılar Kurulu|Hakimler ve Savcılar Kurulu|Radyo ve Televizyon Üst Kurulu|Rekabet Kurumu|Rekabet Kurulu|Sermaye Piyasası Kurulu|Bankacılık Düzenleme ve Denetleme Kurumu|Enerji Piyasası Düzenleme Kurumu|Bilgi Teknolojileri ve İletişim Kurumu|Kamu İhale Kurumu|Kamu Gözetimi Kurumu|Milli Eğitim Bakanlığı|Millî Eğitim Bakanlığı|Sağlık Bakanlığı|Adalet Bakanlığı|İçişleri Bakanlığı|Dışişleri Bakanlığı|Çevre, Şehircilik ve İklim Değişikliği Bakanlığı|Çevre ve Şehircilik Bakanlığı|Enerji ve Tabii Kaynaklar Bakanlığı|Tarım ve Orman Bakanlığı|Hazine ve Maliye Bakanlığı|Maden ve Petrol İşleri Genel Müdürlüğü|Devlet Su İşleri|Orman Genel Müdürlüğü|Karayolları Genel Müdürlüğü|Türkiye İstatistik Kurumu|Türkiye Barolar Birliği|Türkiye Odalar ve Borsalar Birliği|Ankara Barosu|İstanbul Barosu|Ankara Üniversitesi|İstanbul Üniversitesi|Galatasaray Üniversitesi|Marmara Üniversitesi|Hacettepe Üniversitesi|Gazi Üniversitesi|Dokuz Eylül Üniversitesi|Selçuk Üniversitesi|Akdeniz Üniversitesi|Bilkent Üniversitesi|Koç Üniversitesi|Yıldırım Beyazıt|Hacı Bayram Veli|Rawls|Kant|Hegel|Kelsen|Schmitt|Dworkin|Hart|Habermas|Marx|Weber|Duguit|Hauriou|Montesquieu|Rousseau|Locke|Hobbes|Aristoteles|Aristo|Platon|Sokrates|Foucault|Luhmann|Fuller|Radbruch|Jellinek|Laband|Otto Mayer|Carl Schmitt|Hans Kelsen|John Rawls|Jürgen Habermas|Ronald Dworkin|Léon Duguit|Maurice Hauriou|Karl Renner|Karl Marx|Max Weber|Niklas Luhmann|Gustav Radbruch|Onar|Duran|Günday|Gözler|Özbudun|Tanör|Kaboğlu|Sancar|Google|Microsoft|OpenAI|Meta|Facebook|Twitter|Amazon|Apple|Tesla|Urgenda|Marmara Denizi|Kaz Dağları|İkizköy|Akbelen|Kirazlı|Cerattepe|Bergama|Fırat|Dicle|Kızılırmak|Sakarya`.split("|");
@@ -220,6 +221,9 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		if (/^(\p{Lu}\.)+\p{Lu}?$/u.test(up) && core.length <= 8) {
 			return up;   // T.C., A.Ş., U.S.
 		}
+		if (/^(?:m|md|mad)$/iu.test(core) && (o.son || "").startsWith(".")) {
+			return dil.kucult(core, d);   // madde kısaltması "m." Roma rakamı (M = 1000) değil
+		}
 		if (romen(core, o.son)) {
 			return up;
 		}
@@ -286,6 +290,13 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		return m ? { on: m[1], core: m[2], son: m[3] } : { on: "", core: tok, son: "" };
 	}
 
+	/** "HUMK m. 87", "AATUHK md. 3": ardından madde kısaltması gelen kısa, tamamı büyük kelime kanun kısaltmasıdır. */
+	function kanunKisaltmasi(core, tokens, i, d) {
+		let { core: c, son } = parcala(tokens[i + 2] || "");
+		return /^(?:m|md|mad)$/iu.test(c) && son.startsWith(".") && harfler(core).length >= 2 && harfler(core).length <= 6
+			&& /^\p{L}+$/u.test(core) && core === dil.buyult(core, d);
+	}
+
 	function cumleDuzeni(metin, baglam = {}) {
 		let d = baglam.dil == "tr" ? "tr" : "en";
 		let allCaps = tamamiBuyuk(metin, d);
@@ -308,6 +319,9 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 			capNext = sonrakiBuyuk(core, son);
 			if (istisna.has(dil.kucult(core, d))) {
 				return on + istisna.get(dil.kucult(core, d)) + son;
+			}
+			if (kanunKisaltmasi(core, tokens, i, d)) {
+				return tok;
 			}
 			return on + kelime(core, { d, cap, allCaps: allCaps || kosu[i], son, parantez: on.endsWith("(") && son.startsWith(")") }) + son;
 		}).join("");
@@ -335,14 +349,22 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 				}
 				return tok;
 			}
-			let zorunlu = capNext;
+			if (on.startsWith("(") && son.endsWith(")") && /^\p{N}+$/u.test(core)) {
+				return tok;     // "(23) The LLM…": parantez içi numara sonraki kelimeyi etkilemez
+			}
+			let zorunlu = capNext || (d == "en" && /[("“‘]$/.test(on));
 			capNext = sonrakiBuyuk(core, son);
 			let low = dil.kucult(core, d);
+			let latince = d == "en" && LATINCE.test(parcala(tokens[i + 2] || "").core);   // "In Dubio", "Per Se"
 			let r;
 			if (istisna.has(low)) {
 				r = istisna.get(low);
 			}
-			else if (!zorunlu && kucuk.has(low)) {
+			else if (kanunKisaltmasi(core, tokens, i, d)) {
+				r = core;
+			}
+			else if (!zorunlu && kucuk.has(low) && !latince && !(core == "V" && !(son.startsWith(".") && tokens[i + 2]))) {
+				// "Values V", "Kesitler V": Roma rakamı; "Mıaılhe V. Fransa": versus
 				r = low;
 			}
 			else {
@@ -359,7 +381,127 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		if (ps.length < 2) {
 			return fn(s);
 		}
-		return ps.map((p) => p.ayirac + (p.dil && p.dil != "tr" ? p.metin : fn(p.metin))).join("");
+		return ps.map((p) => p.ayirac + (p.dil && p.dil != "tr" ? p.metin : fn(p.metin)) + (p.son || "")).join("");
+	}
+
+	// Türkçe metinde geçen Latince kalıplar: tamamı büyük "SUI GENERIS" Türkçe yerelle "Suı Generıs" olmasın
+	const LATINCE_IFADELER = `sui generis|de facto|de jure|de iure|ultra vires|prima facie|ex officio|ex post facto|ex ante|ex post|ex tunc|ex nunc|ad hoc
+|erga omnes|jus cogens|ius cogens|res judicata|res iudicata|pacta sunt servanda|rebus sic stantibus|habeas corpus|habeas data|in dubio pro reo
+|in dubio pro natura|in dubio pro libertate|ratio legis|ratio decidendi|obiter dictum|amicus curiae|lex specialis|lex posterior|lex superior
+|lex mercatoria|non bis in idem|ne bis in idem|nulla poena sine lege|nullum crimen sine lege|mutatis mutandis|a priori|a posteriori|status quo
+|inter alia|ipso facto|ipso iure|ipso jure|bona fide|mala fide|locus standi|actio popularis|numerus clausus|in rem|in personam|in abstracto
+|in concreto|in limine|in situ|contra legem|praeter legem|secundum legem|ultima ratio|audi alteram partem|nemo judex in causa sua|res publica
+|res communis|terra nullius|persona non grata|modus vivendi|modus operandi|opinio juris|opinio iuris|stare decisis|certiorari|amparo
+|forum non conveniens|lis pendens|ad valorem|pro bono|curriculum vitae|per se|vice versa|et al|ibid|idem|passim|op cit|sine qua non
+|conditio sine qua non|condicio sine qua non|ab initio|de lege lata|de lege ferenda|lex lata|lex ferenda|summum ius summa iniuria`
+		.split("|").map((x) => x.trim().split(" "));
+
+	/** Latince kalıplardaki ı/İ → i/I ("Suı Generıs" → "Sui Generis"); harf büyüklüğü korunur. */
+	function latinceIfadeler(metin) {
+		if (!/[ıİ]/.test(metin)) {
+			return metin;
+		}
+		let tokens = metin.split(/(\s+)/);
+		let kelimeler = [];   // [token indeksi, düz anahtar]
+		tokens.forEach((t, i) => {
+			let core = parcala(t).core;
+			if (core) {
+				kelimeler.push([i, dil.kucult(core, "tr").replace(/ı/g, "i")]);
+			}
+		});
+		for (let j = 0; j < kelimeler.length; j++) {
+			for (let ifade of LATINCE_IFADELER) {
+				if (ifade.every((w, n) => kelimeler[j + n] && kelimeler[j + n][1] == w)) {
+					ifade.forEach((w, n) => {
+						let ti = kelimeler[j + n][0];
+						tokens[ti] = tokens[ti].replace(/ı/g, "i").replace(/İ/g, "I");
+					});
+				}
+			}
+		}
+		return tokens.join("");
+	}
+
+	/** Türkçe başlığın içindeki İngilizce parantez: "Sıgma (support For Improvement In Governance And Management)".
+	 *  Parantez İngilizce yazıma getirilir (ı → i; in, and, for küçük); önündeki kelime açılımın kısaltmasıysa
+	 *  büyük yazılır (Türkçe yerelle küçültülmüş "SIGMA" → "Sıgma" → "SIGMA"). */
+	function ingilizceParantez(metin) {
+		return metin.replace(/(\p{L}+)?(\s*\()([^()]+)(\))/gu, (tum, onceki, ac, ic, kapa) => {
+			let yeni = dil.sahteIDuzeltKelime(ic);       // cümle düzeninde Türkçe yerelle küçültülmüş: "ımprovement ın"
+			let t = dil.tespit(yeni);
+			if (t.dil != "en" || t.guven != "yuksek") {
+				return tum;
+			}
+			if (onceki && dil.acilimMi(onceki, yeni)) {
+				// açılım bir kurum/program adıdır: cümle düzeninde de kelimeleri büyük başlar (bağlaçlar küçük)
+				yeni = ingilizceKucukKelimeler(yeni.replace(/(^|\s)(\p{Ll})/gu, (m, b, c) => b + c.toUpperCase()));
+				return dil.sahteIDuzeltKelime(onceki).toUpperCase() + ac + yeni + kapa;
+			}
+			return (onceki || "") + ac + ingilizceKucukKelimeler(yeni) + kapa;
+		});
+	}
+
+	// Türkçe başlıkta kelime sonunda olağan ünsüz ikilileri (Türkçe ve sık yabancı kelimeler; kütüphane ölçümünden).
+	// Bunların dışında biten kelime çoğunlukla OCR/yazım hatasıdır: ARTTIRILAMAMASF, Orantılılk, Teklifl, Fransanm.
+	const OLAGAN_SON = new Set(`ns nt zm ng st rm rn rk nç rt pt ts ty ch ry nd my rg ld ht tt sh ss rs rd nn ds ms cy lp th nz yn cs ll nk yb yt
+lt ls ly gh dy gy sm dt ck ks mp fs ps ws gs hy ky ct ph tz pp mt xt rv ft yd nc rç rz rp lç rb rf sk sp rl yl ym yr ys yk yz yş yç kt rh lf lm rş ff gg dd bb`.split(/\s+/));
+	const SESLI = /[aeıioöuüâîûéèáàóíy]/;
+
+	/** Türkçe başlıkta yazım hatası olabilecek kelimeler: Türkçede olağan olmayan ünsüz ikilisiyle bitenler.
+	 *  Kısaltmalar (tamamı büyük, ≤ 6 harf), iç büyük harfli adlar (ChatGPT), rakamlı ve noktalı kelimeler sayılmaz. */
+	function yazimSupheli(metin) {
+		let liste = [];
+		for (let w of metin.split(/[^\p{L}’'.\d]+/u)) {
+			w = w.split(/[’']/)[0];
+			if (w.length < 5 || /[\d.]/.test(w)) {
+				continue;
+			}
+			let tamBuyuk = w === dil.buyult(w, "tr");
+			if ((tamBuyuk && w.length <= 6) || (!tamBuyuk && /\p{Lu}/u.test(w.slice(1))) || KISALTMALAR.has(w)) {
+				continue;
+			}
+			let son = dil.kucult(w, "tr").slice(-2);
+			if (!SESLI.test(son[0]) && !SESLI.test(son[1]) && !OLAGAN_SON.has(son)) {
+				liste.push(w);
+			}
+		}
+		return liste;
+	}
+
+	const KISA_KELIME = 4;
+	const SONDA_KALMAZ = new Set([...KUCUK_TR, ...KUCUK_EN, "bir"]);
+
+	/** Kısa başlık: iki noktadan (ya da ?, !, " – ") önceki ana başlık; 4 kelimeyi aşıyorsa ilk 4 kelime.
+	 *  Kelime ortasından bölmez; sonda bağlaç (ve, ile, of, the, bir…), virgül ya da açık kalmış tırnak/parantez bırakmaz. */
+	function kisaBaslik(baslik) {
+		let ana = baslik.trim().split(/(?<=[?!])\s+|\s*:\s+|\s+[-–—]\s+/)[0] || baslik.trim();
+		let ws = ana.split(/\s+/);
+		if (ws.length <= KISA_KELIME) {
+			return ana;
+		}
+		ws = ws.slice(0, KISA_KELIME);
+		while (ws.length > 1 && SONDA_KALMAZ.has(dil.kucult(ws[ws.length - 1].replace(/[^\p{L}]/gu, ""), "tr"))) {
+			ws.pop();
+		}
+		let k = ws.join(" ").replace(/[,;.]+$/, "");
+		// "Avrupa Birliği SIGMA (Support…": açık kalan parantez/tırnaktan önce kes; en baştaysa yalnızca işareti sil
+		for (let [ac, kapa] of [["(", ")"], ["[", "]"], ["“", "”"], ["«", "»"], ['"', '"']]) {
+			let say = (c) => k.split(c).length - 1;
+			let acik = ac == kapa ? say(ac) % 2 == 1 : say(ac) > say(kapa);
+			if (acik) {
+				let i = k.lastIndexOf(ac);
+				k = i > 0 ? k.slice(0, i).trim().replace(/[,;.]+$/, "") : k.slice(1);
+			}
+		}
+		return k;
+	}
+
+	/** Kısa başlık başlığın başından kelime ortasında mı kesilmiş: "Yeni Bir Dönemin Başlang", "Yeni Bir Dönemin…". */
+	function kisaBaslikKesik(kisa, baslik) {
+		let ucNokta = /(?:\.{3}|…)\s*$/.test(kisa);
+		let k = dil.kucult(kisa.replace(/(?:\.{3}|…)\s*$/, "").trim(), "tr");
+		let b = dil.kucult(baslik, "tr");
+		return !!k && b.startsWith(k) && b.length > k.length && (ucNokta || /[\p{L}\p{N}]/u.test(b[k.length]));
 	}
 
 	const BASLIK_ALANLARI = new Set(["title", "shortTitle", "bookTitle", "proceedingsTitle", "encyclopediaTitle", "dictionaryTitle"]);
@@ -383,6 +525,18 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 						: buyukKosuVar(s, d)
 							? { kural: "harf.buyukKosu", aciklama: "Başlıktaki TAMAMI BÜYÜK kelimeler Her Kelime Büyük düzenine çevrildi", guven: "orta" }
 							: { kural: "harf.kucukBaslik", aciklama: "Başlık Her Kelime Büyük düzenine çevrildi (TDK; bağlaçlar küçük)", guven: "orta" });
+					s = y;
+				}
+			}
+			else if (d == "en" && stil == "baslik") {
+				// İngilizce Title Case: her kelime büyük, of/the/in/and küçük
+				let y = baslikDuzeni(s, baglam);
+				if (y != s) {
+					degisiklikler.push(tamamiBuyuk(s, d)
+						? { kural: "harf.tamamiBuyuk", aciklama: "Tamamı büyük başlık Title Case düzenine çevrildi", guven: "orta" }
+						: y == ingilizceKucukKelimeler(s)
+							? { kural: "harf.ingilizceKucuk", aciklama: "İngilizce başlıkta of/the/in gibi küçük kelimeler küçültüldü", guven: "orta" }
+							: { kural: "harf.ingilizceBaslik", aciklama: "İngilizce başlık Title Case düzenine çevrildi (of, the, in, and küçük)", guven: "orta" });
 					s = y;
 				}
 			}
@@ -413,6 +567,18 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 					}
 				}
 			}
+			if (d == "tr") {
+				let y = latinceIfadeler(s);
+				if (y != s) {
+					degisiklikler.push({ kural: "harf.latince", aciklama: "Latince ifadede Türkçe yerelden kalan ı → i (Suı Generıs → Sui Generis)", guven: "orta" });
+					s = y;
+				}
+				y = ingilizceParantez(s);
+				if (y != s) {
+					degisiklikler.push({ kural: "harf.ingilizceParantez", aciklama: "Parantez içindeki İngilizce açılım İngilizce yazıma getirildi; kısaltması büyük yazıldı", guven: "orta" });
+					s = y;
+				}
+			}
 		}
 		else if (AD_ALANLARI.has(baglam.alan) && tamamiBuyuk(s, d == "tr" ? "tr" : "en")) {
 			let y = baslikDuzeni(s, baglam);
@@ -424,5 +590,5 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA`.split(/\s+/).filter(Boolean));
 		return { metin: s, degisiklikler };
 	}
 
-	return { uygula, ingilizceKucukKelimeler, cumleDuzeni, baslikDuzeni, tamamiBuyuk, titleCaseGibi, buyukKosuVar, ozelAdlar, KISALTMALAR, OZEL_ADLAR_TR, OZEL_ADLAR_EN, BASLIK_ALANLARI, AD_ALANLARI };
+	return { uygula, ingilizceKucukKelimeler, ingilizceParantez, latinceIfadeler, yazimSupheli, kisaBaslik, kisaBaslikKesik, cumleDuzeni, baslikDuzeni, tamamiBuyuk, titleCaseGibi, buyukKosuVar, ozelAdlar, KISALTMALAR, OZEL_ADLAR_TR, OZEL_ADLAR_EN, BASLIK_ALANLARI, AD_ALANLARI };
 });
