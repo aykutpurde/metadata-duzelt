@@ -165,6 +165,61 @@
 		return metin.normalize("NFC").replace(/i̇/g, "i").replace(/İ̇/g, "İ");
 	}
 
+	const SESLI_ART = /[aıou]/, SESLI_ON = /[eiöü]/;
+
+	/** Yanlış yerelle küçültülmüş metin ("Mücavi̇r Alan Kavrami", "Aliminda"): "İ" küçülünce "i̇" artığı bırakır,
+	 *  "I" ise düz "i" olur. Metinde artık varsa düz "i"ler büyük olasılıkla "I"dan gelmiştir; ses uyumu kalın
+	 *  (önceki ünlü a/ı/o/u; kelime başındaysa sonraki ünlü) olanlar "ı" yapılır. İnce bağlamdaki "i"ye dokunulmaz
+	 *  ("AİHM'nin", "ilkeleri" gibi zaten küçük yazılmış kelimeler bozulmasın); metinde doğru "ı" varsa hiç dokunulmaz.
+	 *  Artık bu adımdan sonra nfc'de temizlenir. */
+	function yerelI(metin, baglam = {}) {
+		// metinde doğru "ı" varsa kaynak tamamı büyük değildi (karışık metin: "Biyokütle" bozulmasın)
+		if (!/i̇/.test(metin) || /ı/.test(metin) || (baglam.dil && baglam.dil != "tr")) {
+			return metin;
+		}
+		return metin.replace(/[\p{L}\u0307]+/gu, (w) => {
+			let h = [...w];
+			let cikti = [];
+			for (let j = 0; j < h.length; j++) {
+				let c = h[j];
+				if (c == "\u0307") {
+					cikti.push(c);
+					continue;
+				}
+				if (c != "i" || h[j + 1] == "\u0307") {
+					cikti.push(c);
+					continue;
+				}
+				// önceki ünlü (artıklı i̇ ince sayılır); yoksa sonraki ilk ünlü
+				let onceki = null;
+				for (let k = cikti.length - 1; k >= 0 && !onceki; k--) {
+					let x = cikti[k].toLowerCase();
+					if (SESLI_ART.test(x) || SESLI_ON.test(x)) {
+						onceki = x;
+					}
+				}
+				let sonraki = null;
+				for (let k = j + 1; k < h.length && !onceki && !sonraki; k++) {
+					let x = h[k].toLowerCase();
+					if (SESLI_ART.test(x) || (SESLI_ON.test(x) && !(x == "i" && h[k + 1] != "\u0307"))) {
+						sonraki = x;
+					}
+				}
+				let kalin = SESLI_ART.test(onceki || sonraki || "");
+				cikti.push(kalin ? "ı" : c);
+			}
+			return cikti.join("");
+		});
+	}
+
+	/** "Frameworks:Case studies" → "Frameworks: Case studies"; "Öneri:birlikte" → "Öneri: birlikte".
+	 *  İki tarafta da en az iki harf olmalı (saat, DOI, URL, "e:" etkilenmez); "Māori:non-Māori" gibi aynı kelimeyi
+	 *  içeren bileşiklere dokunulmaz. */
+	function ikiNokta(metin) {
+		return metin.replace(/(\p{L}{2,})([:;])(?=(\p{L}{2}[^\s]*))/gu, (m, sol, isaret, sag) =>
+			sag.toLowerCase().includes(sol.toLowerCase()) ? m : `${sol}${isaret} `);
+	}
+
 	/** Çift boşluk, baş/son boşluk; başlık alanlarında satır sonları boşluk olur; ", " öncesi boşluk kalkar. */
 	function bosluk(metin, baglam) {
 		let s = metin;
@@ -197,6 +252,21 @@
 					return ic.trim();
 				}
 			}
+		}
+		return metin;
+	}
+
+	/** Başlığın başında kapanmamış tırnak: "'türk Kamu Yönetiminde …" → "türk Kamu Yönetiminde …".
+	 *  Tek tırnakta (' ‘) ardından küçük harf gelmeli: kapanışı kesmeyle karışır ("‘Kentsel Yeşil Alan’ın" alıntıdır),
+	 *  küçük harf ise bozuk içe aktarmanın izidir. Çift tırnakta (" “) metinde ikinci bir tırnak olmamalı
+	 *  ("Anayasa'ya Uygunluk Denetimi"nde: tırnak ekten önce kapanır). */
+	function basTirnak(metin) {
+		let ac = metin[0], geri = metin.slice(1);
+		if ((ac == "'" || ac == "‘") && /^\p{Ll}/u.test(geri)) {
+			return geri;
+		}
+		if ((ac == '"' || ac == "“") && /^\p{L}/u.test(geri) && !/["“”]/.test(geri)) {
+			return geri;
 		}
 		return metin;
 	}
@@ -248,6 +318,7 @@
 				s = y;
 			}
 		};
+		adim("yerelI", "Yanlış yerelle küçültülmüş metin: “I”dan gelen “i”ler “ı” yapıldı (Kavrami → Kavramı)", (x) => yerelI(x, baglam), "orta");
 		adim("nfc", "Birleşik karakterler NFC'ye getirildi / i̇ artığı temizlendi", nfc);
 		adim("mojibake", "Bozuk kodlama (mojibake) düzeltildi", mojibake);
 		adim("eskiKodSayfasi", "Eski Türkçe kod sayfası harfleri (ý þ ð) düzeltildi", (x) => eskiKodSayfasi(x, baglam));
@@ -259,16 +330,20 @@
 			adim("dergiparkOneki", "Sayfa başlığı öneki (“Dergi » Makale »”) atıldı", dergiparkOneki);
 			if (baglam.alan != "shortTitle") {   // kısa başlık çoğunlukla "“Alıntı”: alt başlık"ın alıntı kısmıdır
 				adim("saranTirnak", "Başlığın tamamını saran tırnak işaretleri kaldırıldı", saranTirnak, "orta");
+				adim("basTirnak", "Başlığın başındaki kapanmamış tırnak kaldırıldı", basTirnak, "orta");
 			}
 			adim("dilEtiketi", "Başlık sonundaki dil etiketi ([tr], (en) …) atıldı; özgün başlıkla karşılaştırın", dilEtiketi, "orta");
 			adim("notParantez", "Başlığa yazılmış not (“künye yok” …) atıldı", notParantez, "orta");
 		}
 		adim("bosluk", "Fazla boşluk / satır sonu temizlendi", (x) => bosluk(x, baglam));
+		if (baglam.alan != "abstractNote") {
+			adim("ikiNokta", "İki nokta / noktalı virgülden sonra eksik boşluk eklendi", ikiNokta);
+		}
 		if (BASLIK_ALANLARI.has(baglam.alan)) {
 			adim("sondakiNokta", "Başlık sonundaki nokta kaldırıldı", sondakiNokta, "orta");
 		}
 		return { metin: s, degisiklikler };
 	}
 
-	return { uygula, pdfKodlama, saranTirnak, dilEtiketi, notParantez, notlar, mojibake, eskiKodSayfasi, htmlVarliklar, bagliHarf, gorunmez, nfc, bosluk, dergiparkOneki, sondakiNokta, BASLIK_ALANLARI };
+	return { uygula, yerelI, ikiNokta, basTirnak, pdfKodlama, saranTirnak, dilEtiketi, notParantez, notlar, mojibake, eskiKodSayfasi, htmlVarliklar, bagliHarf, gorunmez, nfc, bosluk, dergiparkOneki, sondakiNokta, BASLIK_ALANLARI };
 });

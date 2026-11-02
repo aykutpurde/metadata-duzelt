@@ -40,6 +40,15 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 	const KUCUK_TR = new Set(("ve ile ya veya yahut veyahut ki da de mi mı mu mü"
 		+ " v vs c m md f s bkz vd vb krş"                      // atıf kısaltmaları: v. (versus), m. (madde), f. (fıkra), s. (sayfa)
 		+ " and of the or to for nor with from by").split(" "));   // Türkçe başlık içindeki İngilizce karar/eser adları (Türkçede karşılığı olmayanlar)
+	// Soru ekinin çekimli biçimleri de küçük kalır: midir, mudur, mısın, miydi, misiniz… ("müdür" isim de olabildiğinden ayrı)
+	const SORU_EKI = new Set(["ı", "i", "u", "ü"].flatMap((v) => {
+		let ae = v == "ı" || v == "u" ? "a" : "e";
+		return ["d" + v + "r", "s" + v + "n", "s" + v + "n" + v + "z", "y" + v + "m", "y" + v + "z", "yd" + v, "ym" + v + "ş", "d" + v + "rl" + ae + "r"]
+			.map((ek) => "m" + v + ek);
+	}).filter((w) => w != "müdür"));
+	for (let w of SORU_EKI) {
+		KUCUK_TR.add(w);
+	}
 	const KUCUK_EN = new Set("a an the and or but nor of in on at to for by with from as v vs via per".split(" "));
 	// Karışık yazımlı kısaltmalar (e-Devlet, ChatGPT, GmbH…) küçük harfli anahtarla: "E-DEVLET" → "e-Devlet"
 	const KISALTMA_KUCUK = new Map([...KISALTMALAR].filter((k) => k !== k.toUpperCase()).map((k) => [dil.kucult(k, "tr"), k]));
@@ -69,8 +78,11 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			if (on.startsWith("(") && son.endsWith(")")) {
 				return tok;     // "(23) The LLM…": parantez içi numara sonraki kelimeyi etkilemez
 			}
-			let zorunlu = capNext || /[("“‘]$/.test(on);
+			let zorunlu = capNext || /["“‘]$/.test(on);
 			capNext = sonrakiBuyuk(core, son);
+			if (on.endsWith("(")) {
+				return tok;     // parantez başı: "(and Unleashing)", "(A Global Perspective)" yazıldığı gibi kalır
+			}
 			let sonraki = parcala(tokens[i + 2] || "").core;
 			if (!zorunlu && /^\p{Lu}\p{Ll}*$/u.test(core) && KUCUK_EN.has(core.toLowerCase())
 					&& core != "V" && !LATINCE.test(sonraki)) {   // "Values V": Roma rakamı; "In Dubio", "Per Se": Latince
@@ -192,6 +204,12 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			}
 		}
 		return m;
+	}
+
+	/** "Osman F. Berki", "Ahmet M. Yılmaz": büyük yazılmış tek harf + nokta, ardından rakam gelmiyorsa adın baş harfidir;
+	 *  atıf kısaltması (m. 87, f. 2, s. 12, c. 3) sayılıp küçültülmez. Tamamı büyük başlıkta da yalnızca rakamdan önce küçülür. */
+	function atifBasHarf(core, son, sonraki, allCaps) {
+		return /^[CMFSÇ]$/u.test(core) && son.startsWith(".") && !/^\p{N}/u.test(sonraki || "") && (!allCaps || /^\p{L}/u.test(sonraki || ""));
 	}
 
 	/** Tek bir kelime çekirdeğini (noktalamasız) cümle düzenine çevirir. */
@@ -352,7 +370,7 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			if (on.startsWith("(") && son.endsWith(")") && /^\p{N}+$/u.test(core)) {
 				return tok;     // "(23) The LLM…": parantez içi numara sonraki kelimeyi etkilemez
 			}
-			let zorunlu = capNext || (d == "en" && /[("“‘]$/.test(on));
+			let zorunlu = capNext || (d == "en" && /["“‘]$/.test(on));
 			capNext = sonrakiBuyuk(core, son);
 			let low = dil.kucult(core, d);
 			let latince = d == "en" && LATINCE.test(parcala(tokens[i + 2] || "").core);   // "In Dubio", "Per Se"
@@ -363,7 +381,14 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			else if (kanunKisaltmasi(core, tokens, i, d)) {
 				r = core;
 			}
-			else if (!zorunlu && kucuk.has(low) && !latince && !(core == "V" && !(son.startsWith(".") && tokens[i + 2]))) {
+			else if (d == "tr" && !zorunlu && low == "müdür" && (son.includes("?") || /^(?:ya|yoksa|veya)$/.test(dil.kucult(parcala(tokens[i + 2] || "").core, "tr")))) {
+				r = low;        // soru eki "müdür?" ("Genel Müdür" isimdir, büyük kalır)
+			}
+			else if (d == "en" && !zorunlu && on.endsWith("(") && kucuk.has(low)) {
+				r = core;       // parantez başındaki küçük kelime yazıldığı gibi: "(and Unleashing)", "(A Global Perspective)"
+			}
+			else if (!zorunlu && kucuk.has(low) && !latince && !(core == "V" && !(son.startsWith(".") && tokens[i + 2]))
+					&& !atifBasHarf(core, son, tokens[i + 2], allCaps)) {
 				// "Values V", "Kesitler V": Roma rakamı; "Mıaılhe V. Fransa": versus
 				r = low;
 			}
