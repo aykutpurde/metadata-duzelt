@@ -53,7 +53,7 @@ geçmesidir (sözlük her taramada `creators` tablosundan kurulur; `Nur`, `Can`,
 nokta sonrası hariç; parantez başındaki kelime yazıldığı gibi kalır: `(and Unleashing)`, `(A Global Perspective)`).
 **Kaybolmuş Türkçe harfler** iki yolla bulunur: başlıkta `i̇` artığı varsa (başlık yanlış yerelle küçültülmüş) `I`'dan
 gelen düz `i`ler ses uyumuna göre `ı` yapılır; ayrıca kelime kütüphanenizde Türkçe harfli yazımıyla en az 25 kat daha
-sık geçiyorsa (`Kavrami` 2 kez, `Kavramı` 694 kez) o yazım önerilir. Başlıkta zaten geçen bir harf eksik sayılmaz
+sık geçiyorsa (`Kavrami` 2 kez, `Kavramı` 694 kez) o yazım önerilir; kelimenin bu çekimli hâli kütüphanede hiç doğru yazılmamışsa köküne bakılır (`Yozlasmayla` → `yozlaş-` 40 kez → `Yozlaşmayla`). Başlıkta zaten geçen bir harf eksik sayılmaz
 (`Basında Tekelleşme` başlığında `ş` var, `Basında` bilerek öyle yazılmış); `Basın/Başın`, `Ayni/Aynı` gibi iki yazımı da
 geçerli kelimelere ve şapkaya (`Hakim/Hâkim`) dokunulmaz. Hiç Türkçe harf içermeyen uzun Türkçe başlık uyarılır.
 Soru ekinin çekimli biçimleri de küçük kalır (`Bir Tercih midir ya da … Sonucu mudur?`; `Genel Müdür` isimdir, büyük kalır).
