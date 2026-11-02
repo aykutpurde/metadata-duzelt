@@ -189,5 +189,11 @@
  {"ad": "çekimli soru eki küçük (ekran: MİDİR ya da … MUDUR?)", "kayit": {"itemType": "journalArticle", "fields": {"title": "TÜRKİYE’DE KAMU HİZMETLERİNİN SUNULMASINA ÖZEL SEKTÖR KURULUŞLARININ KATILIMI BİR TERCİH MİDİR ya da ZAMANIN DİNAMİK KOŞULLARININ NİHAİ BİR SONUCU MUDUR?", "language": "tr"}, "creators": []},
   "bekle": {"title": "Türkiye’de Kamu Hizmetlerinin Sunulmasına Özel Sektör Kuruluşlarının Katılımı Bir Tercih midir ya da Zamanın Dinamik Koşullarının Nihai Bir Sonucu mudur?"}},
  {"ad": "soru eki müdür, isim Müdür büyük", "kayit": {"itemType": "journalArticle", "fields": {"title": "genel müdür yardımcılığı bir kariyer basamağı müdür?", "language": "tr"}, "creators": []},
-  "bekle": {"title": "Genel Müdür Yardımcılığı Bir Kariyer Basamağı müdür?"}}
+  "bekle": {"title": "Genel Müdür Yardımcılığı Bir Kariyer Basamağı müdür?"}},
+ {"ad": "kök düzeyinde eksik harf (ekran: Yozlasmayla, U3TIR94K)", "kayit": {"itemType": "journalArticle", "fields": {"title": "Yozlasmayla Mücadelede Medyanın Doğrudan ve Dolaylı Rolü", "language": "tr"}, "creators": []},
+  "ayarlar": {"sozlukMetinler": ["Yozlasmayla Mücadelede", "yozlaşma yozlaşmanın yozlaşmayı", "yozlaşma yozlaşmanın yozlaşmayı", "yozlaşma yozlaşmanın yozlaşmayı", "yozlaşma yozlaşmanın yozlaşmayı"]},
+  "bekle": {"title": "Yozlaşmayla Mücadelede Medyanın Doğrudan ve Dolaylı Rolü"}, "kurallar": {"title": ["harf.eksikHarf"]}},
+ {"ad": "kök araması: ünsüz yumuşaması ve başka kelimeye kayma yok (Direnci, İstirdatı)", "kayit": {"itemType": "journalArticle", "fields": {"title": "Yargı Direnci ve İstirdatı Davası", "language": "tr"}, "creators": []},
+  "ayarlar": {"sozlukMetinler": ["direnç direnç direnç direnç direnç direnç direnç direnç direnç direnç direnç", "iştirak iştiraki iştirakler iştirak iştirak iştirak iştirak iştirak iştirak iştirak iştirak"]},
+  "oneriYok": true}
 ]

@@ -289,6 +289,66 @@
 	// İki yazımı da geçerli ve sık kökler (ASCII karşılığıyla): basın/başın, ayni (aynî hak)/aynı
 	const IKI_YAZIMLI = /^(?:basin|ayni)/;
 
+	/** g yazımı k'ye yalnızca Türkçe harf ekliyor mu (i → ı, s → ş …; şapka ve izinli olmayan harf hariç). */
+	function harfEkler(k, g, izinli) {
+		let h = [...k];
+		g = [...g];
+		return h.length == g.length && h.some((c, j) => c != g[j])
+			&& h.every((c, j) => c == g[j] || (KATLA[g[j]] == c && !KATLA[c] && !"âîû".includes(g[j]) && (!izinli || izinli.has(g[j]))));
+	}
+
+	function duzenKoru(w, yeni) {
+		let g = [...yeni];
+		return [...w].map((c, j) => (c != kucult(c, "tr") ? buyult(g[j], "tr") : g[j])).join("");
+	}
+
+	/** Sözlüğün sıralı anahtar listesi (kök araması için; sözlük nesnesinde önbelleklenir). */
+	function siraliAnahtarlar(sozluk) {
+		if (!sozluk._sirali) {
+			sozluk._sirali = [...sozluk.keys()].sort();
+		}
+		return sozluk._sirali;
+	}
+
+	/** Kök düzeyinde arama: kelimenin tam yazımı kütüphanede yoksa ("yozlasmayla"), en az 5 harflik başlangıcının
+	 *  kütüphanedeki yazımına bakılır ("yozlasma…": "yozlaşma" 40, "yozlasma" 10 → "yozlaşmayla"). Kök kelimenin sonundan
+	 *  en çok 3 harf kısa olabilir ("istir" → "iştirak" gibi başka kelimeye kaymasın); kökün Türkçe harfli yazımı en az
+	 *  10 kez ve bozuk yazımdan en az 3 kat sık geçmeli; son harfi değişen kök ünlüyle devam ediyorsa (ünsüz yumuşaması)
+	 *  alınmaz. Ekin kendisine dokunulmaz. */
+	function kokYazimi(k, sozluk, izinli) {
+		let a = katla(k);
+		let anahtarlar = siraliAnahtarlar(sozluk);
+		for (let L = a.length - 1; L >= Math.max(5, a.length - 3); L--) {
+			let p = a.slice(0, L);
+			let say = new Map();
+			let alt = 0, ust = anahtarlar.length;
+			while (alt < ust) {
+				let orta = (alt + ust) >> 1;
+				anahtarlar[orta] < p ? (alt = orta + 1) : (ust = orta);
+			}
+			for (let i = alt; i < anahtarlar.length && anahtarlar[i].startsWith(p); i++) {
+				for (let [y, n] of sozluk.get(anahtarlar[i])) {
+					let kok = y.slice(0, L);
+					say.set(kok, (say.get(kok) || 0) + n);
+				}
+			}
+			let kendi = say.get(k.slice(0, L)) || 0;
+			let en = null, enN = 0;
+			for (let [kok, n] of say) {
+				// kökün son harfi değişiyorsa ve ardından ünlü geliyorsa belirsiz: "direnç" + i → "direnci", "tanış" / "tanısı"
+				let sonDegisir = kok[L - 1] != k[L - 1] && /[aeıioöuü]/.test(k[L] || "");
+				if (n > enN && n >= 10 && n >= 3 * kendi && !sonDegisir && harfEkler(k.slice(0, L), kok, izinli)) {
+					en = kok;
+					enN = n;
+				}
+			}
+			if (en) {
+				return en + k.slice(L);
+			}
+		}
+		return null;
+	}
+
 	function eksikHarfKelime(w, sozluk, izinli = null) {
 		if (!sozluk || !SOZLUK_KELIME.test(w)) {
 			return null;
@@ -297,26 +357,23 @@
 		if (IKI_YAZIMLI.test(katla(k))) {
 			return null;
 		}
-		let adaylar = sozluk.get(katla(k));
-		if (!adaylar) {
-			return null;
-		}
+		let adaylar = sozluk.get(katla(k)) || new Map();
 		let kendi = adaylar.get(k) || 0;
 		let en = null, enN = 0;
 		for (let [y, n] of adaylar) {
 			if (y == k || n < 3 || n < 25 * kendi || n <= enN) {
 				continue;
 			}
-			let h = [...k], g = [...y];
-			if (h.length == g.length && h.every((c, j) => c == g[j] || (KATLA[g[j]] == c && !KATLA[c] && !"âîû".includes(g[j]) && (!izinli || izinli.has(g[j]))))) {
-				en = g;
+			if (harfEkler(k, y, izinli)) {
+				en = y;
 				enN = n;
 			}
 		}
-		if (!en) {
-			return null;
+		// tam yazım kütüphanede doğru biçimiyle yoksa ve kelimenin kendisi de nadirse köke bakılır
+		if (!en && kendi <= 5 && ![...adaylar.keys()].some((y) => y != k && (adaylar.get(y) || 0) >= 3)) {
+			en = kokYazimi(k, sozluk, izinli);
 		}
-		return [...w].map((c, j) => (c != kucult(c, "tr") ? buyult(en[j], "tr") : en[j])).join("");
+		return en ? duzenKoru(w, en) : null;
 	}
 
 	return { tespit, normalize, kucult, buyult, katla, kelimeSozlukKur, eksikHarfKelime, kelimeler, parcalar, sahteIDuzelt, sahteIDuzeltKelime, acilimMi, SIK };
