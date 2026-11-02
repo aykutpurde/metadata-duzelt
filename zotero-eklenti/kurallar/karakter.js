@@ -24,8 +24,8 @@
 	for (let i = 0; i < CP1252.length; i++) {
 		CP1252_TERS.set(CP1252[i], 0x80 + i);
 	}
-	// Türkçe metinde mojibake'nin tipik ikilileri: ü ç ö ı ş İ ğ Ç Ü Ö Ş Ğ â î û ve tırnaklar
-	const MOJI_TETIK = /Ã[¼§¶‡œ–¢®»]|Ä[°±Ÿž]|Å[Ÿž]|â€[™œ\u009d“”¦“]/;
+	// Türkçe metinde mojibake'nin tipik ikilileri: ü ç ö ı ş İ ğ Ç Ü Ö Ş Ğ â î û Â Î Û ve tırnaklar
+	const MOJI_TETIK = /Ã[¼§¶‡œ–¢®»‚Ž›]|Ä[°±Ÿž]|Å[Ÿž]|â€[™œ\u009d“”¦“]/;
 	const MOJI_ADAY = /[ÃÄÅâ][\u0080-ÿ -⃿ŒœŠšŸŽžƒˆ˜™]/;
 
 	function utf8Coz(parca) {
@@ -53,14 +53,31 @@
 	// mojibake dizisi: Ã/Ä/Å/â + ikinci bayt (Latin-1 üst yarısı ya da CP1252 simgeleri); art arda gelebilir
 	const MOJI_DIZI = /(?:[ÃÄÅâ][\u00a0-\u00ff\u0152\u0153\u0160\u0161\u0178\u017d\u017e\u0192\u02c6\u02dc\u2018-\u201e\u2020-\u2022\u2026\u2030\u2039\u203a\u2122\u20ac](?:[\u0080-\u00bf\u0152\u0153\u0160\u0161\u0178\u017d\u017e\u0192\u02c6\u02dc\u2018-\u201e\u2020-\u2022\u2026\u2030\u2039\u203a\u2122\u20ac])?)+/g;
 
-	/** "Ã¼" → "ü": yalnızca Türkçeye özgü ikililer görülünce, dizi dizi ve doğrulamalı. */
+	// Mojibake'li metin sonradan küçültülmüş: "USÃ›L" → "Usã›L" (Ã → ã; "›" sonrası "L" kelime başı sanılmış)
+	const MOJI_KUCUK = /(\p{L})([ãäå])([\u00a0-\u00bf\u0152\u0153\u0160\u0161\u0178\u017d\u017e\u0192\u02c6\u02dc\u2018-\u201e\u2020-\u2022\u2026\u2030\u2039\u203a\u2122\u20ac])(\p{L}?)/gu;
+	const TR_HARF = /^[üçöışİğÇÜÖŞĞâîûÂÎÛ]$/;
+
+	/** "Ã¼" → "ü": yalnızca Türkçeye özgü ikililer görülünce, dizi dizi ve doğrulamalı.
+	 *  Küçültülmüş biçim ("Usã›L" → "Usûl") yalnızca çözülen harf Türkçe harfse; harf büyüklüğü kelimeye uydurulur. */
 	function mojibake(metin) {
-		if (!MOJI_TETIK.test(metin)) {
-			return metin;
+		let s = metin;
+		if (MOJI_TETIK.test(s)) {
+			s = s.replace(MOJI_DIZI, (p) => {
+				let c = utf8Coz(p);
+				return c && /\p{L}|[’“”–—…]/u.test(c) && !/[\u0080-\u009f\ufffd]/.test(c) ? c : p;
+			});
 		}
-		return metin.replace(MOJI_DIZI, (p) => {
-			let c = utf8Coz(p);
-			return c && /\p{L}|[’“”–—…]/u.test(c) && !/[\u0080-\u009f\ufffd]/.test(c) ? c : p;
+		return s.replace(MOJI_KUCUK, (tum, once, bas, ikinci, sonra) => {
+			let c = utf8Coz({ "ã": "Ã", "ä": "Ä", "å": "Å" }[bas] + ikinci);
+			if (!c || !TR_HARF.test(c)) {
+				return tum;
+			}
+			let kucukMu = (x) => !!x && x !== x.toLocaleUpperCase("tr");
+			// kelime küçük harfle sürüyorsa ("Usã›L", "Şã›rası") çözülen harf ve "›" sonrası büyütülmüş harf küçülür
+			if (kucukMu(once)) {
+				return once + c.toLocaleLowerCase("tr") + sonra.toLocaleLowerCase("tr");
+			}
+			return once + (kucukMu(sonra) ? c.toLocaleLowerCase("tr") : c) + sonra;
 		});
 	}
 

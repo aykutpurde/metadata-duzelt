@@ -151,5 +151,7 @@
  {"ad": "listede olmayan kanun kısaltması m. öncesinde büyük kalır, cümle düzeni", "kayit": {"itemType": "journalArticle", "fields": {"title": "XYZK MD. 5 VE ABCK m. 12 HÜKÜMLERİNİN DEĞERLENDİRİLMESİ", "language": "tr"}, "creators": []},
   "ayarlar": {"stil": "cumle"}, "bekle": {"title": "XYZK md. 5 ve ABCK m. 12 hükümlerinin değerlendirilmesi"}},
  {"ad": "PDF yazı tipi kodlaması (Ġ đ Ģ)", "kayit": {"itemType": "journalArticle", "fields": {"title": "Kara - DANIġTAY ve ĠDARE MAHKEMESĠ KARARLARI IġIĞINDA BirleĢmiĢ Milletler ve Türkđye", "language": "tr"}, "creators": []},
-  "bekle": {"title": "Kara - Danıştay ve İdare Mahkemesi Kararları Işığında Birleşmiş Milletler ve Türkiye"}}
+  "bekle": {"title": "Kara - Danıştay ve İdare Mahkemesi Kararları Işığında Birleşmiş Milletler ve Türkiye"}},
+ {"ad": "küçültülmüş mojibake (ekran: Usã›L)", "kayit": {"itemType": "journalArticle", "fields": {"title": "6352 Sayı Ve 02.07.2012 Tarihli Kanun İle İdari Yargılama Usã›L Kanunu'nda Yapılan Yeniliklere Dair Bir İnceleme", "language": "tr"}, "creators": []},
+  "bekle": {"title": "6352 Sayı ve 02.07.2012 Tarihli Kanun ile İdari Yargılama Usûl Kanunu'nda Yapılan Yeniliklere Dair Bir İnceleme"}}
 ]

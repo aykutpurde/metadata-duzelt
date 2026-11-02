@@ -31,6 +31,7 @@ function esit(ad, alinan, beklenen) {
 
 console.log("Birim testleri");
 esit("mojibake tr", karakter.mojibake("TÃ¼rkiye'de Ã§evre hakkÄ± ve ÅŸehir Ä°dare ÄŸ"), "Türkiye'de çevre hakkı ve şehir İdare ğ");
+esit("mojibake küçültülmüş", ["İdari Yargılama Usã›L Kanunu'nda", "Kã¼ltã¼r", "Devlet Şã›rası", "KÃœLTÃœR", "USÃ›L", "São Paulo não"].map(karakter.mojibake), ["İdari Yargılama Usûl Kanunu'nda", "Kültür", "Devlet Şûrası", "KÜLTÜR", "USÛL", "São Paulo não"]);
 esit("mojibake karışık tırnak", karakter.mojibake("TÃ¼rkiye’de"), "Türkiye’de");
 esit("mojibake değil (şapkalı)", karakter.mojibake("YAPAY ZEKÂ KARŞISINDA MÜLÂHAZALAR"), "YAPAY ZEKÂ KARŞISINDA MÜLÂHAZALAR");
 esit("eski kod sayfası", karakter.eskiKodSayfasi("Ýdare hukukunda kamu yararý ve þeffaflýk", {}), "İdare hukukunda kamu yararı ve şeffaflık");
