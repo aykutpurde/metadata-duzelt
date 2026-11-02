@@ -235,5 +235,5 @@
 		return { dil: d, oneriler, uyarilar };
 	}
 
-	return { analiz, METIN_ALANLARI, yazarMetni };
+	return { analiz, oneriYap, METIN_ALANLARI, yazarMetni };
 });

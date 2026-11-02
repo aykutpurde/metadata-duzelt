@@ -17,6 +17,7 @@ MetadataDuzelt = {
 	istisnalar: [],
 	adSozluk: null,          // yazar.sozlukKur: kütüphanedeki ad/soyad sıklığı
 	kelimeSozluk: null,      // dil.kelimeSozlukKur: kütüphanedeki başlık/özet kelimeleri (eksik Türkçe harf kuralı)
+	kunyeler: null,          // kunye.kunyeIndeks: kütüphanedeki kitap/dergi künyeleri (boş künyeyi PDF kapağından tamamlama)
 	kelimeSozlukZaman: 0,
 	busy: false,
 
@@ -31,7 +32,7 @@ MetadataDuzelt = {
 		this.id = id;
 		this.rootURI = rootURI;
 		let scope = {};
-		for (let f of ["dil", "karakter", "tire", "harf", "yazar", "motor", "dogrula"]) {
+		for (let f of ["dil", "karakter", "tire", "harf", "yazar", "motor", "dogrula", "kunye"]) {
 			Services.scriptloader.loadSubScript(rootURI + "kurallar/" + f + ".js", scope);
 		}
 		this.K = scope.MetadataDuzeltKurallar;
@@ -177,6 +178,7 @@ MetadataDuzelt = {
 			istisnalar: this.istisnalar,
 			adSozluk: this.adSozluk,
 			kelimeSozluk: this.kelimeSozluk,
+			kunyeler: this.kunyeler,
 		};
 	},
 
@@ -208,12 +210,52 @@ MetadataDuzelt = {
 				onRow: (row) => metinler.push(String(row.getResultByIndex(0) || "")),
 			});
 			this.kelimeSozluk = this.K.dil.kelimeSozlukKur(metinler);
+			this.kunyeler = await this.loadContainers();
 			this.kelimeSozlukZaman = Date.now();
 			this.cache.clear();
 		}
 		catch (e) {
 			Zotero.logError(e);
 		}
+	},
+
+	/** Kütüphanedeki kitap bölümü / bildiri / makale kayıtlarının kitap ve dergi düzeyindeki alanları (kunye.kunyeIndeks). */
+	async loadContainers() {
+		let kayitlar = new Map();
+		await Zotero.DB.queryAsync(`SELECT i.itemID, i.key, t.typeName, f.fieldName, v.value
+			FROM items i JOIN itemTypes t USING (itemTypeID) JOIN itemData d USING (itemID) JOIN fields f USING (fieldID) JOIN itemDataValues v USING (valueID)
+			WHERE t.typeName IN ('bookSection', 'conferencePaper', 'journalArticle') AND i.itemID NOT IN (SELECT itemID FROM deletedItems)
+			AND f.fieldName IN ('title', 'bookTitle', 'proceedingsTitle', 'publicationTitle', 'place', 'publisher', 'date', 'volume',
+				'numberOfVolumes', 'series', 'edition', 'ISBN', 'ISSN', 'journalAbbreviation')`, [], {
+			onRow: (row) => {
+				let id = row.getResultByIndex(0);
+				if (!kayitlar.has(id)) {
+					kayitlar.set(id, { key: row.getResultByIndex(1), itemType: row.getResultByIndex(2), fields: {} });
+				}
+				kayitlar.get(id).fields[row.getResultByIndex(3)] = String(row.getResultByIndex(4) || "");
+			},
+		});
+		return this.K.kunye.kunyeIndeks([...kayitlar.values()]);
+	},
+
+	/** Kaydın ilk PDF ekinin Zotero tam metin dizinindeki metni (ilk 12000 karakter) ya da null. */
+	async pdfText(item) {
+		for (let id of item.getAttachments()) {
+			let a = Zotero.Items.get(id);
+			if (!a || !a.isPDFAttachment()) {
+				continue;
+			}
+			try {
+				let t = await a.attachmentText;
+				if (t && t.trim()) {
+					return t.slice(0, 12000);
+				}
+			}
+			catch (e) {
+				Zotero.debug("Metadata Düzelt: PDF metni okunamadı: " + e);
+			}
+		}
+		return null;
 	},
 
 	/** Zotero öğesini kural motorunun anladığı düz nesneye çevirir. */
@@ -234,19 +276,33 @@ MetadataDuzelt = {
 			fieldMode: c.fieldMode || 0,
 			creatorType: Zotero.CreatorTypes.getName(c.creatorTypeID),
 		}));
-		return { itemType: Zotero.ItemTypes.getName(item.itemTypeID), fields, alanlar, creators };
+		return { key: item.key, itemType: Zotero.ItemTypes.getName(item.itemTypeID), fields, alanlar, creators };
 	},
 
 	analyze(item) {
 		return this.K.motor.analiz(this.record(item), this.settings());
 	},
 
-	/** Önizleme satırları: her öneri bir satır; kayıt başlığı ve kimliği eklenir. */
-	rows(items, { onlyAuto = false } = {}) {
+	/** analyze + PDF'ten başlık / bozuk yazar / boş künye önerileri (kunye.kaynakAnaliz). hepsi: false ise PDF yalnızca
+	 *  künyesi boş ya da yazar adı bozuk kayıtlarda okunur (kütüphane taraması hızlı kalsın). */
+	async analyzeWithSources(item, hepsi) {
+		let kayit = this.record(item);
+		let s = this.settings();
+		let r = this.K.motor.analiz(kayit, s);
+		if (!hepsi && !this.K.kunye.gerekli(kayit)) {
+			return r;
+		}
+		let pdf = await this.pdfText(item);
+		return pdf ? this.K.kunye.kaynakAnaliz(kayit, pdf, r, s) : r;
+	},
+
+	/** Önizleme satırları: her öneri bir satır; kayıt başlığı ve kimliği eklenir.
+	 *  kaynak: PDF'e de bakılır (hepsi: her kayıtta, değilse yalnızca künyesi boş / yazarı bozuk olanlarda). */
+	async rows(items, { onlyAuto = false, kaynak = false, hepsi = false } = {}) {
 		let rows = [];
 		let uyarilar = [];
 		for (let item of items) {
-			let r = this.analyze(item);
+			let r = kaynak ? await this.analyzeWithSources(item, hepsi) : this.analyze(item);
 			let title = item.getDisplayTitle() || item.key;
 			for (let o of r.oneriler) {
 				if (onlyAuto && !o.otomatik) {
@@ -283,7 +339,7 @@ MetadataDuzelt = {
 		await this.loadExceptions();
 		await this.loadNameStats();
 		await this.loadWordStats();
-		let { rows, uyarilar } = this.rows(targets);
+		let { rows, uyarilar } = await this.rows(targets, { kaynak: true, hepsi: targets.length <= 100 });
 		if (!rows.length) {
 			this.notify(targets.length == 1
 				? "Bu kayıtta düzeltilecek bir şey bulunamadı ✓"
@@ -324,7 +380,7 @@ MetadataDuzelt = {
 					line.setProgress(Math.round(100 * i / items.length));
 					await Zotero.Promise.delay(0);
 				}
-				let r = this.rows([item]);
+				let r = await this.rows([item], { kaynak: true });
 				if (r.rows.length) {
 					itemCount++;
 				}
@@ -394,6 +450,8 @@ MetadataDuzelt = {
 			"yazar.kurumBuyuk": "TAMAMI BÜYÜK kurum", "yazar.diakritik": "diakritiksiz Türkçe ad",
 			"yazar.kucukHarf": "küçük harfle başlayan ad",
 			"karakter.yerelI": "yanlış yerelle küçültülmüş (Kavrami → Kavramı)", "harf.eksikHarf": "eksik Türkçe harf (kütüphanedeki yazımdan)",
+			"kaynak.pdfBaslik": "başlık PDF'teki başlıktan", "kaynak.pdfYazar": "bozuk yazar adı (PDF'ten)", "kaynak.kayitTuru": "kayıt türü (kütüphanedeki aynı kitap)",
+			"kaynak.kutuphaneKunye": "boş künye (kütüphanedeki aynı kitap/dergi)",
 			"karakter.ikiNokta": "iki noktadan sonra boşluk yok", "karakter.basTirnak": "başta kapanmamış tırnak", "tire.izafet": "kopmuş izafet eki (Kanun - i Esasi)",
 		}[kural] || kural;
 	},
@@ -426,23 +484,7 @@ MetadataDuzelt = {
 
 	/** Kaydın özgün kaynakları: bağlı PDF'in tam metni (Zotero dizini), CrossRef (DOI), DergiPark makale sayfası. */
 	async sources(item) {
-		let k = { basliklar: [], yazarlar: [], pdf: null };
-		for (let id of item.getAttachments()) {
-			let a = Zotero.Items.get(id);
-			if (!a || !a.isPDFAttachment()) {
-				continue;
-			}
-			try {
-				let t = await a.attachmentText;
-				if (t && t.trim()) {
-					k.pdf = t.slice(0, 12000);
-					break;
-				}
-			}
-			catch (e) {
-				Zotero.debug("Metadata Düzelt: PDF metni okunamadı: " + e);
-			}
-		}
+		let k = { basliklar: [], yazarlar: [], pdf: await this.pdfText(item) };
 		if (!this.onlineOn()) {
 			return k;
 		}
@@ -512,6 +554,17 @@ MetadataDuzelt = {
 		}
 	},
 
+	/** Öneri alanının bu kayıt türündeki adı: kayıt türü değişmediyse kitap adı dergi makalesinde yayın adıdır
+	 *  (bookTitle ↔ publicationTitle ↔ proceedingsTitle). Türde karşılığı yoksa null. */
+	fieldFor(item, alan) {
+		let gecerli = (a) => Zotero.ItemFields.isValidForType(Zotero.ItemFields.getID(a), item.itemTypeID);
+		if (gecerli(alan)) {
+			return alan;
+		}
+		let kap = ["bookTitle", "publicationTitle", "proceedingsTitle"];
+		return kap.includes(alan) ? kap.find(gecerli) || null : null;
+	},
+
 	/** Seçilen önerileri yazar; eski değerleri kayıt dosyasına ekler. */
 	async apply(rows, baslik, { sessiz = false } = {}) {
 		if (!rows.length) {
@@ -536,7 +589,23 @@ MetadataDuzelt = {
 				let rec = { libraryID: item.libraryID, key: item.key, baslik: list[0].baslik, alanlar: {}, yazarlar: null };
 				let creators = null;
 				try {
+					// kayıt türü önce değişir (Dergi makalesi → Kitap bölümü); başka alanda değeri kaybolacaksa değişmez
+					let tur = list.find((r) => r.alan == "itemType");
+					if (tur) {
+						let yeniID = Zotero.ItemTypes.getID(tur.yeni);
+						if (Zotero.ItemTypes.getName(item.itemTypeID) != tur.eski || !yeniID || (item.getFieldsNotInType(yeniID, true) || []).length) {
+							skipped++;
+						}
+						else {
+							item.setType(yeniID);
+							rec.tur = { eski: tur.eski, yeni: tur.yeni };
+							written++;
+						}
+					}
 					for (let r of list) {
+						if (r.alan == "itemType") {
+							continue;
+						}
 						if (r.alan == "creators") {
 							if (!creators) {
 								creators = item.getCreators();
@@ -551,13 +620,14 @@ MetadataDuzelt = {
 							written++;
 						}
 						else {
-							let cur = String(item.getField(r.alan, true, true) || "");
-							if (cur != r.eski) {
+							let alan = this.fieldFor(item, r.alan);
+							let cur = alan ? String(item.getField(alan, true, true) || "") : null;
+							if (cur === null || cur != r.eski) {
 								skipped++;
 								continue;
 							}
-							rec.alanlar[r.alan] = { eski: r.eski, yeni: r.yeni };
-							item.setField(r.alan, r.yeni);
+							rec.alanlar[alan] = { eski: r.eski, yeni: r.yeni };
+							item.setField(alan, r.yeni);
 							written++;
 						}
 					}
@@ -565,7 +635,7 @@ MetadataDuzelt = {
 						rec.yazarlar.yeni = JSON.parse(JSON.stringify(creators));
 						item.setCreators(creators);
 					}
-					if (Object.keys(rec.alanlar).length || creators) {
+					if (Object.keys(rec.alanlar).length || creators || rec.tur) {
 						await item.save();
 						batch.kayitlar.push(rec);
 					}
@@ -585,6 +655,9 @@ MetadataDuzelt = {
 			}
 			await this.saveRegistry(reg);
 			for (let rec of batch.kayitlar) {
+				if (rec.tur) {
+					await this.log(`${rec.key} itemType: ${rec.tur.eski} → ${rec.tur.yeni}`);
+				}
 				for (let [alan, v] of Object.entries(rec.alanlar)) {
 					await this.log(`${rec.key} ${alan}: “${v.eski}” → “${v.yeni}”`);
 				}
@@ -618,7 +691,7 @@ MetadataDuzelt = {
 			return;
 		}
 		let win = Zotero.getMainWindow();
-		let n = batch.kayitlar.reduce((s, r) => s + Object.keys(r.alanlar).length + (r.yazarlar ? 1 : 0), 0);
+		let n = batch.kayitlar.reduce((s, r) => s + Object.keys(r.alanlar).length + (r.yazarlar ? 1 : 0) + (r.tur ? 1 : 0), 0);
 		let ok = Services.prompt.confirm(win, "Metadata Düzelt — geri al",
 			`“${batch.baslik}” (${new Date(batch.tarih).toLocaleString("tr-TR")}): ${batch.kayitlar.length} kayıtta ${n} değişiklik geri alınacak. `
 			+ "Düzeltmeden sonra elle değiştirilmiş alanlara dokunulmaz.\n\nDevam edilsin mi?");
@@ -649,6 +722,18 @@ MetadataDuzelt = {
 					let yeni = JSON.stringify(rec.yazarlar.yeni.map((c) => [c.firstName || "", c.lastName || "", c.fieldMode || 0]));
 					if (cur == yeni) {
 						item.setCreators(rec.yazarlar.eski);
+						changed = true;
+						restored++;
+					}
+					else {
+						skipped++;
+					}
+				}
+				// kayıt türü en son geri döner (alanlar yeni türde geri alındıktan sonra)
+				if (rec.tur) {
+					let eskiID = Zotero.ItemTypes.getID(rec.tur.eski);
+					if (Zotero.ItemTypes.getName(item.itemTypeID) == rec.tur.yeni && eskiID && !(item.getFieldsNotInType(eskiID, true) || []).length) {
+						item.setType(eskiID);
 						changed = true;
 						restored++;
 					}
@@ -687,7 +772,7 @@ MetadataDuzelt = {
 		if (!Zotero.Items.get(item.id) || item.deleted) {
 			return;
 		}
-		let { rows } = this.rows([item], { onlyAuto: true });
+		let { rows } = await this.rows([item], { onlyAuto: true });
 		if (!rows.length) {
 			return;
 		}

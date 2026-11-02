@@ -185,5 +185,9 @@
  {"ad": "boşlukla kopmuş izafet (ekran: Kanun - i Esasi)", "kayit": {"itemType": "journalArticle", "fields": {"title": "1876 Tarihli Kanun - i Esasi'de Yürütme Organı", "language": "tr"}, "creators": []},
   "bekle": {"title": "1876 Tarihli Kanun-i Esasi'de Yürütme Organı"}},
  {"ad": "boşlukla kopmuş izafet: Şura- yı Devlet", "kayit": {"itemType": "journalArticle", "fields": {"title": "Osmanlı Döneminde Şura- yı Devlet", "language": "tr"}, "creators": []},
-  "bekle": {"title": "Osmanlı Döneminde Şura-yı Devlet"}}
+  "bekle": {"title": "Osmanlı Döneminde Şura-yı Devlet"}},
+ {"ad": "çekimli soru eki küçük (ekran: MİDİR ya da … MUDUR?)", "kayit": {"itemType": "journalArticle", "fields": {"title": "TÜRKİYE’DE KAMU HİZMETLERİNİN SUNULMASINA ÖZEL SEKTÖR KURULUŞLARININ KATILIMI BİR TERCİH MİDİR ya da ZAMANIN DİNAMİK KOŞULLARININ NİHAİ BİR SONUCU MUDUR?", "language": "tr"}, "creators": []},
+  "bekle": {"title": "Türkiye’de Kamu Hizmetlerinin Sunulmasına Özel Sektör Kuruluşlarının Katılımı Bir Tercih midir ya da Zamanın Dinamik Koşullarının Nihai Bir Sonucu mudur?"}},
+ {"ad": "soru eki müdür, isim Müdür büyük", "kayit": {"itemType": "journalArticle", "fields": {"title": "genel müdür yardımcılığı bir kariyer basamağı müdür?", "language": "tr"}, "creators": []},
+  "bekle": {"title": "Genel Müdür Yardımcılığı Bir Kariyer Basamağı müdür?"}}
 ]

@@ -29,6 +29,8 @@ Ayarlar › Gelişmiş › Yapılandırma Düzenleyicisi'nde `extensions.metadat
 | Kopuk kelimeler | `hu- kuk → hukuk` (yalnızca Türkçe metinde; `ön- ve son-` korunur); `Kanun - i Esasi → Kanun-i Esasi` | orta |
 | Kaybolmuş Türkçe harf | `Mücavi̇r Alan Kavrami → Mücavir Alan Kavramı` (yanlış yerelle küçültülmüş metin); `Selcuk Universitesi → Selçuk Üniversitesi` (kütüphanenizdeki yazımdan) | orta |
 | Noktalama | `Frameworks:Case studies → Frameworks: Case Studies`; başta kapanmamış tırnak (`'türk Kamu … → Türk Kamu …`) | yüksek / orta |
+| PDF'ten başlık ve yazar | `İdari Yargıtada Dava Açma Süresi → İdari Yargıda Dava Açma Süresi (2577 Sayılı İYUK'nun … İnceleme)`; dosya adından kalmış yazar `Z_20200504231640, Yahya → Zabunoğlu, Yahya K.` | orta |
+| Boş künye | PDF'in kapağında adı geçen, kütüphanenizdeki kitap/dergi: kitap adı, yer, yayıncı, tarih (ve gerekirse kayıt türü *Dergi makalesi → Kitap bölümü*) | orta |
 
 Türkçe başlıklarda **TDK kuralı** uygulanır: her kelime büyük harfle başlar; `ve, ile, ya, veya, yahut, ki,
 da, de` bağlaçları ile `mı/mi/mu/mü` soru eki küçük kalır (ilk kelime ve iki noktadan sonraki ilk kelime
@@ -53,7 +55,16 @@ nokta sonrası hariç; parantez başındaki kelime yazıldığı gibi kalır: `(
 gelen düz `i`ler ses uyumuna göre `ı` yapılır; ayrıca kelime kütüphanenizde Türkçe harfli yazımıyla en az 25 kat daha
 sık geçiyorsa (`Kavrami` 2 kez, `Kavramı` 694 kez) o yazım önerilir. Başlıkta zaten geçen bir harf eksik sayılmaz
 (`Basında Tekelleşme` başlığında `ş` var, `Basında` bilerek öyle yazılmış); `Basın/Başın`, `Ayni/Aynı` gibi iki yazımı da
-geçerli kelimelere ve şapkaya (`Hakim/Hâkim`) dokunulmaz. Hiç Türkçe harf içermeyen uzun Türkçe başlık uyarılır. **Kısa başlık** boşsa ya da kelime ortasında kesikse üretilir: iki noktadan önceki ana başlık;
+geçerli kelimelere ve şapkaya (`Hakim/Hâkim`) dokunulmaz. Hiç Türkçe harf içermeyen uzun Türkçe başlık uyarılır.
+Soru ekinin çekimli biçimleri de küçük kalır (`Bir Tercih midir ya da … Sonucu mudur?`; `Genel Müdür` isimdir, büyük kalır).
+**PDF'ten düzeltme** (Zotero'nun tam metin dizini; ağ gerekmez): seçili kayıtlarda (en çok 100) her zaman, kütüphane
+taramasında yalnızca künyesi boş ya da yazar adı bozuk kayıtlarda PDF'in başına bakılır. Başlık, kayıttaki başlığın her
+kelimesi PDF'te sırayla bulunursa düzeltilir: yalnızca harfi farklı kelimeler PDF'ten alınır (kayıttaki yazım kütüphanede
+neredeyse hiç, PDF'teki sık geçiyorsa; böylece OCR hatası kayda taşınmaz) ve hemen ardından gelen parantezli / iki noktalı
+alt başlık eklenir. Künyesi boş kayıtta PDF'in kapağında ya da başlıktan önceki kısmında kütüphanenizdeki bir kitabın ya da
+derginin adı (OCR hatalarına dayanıklı, en az 3 ayırt edici kelimesiyle) geçiyorsa yalnızca kitap/dergi düzeyindeki alanlar
+önerilir; başka bölümün sayfası ya da başka makalenin cilt/sayısı kopyalanmaz. Kayıt türü değişikliği, başka bir alandaki
+değer kaybolacaksa yapılmaz ve geri alınabilir. **Kısa başlık** boşsa ya da kelime ortasında kesikse üretilir: iki noktadan önceki ana başlık;
 4 kelimeyi aşıyorsa ilk 4 kelime (sonda bağlaç ya da açık parantez bırakılmaz). Elle yazılmış kısa başlığa dokunulmaz.
 Şapkalı harflere (`zekâ / zeka`) kurallar dokunmaz; kaynakla doğrulamada kaynaktaki yazıma uydurulur. Araçlar › Metadata Düzelt menüsünden **cümle düzeni**
 (yalnızca ilk harf büyük; Türkçe ve İngilizce başlıklar) ya da **dokunma** seçilebilir. Kaynakla doğrulamada başlığın son

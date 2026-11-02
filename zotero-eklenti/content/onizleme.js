@@ -14,7 +14,10 @@
 		language: "Dil", publisher: "Yayıncı", university: "Üniversite", institution: "Kurum", series: "Seri", seriesTitle: "Seri adı",
 		place: "Yer", creators: "Yazar", journalAbbreviation: "Dergi kısaltması", proceedingsTitle: "Bildiri kitabı", court: "Mahkeme",
 		websiteTitle: "Site adı", blogTitle: "Blog adı", conferenceName: "Konferans", reporter: "Reporter", forumTitle: "Forum",
+		itemType: "Kayıt türü", date: "Tarih", volume: "Cilt", numberOfVolumes: "Cilt sayısı", edition: "Baskı", ISBN: "ISBN", ISSN: "ISSN",
 	};
+	const TUR = { journalArticle: "Dergi makalesi", bookSection: "Kitap bölümü", conferencePaper: "Bildiri", book: "Kitap" };
+	const goster = (s, v) => (s.alan == "itemType" ? TUR[v] || v : v);
 	const $ = (id) => document.getElementById(id);
 	const satirlar = args.satirlar || [];
 	const secili = new Set(satirlar.map((s, i) => i));
@@ -75,13 +78,16 @@
 		tr.appendChild(alan);
 		let eski = document.createElement("td");
 		eski.className = "eski";
-		eski.textContent = kisalt(s.eski);
+		eski.textContent = kisalt(goster(s, s.eski));
 		tr.appendChild(eski);
 		let yeni = document.createElement("td");
 		yeni.className = "yeni";
-		yeni.title = "Düzenlemek için tıklayın";
-		yeni.textContent = kisalt(s.yeni);
+		yeni.title = s.alan == "itemType" ? "" : "Düzenlemek için tıklayın";
+		yeni.textContent = kisalt(goster(s, s.yeni));
 		yeni.addEventListener("click", (ev) => {
+			if (s.alan == "itemType") {
+				return;     // kayıt türü elle yazılmaz; satır seçimiyle onaylanır
+			}
 			ev.stopPropagation();
 			if (!yeni.querySelector(".duzenle")) {
 				duzenleAc(i, tr, yeni);

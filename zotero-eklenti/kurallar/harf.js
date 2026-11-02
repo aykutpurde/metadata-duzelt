@@ -40,6 +40,15 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 	const KUCUK_TR = new Set(("ve ile ya veya yahut veyahut ki da de mi mı mu mü"
 		+ " v vs c m md f s bkz vd vb krş"                      // atıf kısaltmaları: v. (versus), m. (madde), f. (fıkra), s. (sayfa)
 		+ " and of the or to for nor with from by").split(" "));   // Türkçe başlık içindeki İngilizce karar/eser adları (Türkçede karşılığı olmayanlar)
+	// Soru ekinin çekimli biçimleri de küçük kalır: midir, mudur, mısın, miydi, misiniz… ("müdür" isim de olabildiğinden ayrı)
+	const SORU_EKI = new Set(["ı", "i", "u", "ü"].flatMap((v) => {
+		let ae = v == "ı" || v == "u" ? "a" : "e";
+		return ["d" + v + "r", "s" + v + "n", "s" + v + "n" + v + "z", "y" + v + "m", "y" + v + "z", "yd" + v, "ym" + v + "ş", "d" + v + "rl" + ae + "r"]
+			.map((ek) => "m" + v + ek);
+	}).filter((w) => w != "müdür"));
+	for (let w of SORU_EKI) {
+		KUCUK_TR.add(w);
+	}
 	const KUCUK_EN = new Set("a an the and or but nor of in on at to for by with from as v vs via per".split(" "));
 	// Karışık yazımlı kısaltmalar (e-Devlet, ChatGPT, GmbH…) küçük harfli anahtarla: "E-DEVLET" → "e-Devlet"
 	const KISALTMA_KUCUK = new Map([...KISALTMALAR].filter((k) => k !== k.toUpperCase()).map((k) => [dil.kucult(k, "tr"), k]));
@@ -371,6 +380,9 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			}
 			else if (kanunKisaltmasi(core, tokens, i, d)) {
 				r = core;
+			}
+			else if (d == "tr" && !zorunlu && low == "müdür" && (son.includes("?") || /^(?:ya|yoksa|veya)$/.test(dil.kucult(parcala(tokens[i + 2] || "").core, "tr")))) {
+				r = low;        // soru eki "müdür?" ("Genel Müdür" isimdir, büyük kalır)
 			}
 			else if (d == "en" && !zorunlu && on.endsWith("(") && kucuk.has(low)) {
 				r = core;       // parantez başındaki küçük kelime yazıldığı gibi: "(and Unleashing)", "(A Global Perspective)"
