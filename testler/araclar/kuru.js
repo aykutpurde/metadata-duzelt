@@ -20,6 +20,11 @@ if (!girdi) {
 }
 const ayarlar = process.argv[3] ? JSON.parse(process.argv[3]) : {};
 const items = JSON.parse(fs.readFileSync(girdi, "utf8"));
+// Zotero'daki gibi: kütüphanedeki başlık ve özetlerden kelime sözlüğü (harf.eksikHarf kuralı için)
+const dil = require(path.join(__dirname, "..", "..", "zotero-eklenti", "kurallar", "dil.js"));
+if (ayarlar.kelimeSozluk !== false) {
+	ayarlar.kelimeSozluk = dil.kelimeSozlukKur(items.flatMap((it) => ["title", "shortTitle", "publicationTitle", "bookTitle", "abstractNote"].map((a) => it.fields[a])));
+}
 
 let kuralSay = {}, kelimeDegisim = {}, ornekler = { "harf.kucukBaslik": [], "harf.tamamiBuyuk": [], "harf.titleCase": [] };
 let n = 0, oneriliKayit = 0, toplamOneri = 0, uyariSay = 0;

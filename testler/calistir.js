@@ -164,6 +164,9 @@ for (let d of durumlar) {
 	if (ayarlar.sozlukKisiler) {
 		ayarlar.adSozluk = yazar.sozlukKur(ayarlar.sozlukKisiler);
 	}
+	if (ayarlar.sozlukMetinler) {
+		ayarlar.kelimeSozluk = dil.kelimeSozlukKur(ayarlar.sozlukMetinler);
+	}
 	let r = motor.analiz(d.kayit, ayarlar);
 	let yeni = {};
 	for (let o of r.oneriler) {

@@ -1,6 +1,7 @@
 /* Metadata Düzelt — önizleme penceresi. window.arguments[0]:
  *   { baslik, satirlar: [{ itemID, key, baslik, alan, eski, yeni, aciklama, guven, kurallar }], uyarilar,
- *     etiket(kural) → metin, onUygula(seciliIndeksler), onGoster(itemID) }
+ *     etiket(kural) → metin, onUygula(seciliIndeksler, elleDuzeltmeler), onGoster(itemID), kisaBaslik(baslik) → metin }
+ *   "Yeni" hücresine tıklanınca öneri elle düzenlenebilir; elleDuzeltmeler: { indeks: { yeni, yeniYazar? } }.
  */
 (function () {
 	"use strict";
@@ -17,6 +18,8 @@
 	const $ = (id) => document.getElementById(id);
 	const satirlar = args.satirlar || [];
 	const secili = new Set(satirlar.map((s, i) => i));
+	const elle = {};     // indeks → { yeni, yeniYazar? }: kullanıcının elle yazdığı değer
+	const kisaOto = new Set();   // başlık düzenlenince yeniden üretilen kısa başlık satırları (kullanıcı dokunmadıkça güncellenir)
 
 	document.title = "Metadata Düzelt — " + (args.baslik || "önizleme");
 	$("baslik").textContent = `${args.baslik || ""} · ${satirlar.length} öneri`;
@@ -76,7 +79,14 @@
 		tr.appendChild(eski);
 		let yeni = document.createElement("td");
 		yeni.className = "yeni";
+		yeni.title = "Düzenlemek için tıklayın";
 		yeni.textContent = kisalt(s.yeni);
+		yeni.addEventListener("click", (ev) => {
+			ev.stopPropagation();
+			if (!yeni.querySelector(".duzenle")) {
+				duzenleAc(i, tr, yeni);
+			}
+		});
 		tr.appendChild(yeni);
 		let ac = document.createElement("td");
 		ac.className = "aciklama";
@@ -94,6 +104,128 @@
 		});
 		govde.appendChild(tr);
 	});
+
+	function yazarMetni(y) {
+		return y.fieldMode == 1 ? `[${y.lastName}]` : `[${y.lastName}] [${y.firstName}]`;
+	}
+
+	function sec(tr, i, evet) {
+		let cb = tr.querySelector("input[type=checkbox]");
+		if (cb.checked != evet) {
+			cb.checked = evet;
+			cb.dispatchEvent(new Event("change"));
+		}
+	}
+
+	/** Satırın "Yeni" hücresini düzenleme kutusuna çevirir. Enter (özette Cmd/Ctrl+Enter) kaydeder, Esc vazgeçer.
+	 *  Yazar satırında soyadı ve ad ayrı kutulardır. Kaydedilen değer öneri yerine yazılır; eskisiyle aynıysa satır seçilmez. */
+	function duzenleAc(i, tr, td) {
+		let s = satirlar[i];
+		let kutu = document.createElement("div");
+		kutu.className = "duzenle";
+		let girdiler = [];
+		if (s.alan == "creators") {
+			let y = s.yeniYazar || {};
+			let alanlar = y.fieldMode == 1 ? [["lastName", "Ad (tek alan)"]] : [["lastName", "Soyadı"], ["firstName", "Adı"]];
+			for (let [ad, yer] of alanlar) {
+				let inp = document.createElement("input");
+				inp.type = "text";
+				inp.placeholder = yer;
+				inp.value = y[ad] || "";
+				inp.dataset.ad = ad;
+				girdiler.push(inp);
+				kutu.appendChild(inp);
+			}
+		}
+		else {
+			let ta = document.createElement("textarea");
+			ta.value = s.yeni;
+			ta.rows = Math.min(8, Math.max(2, Math.ceil(s.yeni.length / 70)));
+			girdiler.push(ta);
+			kutu.appendChild(ta);
+		}
+		let kaydet = document.createElement("button");
+		kaydet.textContent = "Kaydet";
+		let vazgec = document.createElement("button");
+		vazgec.textContent = "Vazgeç";
+		let dugmeler = document.createElement("div");
+		dugmeler.append(kaydet, vazgec);
+		kutu.appendChild(dugmeler);
+		td.textContent = "";
+		td.appendChild(kutu);
+		girdiler[0].focus();
+		girdiler[0].select();
+
+		let kapat = () => {
+			td.textContent = kisalt(s.yeni);
+			if (elle[i]) {
+				let r = document.createElement("span");
+				r.className = "guven elle";
+				r.textContent = "elle düzenlendi";
+				td.appendChild(r);
+			}
+		};
+		let kaydetFn = () => {
+			if (s.alan == "creators") {
+				let y = { ...s.yeniYazar };
+				girdiler.forEach((inp) => { y[inp.dataset.ad] = inp.value.trim(); });
+				if (!y.lastName) {
+					girdiler[0].focus();
+					return;
+				}
+				s.yeniYazar = y;
+				s.yeni = yazarMetni(y);
+				elle[i] = { yeni: s.yeni, yeniYazar: y };
+			}
+			else {
+				let v = s.alan == "abstractNote" ? girdiler[0].value.trim() : girdiler[0].value.replace(/\s+/g, " ").trim();
+				if (!v) {
+					girdiler[0].focus();
+					return;
+				}
+				s.yeni = v;
+				elle[i] = { yeni: v };
+				kisaOto.delete(i);
+				if (s.alan == "title") {
+					kisaBaslikGuncelle(s.itemID, v);
+				}
+			}
+			kapat();
+			sec(tr, i, s.yeni != s.eski);
+		};
+		kaydet.addEventListener("click", (ev) => { ev.stopPropagation(); kaydetFn(); });
+		vazgec.addEventListener("click", (ev) => { ev.stopPropagation(); kapat(); });
+		kutu.addEventListener("click", (ev) => ev.stopPropagation());
+		kutu.addEventListener("keydown", (ev) => {
+			if (ev.key == "Escape") {
+				ev.preventDefault();
+				ev.stopPropagation();
+				kapat();
+			}
+			else if (ev.key == "Enter" && (s.alan != "abstractNote" || ev.metaKey || ev.ctrlKey)) {
+				ev.preventDefault();
+				kaydetFn();
+			}
+		});
+	}
+
+	/** Başlık elle değişince aynı kaydın (elle düzenlenmemiş) kısa başlık önerisi yeni başlıktan yeniden üretilir. */
+	function kisaBaslikGuncelle(itemID, baslik) {
+		if (!args.kisaBaslik) {
+			return;
+		}
+		satirlar.forEach((k, j) => {
+			if (k.itemID === itemID && k.alan == "shortTitle" && (!elle[j] || kisaOto.has(j))) {
+				k.yeni = args.kisaBaslik(baslik);
+				elle[j] = { yeni: k.yeni };
+				kisaOto.add(j);
+				let td = govde.querySelector(`tr.satir[data-i="${j}"] td.yeni`);
+				if (td) {
+					td.textContent = kisalt(k.yeni);
+				}
+			}
+		});
+	}
 
 	function ozet() {
 		$("ozet").textContent = `${secili.size} / ${satirlar.length} seçili`;
@@ -148,7 +280,7 @@
 				let tr = tur == "satir" && govde.querySelector(`tr.satir[data-i="${i}"]`);
 				if (tr) {
 					sonucYaz(tr.querySelector("td.aciklama"), sonuc);
-					if (sonuc.yeniOneri) {
+					if (sonuc.yeniOneri && !elle[i]) {   // elle düzenlenmiş değerin üstüne yazılmaz
 						tr.querySelector("td.yeni").textContent = kisalt(sonuc.yeniOneri);
 					}
 					let cb = tr.querySelector("input");
@@ -170,7 +302,7 @@
 		let liste = [...secili].sort((a, b) => a - b);
 		$("uygula").disabled = true;
 		try {
-			args.onUygula && args.onUygula(liste);
+			args.onUygula && args.onUygula(liste, elle);
 		}
 		finally {
 			window.close();

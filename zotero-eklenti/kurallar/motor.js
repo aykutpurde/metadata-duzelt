@@ -3,7 +3,8 @@
  * analiz(kayit, ayarlar) → { dil, oneriler, uyarilar }
  *   kayit:   { itemType, fields: { title, language, … }, creators: [{ firstName, lastName, fieldMode, creatorType }],
  *              alanlar?: türün geçerli alan adları (boş alanlar fields'ta yok; kısa başlık ancak türde varsa üretilir) }
- *   ayarlar: { stil: "baslik"|"cumle"|"dokunma" (Türkçe başlık düzeni), titleCaseDonustur: bool (yalnızca "cumle"), istisnalar: string[]|Map }
+ *   ayarlar: { stil: "baslik"|"cumle"|"dokunma" (Türkçe başlık düzeni), titleCaseDonustur: bool (yalnızca "cumle"), istisnalar: string[]|Map,
+ *              adSozluk: yazar.sozlukKur(…), kelimeSozluk: dil.kelimeSozlukKur(kütüphanedeki başlık/özetler) }
  *   oneri:   { alan, eski, yeni, kurallar: [{kural, aciklama, guven}], aciklama, guven: "yuksek"|"orta", otomatik: bool,
  *              (yazar için) indeks, eskiYazar, yeniYazar }
  *   "otomatik": yalnızca yüksek güvenli karakter temizlikleri; otomatik modda sorulmadan uygulanır.
@@ -124,12 +125,39 @@
 		}
 	}
 
+	/** Kelime kelime kütüphane sözlüğüne bakar (dil.eksikHarfKelime). Kısaltmalara, iç büyük harfli kelimelere ve
+	 *  kullanıcı istisnalarına dokunmaz. → { metin, kelimeler: ["Kavrami → Kavramı", …] } */
+	function eksikHarf(metin, baglam, eski) {
+		// başlıkta hiç geçmeyen harf eksik sayılır; yanlış yerelle küçültülmüş metinde (i̇ artığı) "ı" her zaman
+		let izinli = new Set([..."ışçğöü"].filter((h) => !eski.includes(h) && (h == "ı" || !eski.includes(dil.buyult(h, "tr")))));
+		if (/i̇/.test(eski)) {
+			izinli.add("ı");
+		}
+		if (!izinli.size) {
+			return { metin, kelimeler: [] };
+		}
+		let istisna = new Set([...(baglam.istisnalar instanceof Map ? baglam.istisnalar.values() : baglam.istisnalar || [])].map((x) => dil.kucult(String(x), "tr")));
+		let kelimeler = [];
+		let y = metin.replace(/\p{L}+/gu, (w) => {
+			if (harf.KISALTMALAR.has(w) || /\p{Lu}/u.test(w.slice(1)) || istisna.has(dil.kucult(w, "tr"))) {
+				return w;
+			}
+			let z = dil.eksikHarfKelime(w, baglam.kelimeSozluk, izinli);
+			if (z && z != w) {
+				kelimeler.push(`${w} → ${z}`);
+				return z;
+			}
+			return w;
+		});
+		return { metin: y, kelimeler };
+	}
+
 	function analiz(kayit, ayarlar = {}) {
 		let fields = kayit.fields || {};
 		let oneriler = [];
 		let uyarilar = [];
 		let d = dilBelirle(fields, oneriler);
-		let baglamTemel = { dil: d, stil: ayarlar.stil || "baslik", titleCaseDonustur: ayarlar.titleCaseDonustur !== false, istisnalar: ayarlar.istisnalar || [], adSozluk: ayarlar.adSozluk || null };
+		let baglamTemel = { dil: d, stil: ayarlar.stil || "baslik", titleCaseDonustur: ayarlar.titleCaseDonustur !== false, istisnalar: ayarlar.istisnalar || [], adSozluk: ayarlar.adSozluk || null, kelimeSozluk: ayarlar.kelimeSozluk || null };
 
 		for (let alan of METIN_ALANLARI) {
 			let eski = fields[alan];
@@ -171,16 +199,26 @@
 				kurallar.push(...r.degisiklikler);
 				s = r.metin;
 			}
+			if (d == "tr" && alan != "abstractNote" && alan != "journalAbbreviation" && baglam.kelimeSozluk) {
+				let y = eksikHarf(s, baglam, eski);
+				if (y.metin != s) {
+					kurallar.push({ kural: "harf.eksikHarf", aciklama: `Kaybolmuş Türkçe harf kütüphanedeki yazımdan tamamlandı (${y.kelimeler.join(", ")})`, guven: "orta" });
+					s = y.metin;
+				}
+			}
 			if (s != eski) {
 				oneriler.push(oneriYap(alan, eski, s, kurallar));
 			}
 			if (alan == "title" && d == "tr" && harf.yazimSupheli(s).length) {
 				uyarilar.push({ alan, mesaj: `Olası yazım hatası: ${harf.yazimSupheli(s).map((w) => `“${w}”`).join(", ")} (Türkçe kelime böyle bitmez; özgün kaynaktan kontrol edin)` });
 			}
+			if (alan == "title" && d == "tr" && s.split(/\s+/).filter((w) => /\p{L}{2,}/u.test(w)).length >= 5 && !/[çğıöşüÇĞİÖŞÜâîû]/.test(s)) {
+				uyarilar.push({ alan, mesaj: "Türkçe başlıkta hiç Türkçe harf (ı ş ç ğ ö ü İ) yok: harfler kaybolmuş olabilir, özgün kaynaktan kontrol edin" });
+			}
 			if (alan == "title" && karakter.notlar(eski).length) {
 				uyarilar.push({ alan, mesaj: `Başlıktaki not atıldı: ${karakter.notlar(eski).join(" ")} — künye eksikse kütüphanedeki kopyalara ya da kaynağa bakın; notu gerekirse Not/Extra alanına taşıyın` });
 			}
-			if (alan == "title" && /i̇/.test(eski)) {
+			if (alan == "title" && /i̇/.test(eski) && !kurallar.some((k) => k.kural == "karakter.yerelI")) {
 				uyarilar.push({ alan, mesaj: "Başlık yanlış yerelle küçültülmüş (i̇ artığı): “ı” olması gereken “i”ler elle kontrol edilmeli (Alımında, Sınav, Yargısal…)" });
 			}
 		}

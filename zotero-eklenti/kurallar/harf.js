@@ -69,8 +69,11 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			if (on.startsWith("(") && son.endsWith(")")) {
 				return tok;     // "(23) The LLM…": parantez içi numara sonraki kelimeyi etkilemez
 			}
-			let zorunlu = capNext || /[("“‘]$/.test(on);
+			let zorunlu = capNext || /["“‘]$/.test(on);
 			capNext = sonrakiBuyuk(core, son);
+			if (on.endsWith("(")) {
+				return tok;     // parantez başı: "(and Unleashing)", "(A Global Perspective)" yazıldığı gibi kalır
+			}
 			let sonraki = parcala(tokens[i + 2] || "").core;
 			if (!zorunlu && /^\p{Lu}\p{Ll}*$/u.test(core) && KUCUK_EN.has(core.toLowerCase())
 					&& core != "V" && !LATINCE.test(sonraki)) {   // "Values V": Roma rakamı; "In Dubio", "Per Se": Latince
@@ -192,6 +195,12 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			}
 		}
 		return m;
+	}
+
+	/** "Osman F. Berki", "Ahmet M. Yılmaz": büyük yazılmış tek harf + nokta, ardından rakam gelmiyorsa adın baş harfidir;
+	 *  atıf kısaltması (m. 87, f. 2, s. 12, c. 3) sayılıp küçültülmez. Tamamı büyük başlıkta da yalnızca rakamdan önce küçülür. */
+	function atifBasHarf(core, son, sonraki, allCaps) {
+		return /^[CMFSÇ]$/u.test(core) && son.startsWith(".") && !/^\p{N}/u.test(sonraki || "") && (!allCaps || /^\p{L}/u.test(sonraki || ""));
 	}
 
 	/** Tek bir kelime çekirdeğini (noktalamasız) cümle düzenine çevirir. */
@@ -352,7 +361,7 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			if (on.startsWith("(") && son.endsWith(")") && /^\p{N}+$/u.test(core)) {
 				return tok;     // "(23) The LLM…": parantez içi numara sonraki kelimeyi etkilemez
 			}
-			let zorunlu = capNext || (d == "en" && /[("“‘]$/.test(on));
+			let zorunlu = capNext || (d == "en" && /["“‘]$/.test(on));
 			capNext = sonrakiBuyuk(core, son);
 			let low = dil.kucult(core, d);
 			let latince = d == "en" && LATINCE.test(parcala(tokens[i + 2] || "").core);   // "In Dubio", "Per Se"
@@ -363,7 +372,11 @@ NAFTA ASEAN BRICS G20 G7 OPEC IAEA IEA HUMK CMUK MK BK VUK DMK AATUHK ÇK PVSK F
 			else if (kanunKisaltmasi(core, tokens, i, d)) {
 				r = core;
 			}
-			else if (!zorunlu && kucuk.has(low) && !latince && !(core == "V" && !(son.startsWith(".") && tokens[i + 2]))) {
+			else if (d == "en" && !zorunlu && on.endsWith("(") && kucuk.has(low)) {
+				r = core;       // parantez başındaki küçük kelime yazıldığı gibi: "(and Unleashing)", "(A Global Perspective)"
+			}
+			else if (!zorunlu && kucuk.has(low) && !latince && !(core == "V" && !(son.startsWith(".") && tokens[i + 2]))
+					&& !atifBasHarf(core, son, tokens[i + 2], allCaps)) {
 				// "Values V", "Kesitler V": Roma rakamı; "Mıaılhe V. Fransa": versus
 				r = low;
 			}

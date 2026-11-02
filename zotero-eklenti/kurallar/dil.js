@@ -9,6 +9,7 @@
  * sahteIDuzelt(m)    → yabancı dildeki parçalarda ı → i, İ → I
  * normalize(kod)     → Zotero language alanı için düzgün kod ("tr-TR" → "tr", "eng" → "en") ya da null
  * kucult/buyult      → Türkçe yerelli küçük/büyük harf (I→ı, İ→i)
+ * kelimeSozlukKur(metinler) / eksikHarfKelime(w, sozluk) → kütüphanedeki yazımdan kaybolmuş Türkçe harfi bulma
  */
 (function (root, factory) {
 	if (typeof module === "object" && module.exports) {
@@ -253,5 +254,70 @@
 		return null;   // 'scheme="ISO639-1"' gibi çöp
 	}
 
-	return { tespit, normalize, kucult, buyult, kelimeler, parcalar, sahteIDuzelt, sahteIDuzeltKelime, acilimMi, SIK };
+	// Türkçe harf → ASCII karşılığı (diakritiği kaybolmuş yazımı bulmak için)
+	const KATLA = { "ı": "i", "ş": "s", "ç": "c", "ğ": "g", "ö": "o", "ü": "u", "â": "a", "î": "i", "û": "u" };
+	const katla = (w) => w.replace(/[ışçğöüâîû]/g, (c) => KATLA[c]);
+	const SOZLUK_KELIME = /^\p{L}{4,}$/u;
+
+	/** Kütüphanedeki metinlerden kelime sıklığı: ASCII karşılığı → Map(küçük yazım → sayı).
+	 *  "I" içeren kelimeler sayılmaz: İngilizce "International" Türkçe yerelle "ınternational" olur, sözlüğü kirletir. */
+	function kelimeSozlukKur(metinler) {
+		let sozluk = new Map();
+		for (let m of metinler || []) {
+			// metin bir kerede küçültülür (Türkçe yerel uzunluğu korur: İ → i, I → ı); "I" denetimi özgün metinde aynı konumda
+			let ozgun = String(m || "").normalize("NFC").replace(/i\u0307/g, "i");
+			let kucuk = kucult(ozgun, "tr");
+			if (kucuk.length != ozgun.length) {
+				continue;
+			}
+			for (let x of kucuk.matchAll(/\p{L}{4,}/gu)) {
+				let k = x[0];
+				if (ozgun.slice(x.index, x.index + k.length).includes("I")) {
+					continue;
+				}
+				let a = katla(k);
+				let m2 = sozluk.get(a);
+				if (!m2) {
+					sozluk.set(a, m2 = new Map());
+				}
+				m2.set(k, (m2.get(k) || 0) + 1);
+			}
+		}
+		return sozluk;
+	}
+
+	// İki yazımı da geçerli ve sık kökler (ASCII karşılığıyla): basın/başın, ayni (aynî hak)/aynı
+	const IKI_YAZIMLI = /^(?:basin|ayni)/;
+
+	function eksikHarfKelime(w, sozluk, izinli = null) {
+		if (!sozluk || !SOZLUK_KELIME.test(w)) {
+			return null;
+		}
+		let k = kucult(w, "tr");
+		if (IKI_YAZIMLI.test(katla(k))) {
+			return null;
+		}
+		let adaylar = sozluk.get(katla(k));
+		if (!adaylar) {
+			return null;
+		}
+		let kendi = adaylar.get(k) || 0;
+		let en = null, enN = 0;
+		for (let [y, n] of adaylar) {
+			if (y == k || n < 3 || n < 25 * kendi || n <= enN) {
+				continue;
+			}
+			let h = [...k], g = [...y];
+			if (h.length == g.length && h.every((c, j) => c == g[j] || (KATLA[g[j]] == c && !KATLA[c] && !"âîû".includes(g[j]) && (!izinli || izinli.has(g[j]))))) {
+				en = g;
+				enN = n;
+			}
+		}
+		if (!en) {
+			return null;
+		}
+		return [...w].map((c, j) => (c != kucult(c, "tr") ? buyult(en[j], "tr") : en[j])).join("");
+	}
+
+	return { tespit, normalize, kucult, buyult, katla, kelimeSozlukKur, eksikHarfKelime, kelimeler, parcalar, sahteIDuzelt, sahteIDuzeltKelime, acilimMi, SIK };
 });

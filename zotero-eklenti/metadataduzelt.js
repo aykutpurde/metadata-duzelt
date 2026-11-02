@@ -16,6 +16,8 @@ MetadataDuzelt = {
 	cache: new Map(),        // itemID -> { mod: dateModified, n: öneri sayısı } (sütun için)
 	istisnalar: [],
 	adSozluk: null,          // yazar.sozlukKur: kütüphanedeki ad/soyad sıklığı
+	kelimeSozluk: null,      // dil.kelimeSozlukKur: kütüphanedeki başlık/özet kelimeleri (eksik Türkçe harf kuralı)
+	kelimeSozlukZaman: 0,
 	busy: false,
 
 	PREF_AUTO: "extensions.metadataduzelt.otomatik",
@@ -174,6 +176,7 @@ MetadataDuzelt = {
 			titleCaseDonustur: this.titleCaseOn(),
 			istisnalar: this.istisnalar,
 			adSozluk: this.adSozluk,
+			kelimeSozluk: this.kelimeSozluk,
 		};
 	},
 
@@ -185,6 +188,27 @@ MetadataDuzelt = {
 				onRow: (row) => kisiler.push({ firstName: row.getResultByIndex(0) || "", lastName: row.getResultByIndex(1) || "" }),
 			});
 			this.adSozluk = this.K.yazar.sozlukKur(kisiler);
+			this.cache.clear();
+		}
+		catch (e) {
+			Zotero.logError(e);
+		}
+	},
+
+	/** Kütüphanedeki başlık ve özetlerden kelime sözlüğü: "Kavrami" → "Kavramı" gibi kaybolmuş Türkçe harfleri
+	 *  kütüphanenin kendi doğru yazımından bulmak için. Sorgu tüm kütüphaneyi okuduğundan (~1 sn) açılışta değil, ilk düzeltme/taramada kurulur ve en çok 10 dakikada bir yenilenir. */
+	async loadWordStats() {
+		if (this.kelimeSozluk && Date.now() - this.kelimeSozlukZaman < 10 * 60 * 1000) {
+			return;
+		}
+		try {
+			let metinler = [];
+			await Zotero.DB.queryAsync(`SELECT v.value FROM itemData d JOIN itemDataValues v USING (valueID) JOIN fields f USING (fieldID)
+				WHERE f.fieldName IN ('title', 'shortTitle', 'publicationTitle', 'bookTitle', 'proceedingsTitle', 'caseName', 'nameOfAct', 'subject', 'abstractNote')`, [], {
+				onRow: (row) => metinler.push(String(row.getResultByIndex(0) || "")),
+			});
+			this.kelimeSozluk = this.K.dil.kelimeSozlukKur(metinler);
+			this.kelimeSozlukZaman = Date.now();
 			this.cache.clear();
 		}
 		catch (e) {
@@ -258,6 +282,7 @@ MetadataDuzelt = {
 		}
 		await this.loadExceptions();
 		await this.loadNameStats();
+		await this.loadWordStats();
 		let { rows, uyarilar } = this.rows(targets);
 		if (!rows.length) {
 			this.notify(targets.length == 1
@@ -288,6 +313,7 @@ MetadataDuzelt = {
 		try {
 			await this.loadExceptions();
 			await this.loadNameStats();
+			await this.loadWordStats();
 			let all = await Zotero.Items.getAll(libraryID, false, false);
 			let items = all.filter((it) => it.isRegularItem() && !it.deleted);
 			let rows = [], uyarilar = [], itemCount = 0;
@@ -367,6 +393,8 @@ MetadataDuzelt = {
 			"yazar.soyadBos": "yazar soyadı boş", "yazar.tekAlan": "tek alana yazılmış yazar", "yazar.buyukHarf": "TAMAMI BÜYÜK yazar",
 			"yazar.kurumBuyuk": "TAMAMI BÜYÜK kurum", "yazar.diakritik": "diakritiksiz Türkçe ad",
 			"yazar.kucukHarf": "küçük harfle başlayan ad",
+			"karakter.yerelI": "yanlış yerelle küçültülmüş (Kavrami → Kavramı)", "harf.eksikHarf": "eksik Türkçe harf (kütüphanedeki yazımdan)",
+			"karakter.ikiNokta": "iki noktadan sonra boşluk yok", "karakter.basTirnak": "başta kapanmamış tırnak", "tire.izafet": "kopmuş izafet eki (Kanun - i Esasi)",
 		}[kural] || kural;
 	},
 
@@ -383,7 +411,9 @@ MetadataDuzelt = {
 			satirlar: rows,
 			uyarilar,
 			etiket: (k) => this.ruleLabel(k),
-			onUygula: (secilen) => this.apply(secilen.map((i) => rows[i]), baslik),
+			// elle: önizlemede elle düzenlenen değerler ({ indeks: { yeni, yeniYazar? } }); öneri yerine bunlar yazılır
+			onUygula: (secilen, elle = {}) => this.apply(secilen.map((i) => ({ ...rows[i], ...(elle[i] || {}) })), baslik),
+			kisaBaslik: (b) => this.K.harf.kisaBaslik(b),
 			dogrulanacak: hedefler.length,
 			onDogrula: (geri) => this.verifyTargets(hedefler, geri),
 			onGoster: (itemID) => win.ZoteroPane.selectItem(itemID),
