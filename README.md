@@ -15,35 +15,44 @@ JavaScript; ek program gerektirmez, hiçbir veri dışarı gönderilmez.
 
 | Grup | Örnek | Güven |
 |---|---|---|
-| Bozuk karakterler | `TÃ¼rkiye → Türkiye`, `ý þ ð → ı ş ğ`, `&amp;lt;`, `ﬁ → fi`, görünmez karakterler, NBSP, çift boşluk, `i̇` artığı (i + U+0307), `Dergi » Makale »` öneki | yüksek |
+| Bozuk karakterler | `TÃ¼rkiye → Türkiye`, `ý þ ð → ı ş ğ`, `MADENCĠLĠK → MADENCİLİK` (PDF yazı tipi), `&amp;lt;`, `ﬁ → fi`, görünmez karakterler, NBSP, çift boşluk, `i̇` artığı (i + U+0307), `Dergi » Makale »` öneki | yüksek |
 | Tamamı büyük Türkçe başlık | `TÜRK İDARE HUKUKUNDA KAMU YARARI → Türk İdare Hukukunda Kamu Yararı` | orta |
 | Küçük harfli / cümle düzenli Türkçe başlık | `Türk idare hukukunda kamu yararı ve Danıştay → Türk İdare Hukukunda Kamu Yararı ve Danıştay` | orta |
-| Tamamı büyük İngilizce başlık | `HUMAN RIGHTS APPROACH TO … → Human rights approach to …` (cümle düzeni) | orta |
+| İngilizce başlık | `HUMAN RIGHTS APPROACH TO …`, `Human rights approach to …` → `Human Rights Approach to …` (Title Case) | orta |
+| Kısa başlık | boşsa ya da kelime ortasında kesikse (`Yeni Bir Dönemin Başlang`) başlıktan üretilir | orta |
 | Tamamı büyük dergi / kurum adı | `ANKARA ÜNİVERSİTESİ HUKUK FAKÜLTESİ DERGİSİ → Ankara Üniversitesi Hukuk Fakültesi Dergisi` | orta |
 | Dil alanı | boş → `tr`; `tr-TR`, `tur`, `Turkish` → `tr`; Türkçe başlıkta `en` → `tr` | yüksek / orta |
-| Yazar adları | `YILMAZ, AHMET → Yılmaz, Ahmet`; `Prof. Dr.`, `Arş. Gör.`, `Av.` silinir; `Soyad, Ad` tek alandan ayrılır; `Yilmaz → Yılmaz` | yüksek / orta |
+| Yazar adları | `YILMAZ, AHMET → Yılmaz, Ahmet`; `Prof. Dr.`, `Arş. Gör.`, `Av.` silinir; `Soyad, Ad` tek alandan ayrılır; `Yilmaz`, `Işik → Yılmaz`, `Işık`; `Yrd.doç.dr.ali → Ali` | yüksek / orta |
 | Kopuk kelimeler | `hu- kuk → hukuk` (yalnızca Türkçe metinde; `ön- ve son-` korunur) | orta |
 
 Türkçe başlıklarda **TDK kuralı** uygulanır: her kelime büyük harfle başlar; `ve, ile, ya, veya, yahut, ki,
 da, de` bağlaçları ile `mı/mi/mu/mü` soru eki küçük kalır (ilk kelime ve iki noktadan sonraki ilk kelime
 hep büyük). **Kısaltmalar** (AİHM, TBMM, İYUK…), iç büyük harfli adlar (ChatGPT, e-Devlet), **kesme işaretli
 ekler** (`Türkiye'de`, `AİHM'nin`), Roma rakamları, parantez içi kısaltmalar (`(IOI)`), `m.`/`f.`/`v.` gibi atıf
-kısaltmaları ve `Islah-ı`, `Şûrâ-yı` gibi izafet ekleri korunur. Başlığın yalnızca bir kısmı TAMAMI BÜYÜK yazılmışsa
+kısaltmaları ve `Islah-ı`, `Şûrâ-yı` gibi izafet ekleri korunur. Ardından `m.`/`md.` gelen kanun kısaltmaları
+(`HUMK m. 87`) listede olmasa da büyük kalır; Latince kalıplar (`SUI GENERIS → Sui Generis`, `non bis in idem`) Türkçe
+`ı` almaz. Başlığın ortasındaki İngilizce kısaltma açılımı korunur ve kısaltması büyük yazılır
+(`Sıgma (support For … Management) → SIGMA (Support for … Management)`). Başlığın yalnızca bir kısmı TAMAMI BÜYÜK yazılmışsa
 (`KAMU MALİ KRİZİ VE YEREL YÖNETİMLER -Yerel…`) o kısım da çevrilir. **İki dilli başlıklarda** (`Türkçe başlık /
-English title`, ` - `, `=`, ayraçsız `TÜRKÇE BAŞLIK English title`) yalnızca eserin dilindeki (dil alanı) parça
-bırakılır. Sona yapışmış dil etiketleri (`[tr]`) ve başlığın tamamını saran tırnaklar silinir; Türkçe yerelle bozulmuş yabancı başlıklarda
+English title`, ` - `, `=`, ayraçsız `TÜRKÇE BAŞLIK English title`, sondaki `Türkçe başlık (English title)`)
+yalnızca eserin dilindeki (dil alanı) parça bırakılır. Başlığa yazılmış notlar (`(amme, künye yok)`, `[pdf yok]`) atılır
+ve uyarı olarak gösterilir. Türkçe kelimenin olağan olmayan ünsüz ikilisiyle bitmesi (`ARTTIRILAMAMASF`, `Orantılılk`)
+**olası yazım hatası** olarak uyarılır. Sona yapışmış dil etiketleri (`[tr]`) ve başlığın tamamını saran tırnaklar silinir; Türkçe yerelle bozulmuş yabancı başlıklarda
 `ı → i` düzeltilir (`Internatıonal → International`); `N-erdal` gibi bozuk görünen yazar adları işaretlenir.
 **İki soyadlı yazarlar:** ad alanına düşmüş soyadı (`Cansu Koç` + `Başar`, `Şeyma SAĞDIÇ` + `Güven`) soyadına
 taşınır. İşaret ya ad alanındaki BÜYÜK harfli kelimedir ya da kelimenin kütüphanenizde yalnızca soyadı olarak
 geçmesidir (sözlük her taramada `creators` tablosundan kurulur; `Nur`, `Can`, `Gül` gibi ikinci adlar taşınmaz).
-İngilizce başlıklarda büyük yazılmış `of, the, in, on, a…` küçültülür (ilk kelime ve iki nokta sonrası hariç).
+İngilizce başlıklar da **Title Case** yazılır: her kelime büyük, `of, the, in, on, a, and…` küçük (ilk kelime ve iki
+nokta sonrası hariç). **Kısa başlık** boşsa ya da kelime ortasında kesikse üretilir: iki noktadan önceki ana başlık;
+4 kelimeyi aşıyorsa ilk 4 kelime (sonda bağlaç ya da açık parantez bırakılmaz). Elle yazılmış kısa başlığa dokunulmaz.
 Şapkalı harflere (`zekâ / zeka`) kurallar dokunmaz; kaynakla doğrulamada kaynaktaki yazıma uydurulur. Araçlar › Metadata Düzelt menüsünden **cümle düzeni**
-(yalnızca ilk harf büyük) ya da **dokunma** seçilebilir. Küçültme Türkçe yerelle yapılır (`I → ı`, `İ → i`).
+(yalnızca ilk harf büyük; Türkçe ve İngilizce başlıklar) ya da **dokunma** seçilebilir. Kaynakla doğrulamada başlığın son
+kelimesi PDF'te daha uzunsa (`… Perspektif` / PDF'te `… PERSPEKTİFİ`) başlık PDF'e göre tamamlanır. Küçültme Türkçe yerelle yapılır (`I → ı`, `İ → i`).
 Sözlükte olmayan özel adlar ve küçük kalması istenen kelimeler için **istisna listesi** vardır (listedeki
 yazım aynen korunur).
 
-Yapmadıkları: diakritiksiz Türkçeyi geri getirme (`Sinav → Sınav`; yalnızca uyarı verir), İngilizce
-Title Case başlıkları çevirme (Zotero'nun kendi sağ tık menüsü var).
+Yapmadıkları: diakritiksiz Türkçeyi geri getirme (`Sinav → Sınav`; yalnızca uyarı verir), yazım hatasını kendiliğinden
+düzeltme (yalnızca uyarır), Almanca/Fransızca başlıkların harf düzeni.
 
 ## Kurulum
 

@@ -4,7 +4,7 @@
  * baglam: { alan: "title"|"abstractNote"|…, dil: "tr"|"en"|…|null }
  *
  * Kurallar: mojibake (UTF-8'in Latin-1/CP1252 okunması), eski Türkçe kod sayfası (ý þ ð),
- * HTML varlıkları, bağlı harfler (ﬁ ﬂ), görünmez karakterler, NFC + "i̇" artığı, boşluklar,
+ * PDF yazı tipi kodlaması (Ġ đ Ģ → İ i ş), HTML varlıkları, bağlı harfler (ﬁ ﬂ), görünmez karakterler, NFC + "i̇" artığı, boşluklar,
  * DergiPark sayfa başlığı öneki ("Dergi » Makale » …"), başlık sonundaki nokta.
  */
 (function (root, factory) {
@@ -82,6 +82,25 @@
 			return yeni;
 		}
 		return metin;
+	}
+
+	// PDF'ten kopyalanmış Türkçe metinde yazı tipi kodlaması: "MADENCĠLĠK", "DANIġTAY", "BirleĢmiĢ", "Türkđye"
+	const PDF_KOD = { "Ġ": "i", "Đ": "i", "đ": "i", "ġ": "ş", "Ģ": "ş" };
+
+	/** Ġ/Đ/đ → İ/i, ġ/Ģ → Ş/ş. Büyüklük çevreden: kelime başında ya da büyük harfler arasında büyük.
+	 *  Yalnızca metin Türkçe görünüyorsa; Hırvatça (ć č š ž) metne dokunulmaz ("Đorđević"). */
+	function pdfKodlama(metin, baglam) {
+		if (!/[ĠĐđġĢ]/.test(metin) || /[ćčšžĆČŠŽ]/.test(metin)) {
+			return metin;
+		}
+		let harf = (c) => !!c && /\p{L}/u.test(c);
+		let buyuk = (c) => harf(c) && c !== c.toLocaleLowerCase("tr");
+		let yeni = metin.replace(/[ĠĐđġĢ]/g, (c, i, s) => {
+			let once = s[i - 1], sonra = s[i + 1];
+			let up = !harf(once) || (buyuk(once) && (!harf(sonra) || buyuk(sonra) || /[ĠĐĢ]/.test(sonra)));
+			return up ? PDF_KOD[c].toLocaleUpperCase("tr") : PDF_KOD[c];
+		});
+		return baglam.dil == "tr" || dil.tespit(yeni).dil == "tr" ? yeni : metin;
 	}
 
 	const VARLIK = {
@@ -172,6 +191,19 @@
 		return metin.replace(DIL_ETIKETI, "") || metin;
 	}
 
+	// Başlığa düşmüş kişisel not: "Kamusal Malların Ölçütü (amme, künye yok)", "… [pdf yok]", "… (kontrol et)"
+	const NOT_PARANTEZ = /\s*[\[(][^\[\]()]*(?<!\p{L})(?:künye\s*(?:yok|eksik|bulunamadı|bilinmiyor)|künyesiz|eksik\s*künye|kaynak\s*yok|pdf\s*yok|tam\s*metin\s*yok|kontrol\s*(?:et|edil\p{L}*)|bakılacak|okunacak|tarih\s*yok|yıl\s*yok|sayfa\s*yok|todo|citation\s*missing|no\s*citation)(?!\p{L})[^\[\]()]*[\])]/giu;
+
+	/** Başlıktaki not parantezleri: ["(amme, künye yok)"]. Motor bunları uyarı olarak gösterir (not kaybolmasın). */
+	function notlar(metin) {
+		return (metin.match(NOT_PARANTEZ) || []).map((x) => x.trim());
+	}
+
+	/** Başlıktaki not parantezini atar: "Kamusal Malların Ölçütü (amme, künye yok)" → "Kamusal Malların Ölçütü". */
+	function notParantez(metin) {
+		return metin.replace(NOT_PARANTEZ, "").trim() || metin;
+	}
+
 	const KISALTMA_SONU = /(?<!\p{L})(?:vs|vb|vd|bkz|krş|etc|al|Inc|Ltd|Jr|Sr|Co|No|Nr|St|Bd|Vol|Cilt|Sayı|pp)\.$/iu;
 	const TEK_HARF_SONU = /(?<!\p{L})(?:\p{Lu}|\p{N}+)\.$/u;   // "A.", "B.N.", "2018."
 
@@ -202,6 +234,7 @@
 		adim("nfc", "Birleşik karakterler NFC'ye getirildi / i̇ artığı temizlendi", nfc);
 		adim("mojibake", "Bozuk kodlama (mojibake) düzeltildi", mojibake);
 		adim("eskiKodSayfasi", "Eski Türkçe kod sayfası harfleri (ý þ ð) düzeltildi", (x) => eskiKodSayfasi(x, baglam));
+		adim("pdfKodlama", "PDF yazı tipi kodlaması düzeltildi (Ġ đ Ģ → İ i ş)", (x) => pdfKodlama(x, baglam), "orta");
 		adim("htmlVarliklar", "HTML varlıkları (&amp; &#305; …) çözüldü", htmlVarliklar);
 		adim("bagliHarf", "Bağlı harfler (ﬁ ﬂ) ayrıldı", bagliHarf);
 		adim("gorunmez", "Görünmez karakterler / kırılmaz boşluklar temizlendi", gorunmez);
@@ -211,6 +244,7 @@
 				adim("saranTirnak", "Başlığın tamamını saran tırnak işaretleri kaldırıldı", saranTirnak, "orta");
 			}
 			adim("dilEtiketi", "Başlık sonundaki dil etiketi ([tr], (en) …) atıldı; özgün başlıkla karşılaştırın", dilEtiketi, "orta");
+			adim("notParantez", "Başlığa yazılmış not (“künye yok” …) atıldı", notParantez, "orta");
 		}
 		adim("bosluk", "Fazla boşluk / satır sonu temizlendi", (x) => bosluk(x, baglam));
 		if (BASLIK_ALANLARI.has(baglam.alan)) {
@@ -219,5 +253,5 @@
 		return { metin: s, degisiklikler };
 	}
 
-	return { uygula, saranTirnak, dilEtiketi, mojibake, eskiKodSayfasi, htmlVarliklar, bagliHarf, gorunmez, nfc, bosluk, dergiparkOneki, sondakiNokta, BASLIK_ALANLARI };
+	return { uygula, pdfKodlama, saranTirnak, dilEtiketi, notParantez, notlar, mojibake, eskiKodSayfasi, htmlVarliklar, bagliHarf, gorunmez, nfc, bosluk, dergiparkOneki, sondakiNokta, BASLIK_ALANLARI };
 });

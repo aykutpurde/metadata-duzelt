@@ -5,6 +5,7 @@
  *
  * Kurallar: boşluk/NFC temizliği, unvan silme (Prof. Dr., Arş. Gör., Av.), "Soyad, Ad" ayırma,
  * tek alana yazılmış kişi adını ikiye bölme, TAMAMI BÜYÜK adı baş harfe çevirme (Türkçe yerel),
+ * küçük harfle başlayan adı büyütme ("Yrd.doç.dr.ali Fuat" → "Ali Fuat"; von, de, al gibi parçacıklar küçük kalır),
  * diakritiksiz Türkçe ad/soyadı sözlükle düzeltme (Yilmaz → Yılmaz), ad alanına düşmüş ikinci soyadını
  * soyadına taşıma ("Cansu Koç" + "Başar" → "Cansu" + "Koç Başar").
  *
@@ -142,9 +143,21 @@
 		}).join("");
 	}
 
+	/** Küçük harfle başlayan ad kelimelerinin ilk harfi büyütülür: "ali Fuat" → "Ali Fuat".
+	 *  Parçacıklar (von, de, van der, al) ve bağlaçlar (ve, and) küçük kalır; "McDonald", "d’Alembert" gibi iç büyük harfe dokunulmaz. */
+	function kucukBasla(s, d) {
+		return s.split(/(\s+)/).map((w) => {
+			if (!/^\p{Ll}[\p{Ll}'’.-]{2,}$/u.test(w) || PARCACIK.has(w.toLocaleLowerCase(d)) || /^(?:ve|and|ile|et|al\.?|of|for|the|in|on|at|to|by|with|from)$/.test(w)) {
+				return w;
+			}
+			return w[0].toLocaleUpperCase(d) + w.slice(1);
+		}).join("");
+	}
+
+	/** Sözlükteki adın diakritiği eksik ya da yanlışsa kanonik yazım: "Yilmaz", "Işik" (IŞIK İngilizce yerelle küçültülmüş) → "Yılmaz", "Işık". */
 	function diakritik(s) {
 		return s.split(/(\s+|-)/).map((w) => {
-			let k = w.toLowerCase();
+			let k = katla(w);
 			if (DIAKRITIK.has(k)) {
 				return DIAKRITIK.get(k);
 			}
@@ -255,6 +268,18 @@
 				c.lastName = basHarf(c.lastName, d);
 			}
 
+			// en az bir kelime büyük başlıyorsa ad gerçektir ("ali Fuat" + "Gökçe"); tamamı küçük ("madenci") yalnızca uyarılır
+			// ad alanı boşsa ya da kurum sözcüğü varsa ("Association for Progressive Communications") dokunulmaz
+			if (c.fieldMode == 0 && c.firstName && !KURUM.test(c.firstName + " " + c.lastName) && /(?:^|\s)\p{Lu}/u.test(c.firstName + " " + c.lastName)) {
+				f = kucukBasla(c.firstName, d);
+				l = kucukBasla(c.lastName, d);
+				if (f != c.firstName || l != c.lastName) {
+					ekle("kucukHarf", "Küçük harfle başlayan ad büyük harfle başlatıldı (özel ad)", "orta");
+					c.firstName = f;
+					c.lastName = l;
+				}
+			}
+
 			if (baglam.dil == "tr" && c.fieldMode == 0) {
 				f = diakritik(c.firstName);
 				l = diakritik(c.lastName);
@@ -292,5 +317,5 @@
 		return { yazarlar: sonuc, degisiklikler, uyarilar };
 	}
 
-	return { uygula, sozlukKur, katla, adaDusenSoyad, unvanSil, basHarf, diakritik, kisiGibi, tamamiBuyuk, DIAKRITIK, PARCACIK };
+	return { uygula, sozlukKur, katla, adaDusenSoyad, unvanSil, basHarf, kucukBasla, diakritik, kisiGibi, tamamiBuyuk, DIAKRITIK, PARCACIK };
 });

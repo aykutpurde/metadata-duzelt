@@ -2,8 +2,10 @@
  *
  * tespit(metin)      → { dil: "tr"|"en"|"de"|null, guven: "yuksek"|"orta"|null, puan, sahteI? }
  *                      sahteI: metin yabancı dilde ama Türkçe yerelle büyütülüp küçültülmüş ("Internatıonal")
- * parcalar(metin)    → [{ ayirac, metin, dil, sahteI }]: farklı dildeki başlık parçaları
- *                      ("Türkçe – English", "TÜRKÇE BAŞLIK English title"); aynı dildeki parçalar birleşik kalır
+ * parcalar(metin)    → [{ ayirac, metin, son?, dil, sahteI }]: farklı dildeki başlık parçaları
+ *                      ("Türkçe – English", "TÜRKÇE BAŞLIK English title", "Türkçe başlık (English title)");
+ *                      aynı dildeki parçalar birleşik kalır. Metin geri kurulurken: ayirac + metin + (son || "")
+ * acilimMi(k, ic)    → "SIGMA (Support for … Management)": k, parantezdeki açılımın kısaltması mı
  * sahteIDuzelt(m)    → yabancı dildeki parçalarda ı → i, İ → I
  * normalize(kod)     → Zotero language alanı için düzgün kod ("tr-TR" → "tr", "eng" → "en") ya da null
  * kucult/buyult      → Türkçe yerelli küçük/büyük harf (I→ı, İ→i)
@@ -139,6 +141,31 @@
 		return [{ ayirac: "", metin: p }];
 	}
 
+	const BAGLAC_EN = new Set("a an the and or of in on at to for by with from as".split(" "));
+
+	/** "SIGMA (Support for Improvement in Governance and Management)", "TAIEX (Technical Assistance and Information Exchange)":
+	 *  kelime, açılımdaki kelimelerin (bağlaçlar hariç) baş harfleriyle başlıyor mu. Sonda bir harf fazlası olabilir (SIGM-A).
+	 *  Türkçe yerelle bozulmuş yazım ("Sıgma") da tanınır. */
+	function acilimMi(kelime, ic) {
+		let norm = (x) => sahteIDuzeltKelime(x).toUpperCase();
+		let bas = ic.split(/\s+/).filter((w) => /\p{L}/u.test(w) && !BAGLAC_EN.has(w.replace(/[^\p{L}]/gu, "").toLowerCase()))
+			.map((w) => w.match(/\p{L}/u)[0]).join("");
+		let k = norm(kelime || "");
+		bas = norm(bas);
+		return bas.length >= 3 && k.length <= bas.length + 1 && k.startsWith(bas);
+	}
+
+	/** "\"Yetki Genişliği\" İlkesi Üzerine Bir İnceleme (A Research About the Principle of Deconcentration)":
+	 *  başlığın sonundaki uzun (4+ kelime) parantez ayrı parça olur; dili farklıysa çeviri sayılır. Kapanış parantezi
+	 *  "son" alanında tutulur. Kısa parantezler ("(IOI)", "(İİK m. 134)") ve kısaltma açılımları bölünmez. */
+	function sondakiParantez(p) {
+		let m = p.match(/^(.*\S)(\s*\()([^()]+)\)(\s*)$/su);
+		if (!m || (m[3].match(/\p{L}+/gu) || []).length < 4 || acilimMi((m[1].match(/\p{L}+$/u) || [""])[0], m[3])) {
+			return [{ ayirac: "", metin: p }];
+		}
+		return [{ ayirac: "", metin: m[1] }, { ayirac: m[2], metin: m[3], son: ")" + m[4] }];
+	}
+
 	const AYIRAC = /( \/ | \| |\s*=\s*| [-–—] )/;
 	const KESIN_AYIRAC = /[\/|=]/;
 
@@ -151,9 +178,10 @@
 			let ay = i ? ham[i - 1] : "";
 			// "…Hükmünün DeğerlendirilmesiFrom the Perspective…": iki dil boşluksuz yapışmış
 			let alt = ham[i].replace(/(\p{Ll}{2})(\p{Lu}\p{Ll}{2,})/gu, "$1\u0000$2").split("\u0000")
-				.flatMap((y) => buyukSinir(y));
+				.flatMap((y) => buyukSinir(y))
+				.flatMap((q) => sondakiParantez(q.metin).map((r, j) => (j ? r : { ...r, ayirac: q.ayirac })));
 			alt[0].ayirac = ay;
-			alt.forEach((q, j) => liste.push({ ayirac: q.ayirac, metin: q.metin, kesin: !j && KESIN_AYIRAC.test(ay) }));
+			alt.forEach((q, j) => liste.push({ ayirac: q.ayirac, metin: q.metin, son: q.son, kesin: !j && KESIN_AYIRAC.test(ay) }));
 		}
 		for (let p of liste) {
 			let t = tespit(p.metin);
@@ -164,12 +192,13 @@
 		for (let p of liste) {
 			let o = out[out.length - 1];
 			if (o && !p.kesin && (!p.dil || !o.dil || p.dil == o.dil)) {
-				o.metin += p.ayirac + p.metin;
+				o.metin += (o.son || "") + p.ayirac + p.metin;
+				o.son = p.son;
 				o.dil = o.dil || p.dil;
 				o.sahteI = o.sahteI || p.sahteI;
 				continue;
 			}
-			out.push({ ayirac: p.ayirac, metin: p.metin, dil: p.dil, sahteI: p.sahteI });
+			out.push({ ayirac: p.ayirac, metin: p.metin, son: p.son, dil: p.dil, sahteI: p.sahteI });
 		}
 		return out;
 	}
@@ -187,7 +216,7 @@
 		if (!ps.some(duzelt)) {
 			return metin;
 		}
-		return ps.map((p) => p.ayirac + (duzelt(p) ? sahteIDuzeltKelime(p.metin) : p.metin)).join("");
+		return ps.map((p) => p.ayirac + (duzelt(p) ? sahteIDuzeltKelime(p.metin) : p.metin) + (p.son || "")).join("");
 	}
 
 	const ES = {
@@ -224,5 +253,5 @@
 		return null;   // 'scheme="ISO639-1"' gibi çöp
 	}
 
-	return { tespit, normalize, kucult, buyult, kelimeler, parcalar, sahteIDuzelt, SIK };
+	return { tespit, normalize, kucult, buyult, kelimeler, parcalar, sahteIDuzelt, sahteIDuzeltKelime, acilimMi, SIK };
 });

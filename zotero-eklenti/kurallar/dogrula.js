@@ -11,6 +11,8 @@
  *
  * Karşılaştırma büyük/küçük harf, aksan, ı/i, boşluk ve noktalamadan bağımsızdır: PDF'te başlık çoğunlukla
  * TAMAMI BÜYÜK, satırlara bölünmüş ve tirelenmiş durur. Bu yüzden harf düzeni değil, metnin kendisi doğrulanır.
+ * PDF'te başlığın son kelimesi kelime sınırında bitmeli: "… Perspektif" PDF'te "… PERSPEKTİFİ" ise başlık
+ * kesik sayılır ve PDF'teki kelimeyle tamamlanır (kayıtlarda, DergiPark'ın kendi künyesinde bile eksik olabilir).
  */
 (function (root, factory) {
 	if (typeof module === "object" && module.exports) {
@@ -62,6 +64,41 @@
 			parca = parca.replace(/\s+\S*$/, "");
 		}
 		return (bas ? "…" : "") + parca.replace(/\s+/g, " ").trim() + (son < metin.length ? "…" : "");
+	}
+
+	/** kat() ile aynı anahtar ve her anahtar karakterinin metindeki yeri. */
+	function katKonum(s) {
+		let k = "", yer = [], i = 0;
+		for (let c of String(s || "")) {
+			let x = katKarakter(c);
+			if (/[\p{L}\p{N}]/u.test(x)) {
+				k += x;
+				yer.push(i);
+			}
+			i += c.length;
+		}
+		return { k, yer };
+	}
+
+	/** Başlık (anahtar y) PDF'te geçiyor mu ve son kelimesi orada bitiyor mu.
+	 *  → { tam: true } | { tam: false, devam: "İ" } (PDF'te son kelimenin devamı) | null (hiç geçmiyor).
+	 *  Devam, aynı büyüklükte en çok 4 harftir ve ardından boşluk/noktalama gelir: "ANALİZYrd." gibi yapışık satır sayılmaz. */
+	function pdfEslesme(pdf, y) {
+		let { k, yer } = katKonum(pdf);
+		let bulundu = false, devam = null, i = -1;
+		while ((i = k.indexOf(y, i + 1)) >= 0) {
+			bulundu = true;
+			let son = yer[i + y.length - 1];
+			let sonHarf = String.fromCodePoint(pdf.codePointAt(son));
+			let sonra = pdf.slice(son + sonHarf.length);
+			if (!/^\p{L}/u.test(sonra)) {
+				return { tam: true };
+			}
+			let buyuk = sonHarf !== sonHarf.toLocaleLowerCase("tr");
+			let m = sonra.match(buyuk ? /^\p{Lu}{1,4}(?![\p{L}\p{N}])/u : /^\p{Ll}{1,4}(?![\p{L}\p{N}])/u);
+			devam = devam || (m && m[0]);
+		}
+		return bulundu ? { tam: false, devam } : null;
 	}
 
 	function etiketSil(s) {
@@ -158,8 +195,8 @@
 		}
 		// başlık kaydı varsa yalnızca o (PDF metin çıkarımı şapkayı düşürebilir); yoksa PDF'in başı
 		let sapkaKaynak = k.basliklar.length ? k.basliklar.map((b) => b.metin) : [k.pdf ? k.pdf.slice(0, 3000) : ""];
-		let yeniOneri = sapkaUyumla(satir.yeni, sapkaKaynak);
 		let sonuc = baslikKarsilastir(satir, k, y);
+		let yeniOneri = sapkaUyumla((sonuc && sonuc.yeniOneri) || satir.yeni, sapkaKaynak);
 		if (yeniOneri && sonuc) {
 			sonuc.yeniOneri = yeniOneri;
 			sonuc.mesaj += " · şapkalı harfler kaynaktaki yazıma uyduruldu";
@@ -184,8 +221,20 @@
 				uyan.add(b.kaynak);
 			}
 		}
-		if (k.pdf && y.length >= 10 && kat(k.pdf.slice(0, PDF_BOYU)).includes(y)) {
-			uyan.add("PDF");
+		let p = k.pdf && y.length >= 10 ? pdfEslesme(k.pdf.slice(0, PDF_BOYU), y) : null;
+		if (p && (p.tam || !p.devam)) {
+			uyan.add("PDF");     // devamı belirsizse ("ANALİZYrd."): sonraki satır yapışmış
+		}
+		else if (p && p.devam) {
+			// PDF'te son kelime daha uzun: başlık kesik (künye kayıtları da aynı kesik başlığı taşıyabilir)
+			let sonKelime = (satir.yeni.match(/\p{L}+$/u) || [""])[0];
+			let ek = /\p{Lu}$/u.test(sonKelime) && sonKelime.length > 1 && sonKelime === sonKelime.toLocaleUpperCase("tr")
+				? p.devam.toLocaleUpperCase("tr") : p.devam.toLocaleLowerCase("tr");
+			return {
+				durum: "dogrulandi",
+				mesaj: `PDF'te son kelime “${sonKelime}${ek}”; başlık PDF'e göre tamamlandı` + (uyan.size ? ` (${[...uyan].join(", ")} kaydında da eksik)` : ""),
+				yeniOneri: satir.yeni.replace(/\s+$/, "") + ek,
+			};
 		}
 		if (uyan.size) {
 			return { durum: "dogrulandi", mesaj: `${[...uyan].join(", ")} ile aynı` };
@@ -334,5 +383,5 @@
 		return BASLIK_ALANLARI.has(satir.alan) || (satir.alan == "creators" && satir.guven == "orta");
 	}
 
-	return { degerlendir, dogrulanabilir, sapkaUyumla, adiKaynaktanAl, kat, kesit, metaOku, crossrefOku, doiBul };
+	return { degerlendir, dogrulanabilir, sapkaUyumla, adiKaynaktanAl, kat, kesit, pdfEslesme, metaOku, crossrefOku, doiBul };
 });

@@ -1,7 +1,8 @@
 /* Metadata Düzelt — kural motoru (saf; Zotero'ya bağımlı değil).
  *
  * analiz(kayit, ayarlar) → { dil, oneriler, uyarilar }
- *   kayit:   { itemType, fields: { title, language, … }, creators: [{ firstName, lastName, fieldMode, creatorType }] }
+ *   kayit:   { itemType, fields: { title, language, … }, creators: [{ firstName, lastName, fieldMode, creatorType }],
+ *              alanlar?: türün geçerli alan adları (boş alanlar fields'ta yok; kısa başlık ancak türde varsa üretilir) }
  *   ayarlar: { stil: "baslik"|"cumle"|"dokunma" (Türkçe başlık düzeni), titleCaseDonustur: bool (yalnızca "cumle"), istisnalar: string[]|Map }
  *   oneri:   { alan, eski, yeni, kurallar: [{kural, aciklama, guven}], aciklama, guven: "yuksek"|"orta", otomatik: bool,
  *              (yazar için) indeks, eskiYazar, yeniYazar }
@@ -95,6 +96,34 @@
 		return etkin;
 	}
 
+	/** Kısa başlık boşsa ya da kelime ortasında kesikse ("Yeni Bir Dönemin Başlang") düzeltilmiş başlıktan üretilir.
+	 *  Elle yazılmış, kelime sınırında biten kısa başlığa dokunulmaz. Boş kısa başlık ancak türün alan listesi
+	 *  (kayit.alanlar) verilmiş ve türde shortTitle varsa doldurulur. */
+	function kisaBaslikOner(kayit, fields, oneriler) {
+		let baslik = (oneriler.find((o) => o.alan == "title") || {}).yeni || fields.title;
+		if (!baslik) {
+			return;
+		}
+		let ki = oneriler.findIndex((o) => o.alan == "shortTitle");
+		let simdiki = ki >= 0 ? oneriler[ki].yeni : (fields.shortTitle || "");
+		let kural = !simdiki.trim() && (kayit.alanlar || []).includes("shortTitle")
+			? { kural: "harf.kisaBaslikBos", aciklama: "Kısa başlık boştu; başlıktan üretildi (ana başlık, en çok 4 kelime)", guven: "orta" }
+			: harf.kisaBaslikKesik(simdiki, baslik)
+				? { kural: "harf.kisaBaslikKesik", aciklama: "Kısa başlık kelime ortasında kesilmişti; başlıktan yeniden üretildi (ana başlık, en çok 4 kelime)", guven: "orta" }
+				: null;     // boş ama türde kısa başlık yok (ya da alan listesi bilinmiyor): üretilmez
+		let yeni = kural && harf.kisaBaslik(baslik);
+		if (!yeni || yeni == (fields.shortTitle || "")) {
+			return;
+		}
+		let o = oneriYap("shortTitle", fields.shortTitle || "", yeni, [...(ki >= 0 ? oneriler[ki].kurallar : []), kural]);
+		if (ki >= 0) {
+			oneriler[ki] = o;
+		}
+		else {
+			oneriler.push(o);
+		}
+	}
+
 	function analiz(kayit, ayarlar = {}) {
 		let fields = kayit.fields || {};
 		let oneriler = [];
@@ -118,7 +147,7 @@
 				if (diller.size >= 2 && diller.has(d)) {
 					let kalan = ps.filter((p) => p.dil == d);
 					let atilan = ps.filter((p) => p.dil != d).map((p) => p.metin).join(" / ");
-					s = kalan.map((p, i) => (i ? p.ayirac : "") + p.metin).join("");
+					s = kalan.map((p, i) => (i ? p.ayirac + p.metin + (p.son || "") : p.metin)).join("");
 					kurallar.push({ kural: "dil.ikiDilliBaslik", aciklama: `İki dilli başlık: eser dilindeki (${d}) kısım bırakıldı; atılan: “${atilan}”`, guven: "orta" });
 				}
 				else if (diller.size >= 2) {
@@ -145,10 +174,18 @@
 			if (s != eski) {
 				oneriler.push(oneriYap(alan, eski, s, kurallar));
 			}
+			if (alan == "title" && d == "tr" && harf.yazimSupheli(s).length) {
+				uyarilar.push({ alan, mesaj: `Olası yazım hatası: ${harf.yazimSupheli(s).map((w) => `“${w}”`).join(", ")} (Türkçe kelime böyle bitmez; özgün kaynaktan kontrol edin)` });
+			}
+			if (alan == "title" && karakter.notlar(eski).length) {
+				uyarilar.push({ alan, mesaj: `Başlıktaki not atıldı: ${karakter.notlar(eski).join(" ")} — künye eksikse kütüphanedeki kopyalara ya da kaynağa bakın; notu gerekirse Not/Extra alanına taşıyın` });
+			}
 			if (alan == "title" && /i̇/.test(eski)) {
 				uyarilar.push({ alan, mesaj: "Başlık yanlış yerelle küçültülmüş (i̇ artığı): “ı” olması gereken “i”ler elle kontrol edilmeli (Alımında, Sınav, Yargısal…)" });
 			}
 		}
+
+		kisaBaslikOner(kayit, fields, oneriler);
 
 		let y = yazar.uygula(kayit.creators || [], baglamTemel);
 		for (let dg of y.degisiklikler) {
