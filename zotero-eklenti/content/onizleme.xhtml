@@ -20,7 +20,11 @@
 		tr.kayit td span.link { color: #3b6fd6; cursor: pointer; font-weight: normal; margin-left: 8px; font-size: 12px; }
 		tr.satir.secili { background: var(--sel); }
 		td.eski { color: var(--old); }
-		td.yeni { color: var(--new); }
+		td.yeni { color: var(--new); cursor: text; }
+		td.yeni:hover { outline: 1px dashed var(--line); outline-offset: -3px; }
+		.duzenle textarea, .duzenle input { font: inherit; width: 100%; box-sizing: border-box; margin-bottom: 4px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); padding: 3px 5px; }
+		.duzenle button { font: inherit; padding: 2px 8px; margin-right: 6px; }
+		.guven.elle { color: #3b6fd6; border-color: #3b6fd6; }
 		td.alan { white-space: nowrap; color: var(--muted); }
 		td.aciklama { color: var(--muted); font-size: 12px; max-width: 260px; }
 		.guven { display: inline-block; font-size: 11px; padding: 0 5px; border-radius: 8px; border: 1px solid var(--line); margin-left: 4px; }

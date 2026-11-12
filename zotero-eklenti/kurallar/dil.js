@@ -9,6 +9,7 @@
  * sahteIDuzelt(m)    → yabancı dildeki parçalarda ı → i, İ → I
  * normalize(kod)     → Zotero language alanı için düzgün kod ("tr-TR" → "tr", "eng" → "en") ya da null
  * kucult/buyult      → Türkçe yerelli küçük/büyük harf (I→ı, İ→i)
+ * kelimeSozlukKur(metinler) / eksikHarfKelime(w, sozluk) → kütüphanedeki yazımdan kaybolmuş Türkçe harfi bulma
  */
 (function (root, factory) {
 	if (typeof module === "object" && module.exports) {
@@ -253,5 +254,127 @@
 		return null;   // 'scheme="ISO639-1"' gibi çöp
 	}
 
-	return { tespit, normalize, kucult, buyult, kelimeler, parcalar, sahteIDuzelt, sahteIDuzeltKelime, acilimMi, SIK };
+	// Türkçe harf → ASCII karşılığı (diakritiği kaybolmuş yazımı bulmak için)
+	const KATLA = { "ı": "i", "ş": "s", "ç": "c", "ğ": "g", "ö": "o", "ü": "u", "â": "a", "î": "i", "û": "u" };
+	const katla = (w) => w.replace(/[ışçğöüâîû]/g, (c) => KATLA[c]);
+	const SOZLUK_KELIME = /^\p{L}{4,}$/u;
+
+	/** Kütüphanedeki metinlerden kelime sıklığı: ASCII karşılığı → Map(küçük yazım → sayı).
+	 *  "I" içeren kelimeler sayılmaz: İngilizce "International" Türkçe yerelle "ınternational" olur, sözlüğü kirletir. */
+	function kelimeSozlukKur(metinler) {
+		let sozluk = new Map();
+		for (let m of metinler || []) {
+			// metin bir kerede küçültülür (Türkçe yerel uzunluğu korur: İ → i, I → ı); "I" denetimi özgün metinde aynı konumda
+			let ozgun = String(m || "").normalize("NFC").replace(/i\u0307/g, "i");
+			let kucuk = kucult(ozgun, "tr");
+			if (kucuk.length != ozgun.length) {
+				continue;
+			}
+			for (let x of kucuk.matchAll(/\p{L}{4,}/gu)) {
+				let k = x[0];
+				if (ozgun.slice(x.index, x.index + k.length).includes("I")) {
+					continue;
+				}
+				let a = katla(k);
+				let m2 = sozluk.get(a);
+				if (!m2) {
+					sozluk.set(a, m2 = new Map());
+				}
+				m2.set(k, (m2.get(k) || 0) + 1);
+			}
+		}
+		return sozluk;
+	}
+
+	// İki yazımı da geçerli ve sık kökler (ASCII karşılığıyla): basın/başın, ayni (aynî hak)/aynı
+	const IKI_YAZIMLI = /^(?:basin|ayni)/;
+
+	/** g yazımı k'ye yalnızca Türkçe harf ekliyor mu (i → ı, s → ş …; şapka ve izinli olmayan harf hariç). */
+	function harfEkler(k, g, izinli) {
+		let h = [...k];
+		g = [...g];
+		return h.length == g.length && h.some((c, j) => c != g[j])
+			&& h.every((c, j) => c == g[j] || (KATLA[g[j]] == c && !KATLA[c] && !"âîû".includes(g[j]) && (!izinli || izinli.has(g[j]))));
+	}
+
+	function duzenKoru(w, yeni) {
+		let g = [...yeni];
+		return [...w].map((c, j) => (c != kucult(c, "tr") ? buyult(g[j], "tr") : g[j])).join("");
+	}
+
+	/** Sözlüğün sıralı anahtar listesi (kök araması için; sözlük nesnesinde önbelleklenir). */
+	function siraliAnahtarlar(sozluk) {
+		if (!sozluk._sirali) {
+			sozluk._sirali = [...sozluk.keys()].sort();
+		}
+		return sozluk._sirali;
+	}
+
+	/** Kök düzeyinde arama: kelimenin tam yazımı kütüphanede yoksa ("yozlasmayla"), en az 5 harflik başlangıcının
+	 *  kütüphanedeki yazımına bakılır ("yozlasma…": "yozlaşma" 40, "yozlasma" 10 → "yozlaşmayla"). Kök kelimenin sonundan
+	 *  en çok 3 harf kısa olabilir ("istir" → "iştirak" gibi başka kelimeye kaymasın); kökün Türkçe harfli yazımı en az
+	 *  10 kez ve bozuk yazımdan en az 3 kat sık geçmeli; son harfi değişen kök ünlüyle devam ediyorsa (ünsüz yumuşaması)
+	 *  alınmaz. Ekin kendisine dokunulmaz. */
+	function kokYazimi(k, sozluk, izinli) {
+		let a = katla(k);
+		let anahtarlar = siraliAnahtarlar(sozluk);
+		for (let L = a.length - 1; L >= Math.max(5, a.length - 3); L--) {
+			let p = a.slice(0, L);
+			let say = new Map();
+			let alt = 0, ust = anahtarlar.length;
+			while (alt < ust) {
+				let orta = (alt + ust) >> 1;
+				anahtarlar[orta] < p ? (alt = orta + 1) : (ust = orta);
+			}
+			for (let i = alt; i < anahtarlar.length && anahtarlar[i].startsWith(p); i++) {
+				for (let [y, n] of sozluk.get(anahtarlar[i])) {
+					let kok = y.slice(0, L);
+					say.set(kok, (say.get(kok) || 0) + n);
+				}
+			}
+			let kendi = say.get(k.slice(0, L)) || 0;
+			let en = null, enN = 0;
+			for (let [kok, n] of say) {
+				// kökün son harfi değişiyorsa ve ardından ünlü geliyorsa belirsiz: "direnç" + i → "direnci", "tanış" / "tanısı"
+				let sonDegisir = kok[L - 1] != k[L - 1] && /[aeıioöuü]/.test(k[L] || "");
+				if (n > enN && n >= 10 && n >= 3 * kendi && !sonDegisir && harfEkler(k.slice(0, L), kok, izinli)) {
+					en = kok;
+					enN = n;
+				}
+			}
+			if (en) {
+				return en + k.slice(L);
+			}
+		}
+		return null;
+	}
+
+	function eksikHarfKelime(w, sozluk, izinli = null) {
+		if (!sozluk || !SOZLUK_KELIME.test(w)) {
+			return null;
+		}
+		let k = kucult(w, "tr");
+		if (IKI_YAZIMLI.test(katla(k))) {
+			return null;
+		}
+		let adaylar = sozluk.get(katla(k)) || new Map();
+		let kendi = adaylar.get(k) || 0;
+		let en = null, enN = 0;
+		for (let [y, n] of adaylar) {
+			if (y == k || n < 3 || n < 25 * kendi || n <= enN) {
+				continue;
+			}
+			if (harfEkler(k, y, izinli)) {
+				en = y;
+				enN = n;
+			}
+		}
+		// tam yazım kütüphanede doğru biçimiyle yoksa ve kelimenin kendisi de nadirse köke bakılır
+		if (!en && kendi <= 5 && ![...adaylar.keys()].some((y) => y != k && (adaylar.get(y) || 0) >= 3)) {
+			en = kokYazimi(k, sozluk, izinli);
+		}
+		return en ? duzenKoru(w, en) : null;
+	}
+
+	return { tespit, normalize, kucult, buyult, katla, kelimeSozlukKur, eksikHarfKelime, kelimeler, parcalar, sahteIDuzelt, sahteIDuzeltKelime, acilimMi, SIK };
 });

@@ -46,6 +46,12 @@
 		return tokens.join("");
 	}
 
+	/** Boşlukla kopmuş Osmanlıca izafet eki: "Kanun - i Esasi" / "Kanun -i Esasi" / "Şura- yı Devlet" → "Kanun-i Esasi".
+	 *  Ek tek başına bir kelime olamayacağı için (i, ı, u, ü, yi, yı, yu, yü) ara tire sayılmaz; harf kuralı eki küçük tutar. */
+	function izafet(metin) {
+		return metin.replace(/(\p{L})(?:\s+[-–]\s*|\s*[-–]\s+)([yY]?[ıiuüIİUÜ])(?=\s+\p{L})/gu, "$1-$2");
+	}
+
 	/** Kelime arası " - " yerine uzun tire (–) kullanılır (başlık – alt başlık). */
 	function araTire(metin) {
 		return metin.replace(/(\p{L}|\d|[)\]”’"]) - (?=\p{L}|\d|[(\[“‘"])/gu, "$1 – ");
@@ -57,7 +63,12 @@
 			return { metin, degisiklikler };
 		}
 		let s = metin;
-		let y = kopukKelime(s, baglam);
+		let y = izafet(s);
+		if (y != s) {
+			degisiklikler.push({ kural: "tire.izafet", aciklama: "Boşlukla kopmuş izafet eki birleştirildi (Kanun - i Esasi → Kanun-i Esasi)", guven: "orta" });
+			s = y;
+		}
+		y = kopukKelime(s, baglam);
 		if (y != s) {
 			degisiklikler.push({ kural: "tire.kopukKelime", aciklama: "Satır sonu tiresiyle kopmuş kelime birleştirildi", guven: "orta" });
 			s = y;
@@ -65,5 +76,5 @@
 		return { metin: s, degisiklikler };
 	}
 
-	return { uygula, kopukKelime, araTire };
+	return { uygula, izafet, kopukKelime, araTire };
 });

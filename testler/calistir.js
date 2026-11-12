@@ -16,6 +16,7 @@ const harf = require(path.join(K, "harf.js"));
 const yazar = require(path.join(K, "yazar.js"));
 const motor = require(path.join(K, "motor.js"));
 const dogrula = require(path.join(K, "dogrula.js"));
+const kunye = require(path.join(K, "kunye.js"));
 
 let gecti = 0, kaldi = 0;
 function esit(ad, alinan, beklenen) {
@@ -157,12 +158,76 @@ esit("PDF son kelime sınırı", [dogrula.pdfEslesme("İHAM PERSPEKTİFİ\nAhmet
 	esit("doğrula dil satırı yok", dogrula.degerlendir({ alan: "language", eski: "", yeni: "tr" }, { pdf }), null);
 }
 
+{
+	// PDF ve kütüphaneden künye (ekran: ZQMAG7FK — dosya adından içe aktarılmış, künyesi boş kongre bildirisi)
+	const pdf = "S\n1. Ulusal İdore Hukuku Kongresi Birinci Kitap\nisori Yargı\n4-4 Mayıs 1990\nAnkora\nDonistoy /Yarboas\n"
+		+ "İDARİ YARGIDA DAVA AÇMA SÜRESİ (2577 Sayılı İYUK'nun 10. ve 11. maddeleri Açısından Bir\nİnceleme)\n"
+		+ "Prof .Dr.Yahya K.ZABUNOĞLU *\nGİRİŞ I- KONU VE SINIRLARI\nBildirimizin ana başlığı, 'İdari Yargıda Dava Açma Süresi'dir.";
+	const sozluk = dil.kelimeSozlukKur(Array(5).fill("İdari Yargıda Dava Açma Süresi; Maddeleri Açısından Bir İnceleme; Sayılı Orantılılık"));
+	const kunyeler = kunye.kunyeIndeks([
+		{ key: "N8XX4FZQ", itemType: "bookSection", fields: { title: "Yönetsel Yargıda Dava Süresi", bookTitle: "I. Ulusal İdare Hukuku Kongresi, Birinci Kitap: İdari Yargı (1-4 Mayıs 1990)", place: "Ankara", publisher: "Danıştay Yayınları", date: "1991-00-00 1991", pages: "209-262" } },
+		{ key: "6NKF88BR", itemType: "bookSection", fields: { title: "Yönetsel Yargıda Dava Süresi", bookTitle: "1. Ulusal İdare Hukuku Kongresi", volume: "1" } },
+		{ key: "DERGI001", itemType: "journalArticle", fields: { title: "Başka Makale", publicationTitle: "Danıştay Dergisi", volume: "80", ISSN: "1300-0000" } },
+	]);
+	esit("künye dizini: sayfa alınmaz, tarih yalın", kunyeler[0].alanlar, { place: "Ankara", publisher: "Danıştay Yayınları", date: "1991" });
+	esit("künye dizini: dergide cilt alınmaz", kunyeler[2].alanlar, { ISSN: "1300-0000" });
+	esit("bozuk ad", [kunye.bozukAd("Z_20200504231640"), kunye.bozukAd("Zabunoğlu"), kunye.bozukAd("Koç-Başar")], [true, false, false]);
+	esit("OCR'a dayanıklı kelime", [kunye.yakin("idore", "idare"), kunye.yakin("isori", "idari"), kunye.yakin("1990", "1991"), kunye.yakin("ve", "de")], [true, true, false, false]);
+	esit("PDF başlığı: harf farkı + parantezli alt başlık", kunye.pdfBaslik(pdf, "İdari Yargıtada Dava Açma Süresi", sozluk).metin,
+		"İdari Yargıda Dava Açma Süresi (2577 Sayılı İYUK'nun 10. ve 11. maddeleri Açısından Bir İnceleme)");
+	esit("PDF başlığı: sözlük yoksa harf değişmez", kunye.pdfBaslik(pdf, "İdari Yargıtada Dava Açma Süresi", null), null);
+	esit("PDF başlığı: OCR hatası kayda taşınmaz", kunye.pdfBaslik("Sıkıyönetim İlânı Kararı ve Yargısal Denetim; Sorunu", "Sıkıyönetim İlanı Kararı ve Yargısal Denetimi Sorunu",
+		dil.kelimeSozlukKur(Array(5).fill("yargısal denetimi denetim"))), null);
+	esit("PDF başlığı: araya giren sayfa no alınmaz", kunye.pdfBaslik("Askeri Uçak ve Helikopterlerin Düşmesinden 733\nDoğan Zararlardan İdarenin Sorumluluğu",
+		"Askeri Uçak ve Helikopterlerin Düşmesinden Doğan Zararlardan İdarenin Sorumluluğu", sozluk).metin, "Askeri Uçak ve Helikopterlerin Düşmesinden Doğan Zararlardan İdarenin Sorumluluğu");
+	const sz2 = dil.kelimeSozlukKur(Array(5).fill("maden madenin önünü personeli kurumuna kurumu"));
+	esit("PDF başlığı: yalnızca kesme/şapka/harf düzeni farkı öneri değil", kunye.pdfBaslik("KİŞİSEL VERİLERİ KORUMA KURUMUNA İDARE HUKUKU ÇERÇEVESİNDEN BİR BAKIŞ",
+		"Kişisel Verileri Koruma Kurumu'na İdare Hukuku Çerçevesinden Bir Bakış", sz2).metin, "Kişisel Verileri Koruma Kurumu'na İdare Hukuku Çerçevesinden Bir Bakış");
+	esit("PDF başlığı: geçerli kelime değişmez (Madenin → Maden)", kunye.pdfBaslik("Danıştay Cerrattepe'de Maden Önünü Açtı", "Danıştay Cerrattepe'de Madenin Önünü Açtı", sz2), null);
+	esit("PDF başlığı: ek düşmüş PDF kelimesi alınmaz (Satımın → Satım)", kunye.pdfBaslik("Kamulaştırma, Satım Özel Bir Çeşidi midir?", "Kamulaştırma, Satımın Özel Bir Çeşidi midir?",
+		dil.kelimeSozlukKur(Array(5).fill("satım satım"))), null);
+	esit("PDF başlığı: alt başlık yerine yazar adı alınmaz", kunye.pdfBaslik("Devletin Borçlanma Hakkı ve Yetkisi:: Metin MERİÇ", "Devletin Borçlanma Hakkı ve Yetkisi", sz2).metin, "Devletin Borçlanma Hakkı ve Yetkisi");
+	esit("PDF başlığı: yazım hatası düzelir", kunye.pdfBaslik("Kamu Personeli ve Kamu Zararı", "Kamu Pesoneli ve Kamu Zararı", sz2).metin, "Kamu Personeli ve Kamu Zararı");
+	esit("PDF başlığı: (1), sayfa aralığı ve unvan alt başlık sayılmaz", ["İngiliz Anayasa Hukuku (1)\n", "İngiliz Anayasa Hukuku (131-147)", "İngiliz Anayasa Hukuku: Prof. Dr. Selim KANETİ", "İngiliz Anayasa Hukuku: S"]
+		.map((p) => kunye.pdfBaslik(p, "İngiliz Anayasa Hukuku", sz2).metin), Array(4).fill("İngiliz Anayasa Hukuku"));
+	esit("PDF yazarı: sağlam ad + bozuk soyadı", kunye.pdfYazar({ firstName: "Yahya", lastName: "Z_20200504231640", fieldMode: 0 }, pdf), { firstName: "Yahya K.", lastName: "Zabunoğlu", fieldMode: 0 });
+	esit("PDF yazarı: sağlam adlara dokunulmaz", kunye.pdfYazar({ firstName: "Yahya", lastName: "Zabunoğlu", fieldMode: 0 }, pdf), null);
+	esit("künye: kapaktaki kitap (OCR'lı), en ayrıntılı kayıt", kunye.kunyeBul(pdf.slice(0, 100), kunyeler, "ZQMAG7FK").key, "N8XX4FZQ");
+	esit("künye: kelimeler metne dağılmışsa eşleşmez", kunye.kunyeBul("Büyük şehirlerde çöp vergisi. İstanbul örneğinde vergi tarihi ve uygulaması",
+		kunye.kunyeIndeks([{ key: "BIT", itemType: "bookSection", fields: { bookTitle: "Büyük İstanbul Tarihi", place: "İstanbul" } }]), "X"), null);
+	esit("künye: araya uzun kelime girerse eşleşmez", kunye.kunyeBul("International Journal of Current Social Science, 2(2)",
+		kunye.kunyeIndeks([{ key: "JSS", itemType: "journalArticle", fields: { publicationTitle: "The Journal of Social Science" } }]), "X"), null);
+	esit("künye: ifade olarak geçince eşleşir", kunye.kunyeBul("Büyük İstanbul Tarihi, Cilt 9",
+		kunye.kunyeIndeks([{ key: "BIT", itemType: "bookSection", fields: { bookTitle: "Büyük İstanbul Tarihi", place: "İstanbul" } }]), "X").key, "BIT");
+	esit("künye: 3'ten az ayırt edici kelime yetmez", kunye.kunyeBul("Danıştay Dergisi Sayı 80", kunyeler, "X"), null);
+	const kayit = { key: "ZQMAG7FK", itemType: "journalArticle", alanlar: ["title", "shortTitle", "publicationTitle", "date", "place", "publisher", "language"],
+		fields: { title: "İdari Yargıtada Dava Açma Süresi" }, creators: [{ firstName: "Yahya", lastName: "Z_20200504231640", fieldMode: 0, creatorType: "author" }] };
+	const ayar = { kelimeSozluk: sozluk, kunyeler };
+	esit("kaynak gerekli", kunye.gerekli(kayit), true);
+	const r = kunye.kaynakAnaliz(kayit, pdf, motor.analiz(kayit, ayar), ayar);
+	let yeni = Object.fromEntries(r.oneriler.map((o) => [o.alan, o.alan == "creators" ? o.yeniYazar.lastName + ", " + o.yeniYazar.firstName : o.yeni]));
+	esit("kaynak analizi (ZQMAG7FK)", yeni, {
+		language: "tr",
+		title: "İdari Yargıda Dava Açma Süresi (2577 Sayılı İYUK'nun 10. ve 11. Maddeleri Açısından Bir İnceleme)",
+		shortTitle: "İdari Yargıda Dava Açma",
+		creators: "Zabunoğlu, Yahya K.",
+		itemType: "bookSection",
+		bookTitle: "I. Ulusal İdare Hukuku Kongresi, Birinci Kitap: İdari Yargı (1-4 Mayıs 1990)",
+		place: "Ankara", publisher: "Danıştay Yayınları", date: "1991",
+	});
+	esit("kaynak analizi: yazar uyarısı kalkar", r.uyarilar.filter((u) => u.alan == "creators").length, 0);
+	esit("kaynak analizi: PDF yoksa motor sonucu", kunye.kaynakAnaliz(kayit, null, motor.analiz(kayit, ayar), ayar).oneriler.length, motor.analiz(kayit, ayar).oneriler.length);
+}
+
 console.log("Durum testleri (testler/durumlar.json)");
 let durumlar = JSON.parse(fs.readFileSync(path.join(__dirname, "durumlar.json"), "utf8"));
 for (let d of durumlar) {
 	let ayarlar = { ...(d.ayarlar || {}) };
 	if (ayarlar.sozlukKisiler) {
 		ayarlar.adSozluk = yazar.sozlukKur(ayarlar.sozlukKisiler);
+	}
+	if (ayarlar.sozlukMetinler) {
+		ayarlar.kelimeSozluk = dil.kelimeSozlukKur(ayarlar.sozlukMetinler);
 	}
 	let r = motor.analiz(d.kayit, ayarlar);
 	let yeni = {};

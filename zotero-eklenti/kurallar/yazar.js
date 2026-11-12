@@ -296,6 +296,11 @@
 				ekle("supheli", `Ad bozuk görünüyor: “${supheli}” (özgün kaynaktan kontrol edin)`, "orta");
 				uyarilar.push({ indeks: i, mesaj: `Yazar adı bozuk görünüyor: “${supheli}” (özgün kaynaktan kontrol edin)` });
 			}
+			// "Z_20200504231640": dosya adından / zaman damgasından kalmış ad (kaynakla doğrulama PDF'ten düzeltebilir)
+			let artik = [c.firstName, c.lastName].find((x) => /_|\d{4,}/.test(x || ""));
+			if (artik) {
+				uyarilar.push({ indeks: i, mesaj: `Yazar adında dosya adı / zaman damgası artığı: “${artik}” (PDF'te adı geçiyorsa düzeltme önerilir)` });
+			}
 			if (c.fieldMode == 0 && c.lastName && /^\p{Ll}/u.test(c.lastName) && !PARCACIK.has(c.lastName.split(/\s+/)[0].toLocaleLowerCase("tr"))) {
 				uyarilar.push({ indeks: i, mesaj: `Soyadı küçük harfle başlıyor: “${c.lastName}” (gerçek bir ad olmayabilir)` });
 			}
