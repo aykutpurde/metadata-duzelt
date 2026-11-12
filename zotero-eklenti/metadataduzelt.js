@@ -341,9 +341,9 @@ MetadataDuzelt = {
 		await this.loadWordStats();
 		let { rows, uyarilar } = await this.rows(targets, { kaynak: true, hepsi: targets.length <= 100 });
 		if (!rows.length) {
-			this.notify(targets.length == 1
+			this.notify((targets.length == 1
 				? "Bu kayıtta düzeltilecek bir şey bulunamadı ✓"
-				: `${targets.length} kayıtta düzeltilecek bir şey bulunamadı ✓`
+				: `${targets.length} kayıtta düzeltilecek bir şey bulunamadı ✓`)
 				+ (uyarilar.length ? `\n(${uyarilar.length} uyarı: elle bakılmalı)` : ""));
 			if (uyarilar.length) {
 				this.openPreview(rows, uyarilar, targets.length == 1 ? (targets[0].getDisplayTitle() || targets[0].key) : `${targets.length} kayıt`);
